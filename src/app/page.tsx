@@ -50,7 +50,9 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <InputModule onNewResult={handleNewResult} />
+        <div className="py-8">
+          <InputModule onNewResult={handleNewResult} />
+        </div>
 
         <div className="mt-12">
           <h2 className="text-3xl font-bold text-center mb-2 font-headline">
