@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * Import function triggers from their respective submodules:
@@ -18,24 +19,8 @@ import {findHashtags} from './ai/flows/find-hashtags';
 import {getBestTimeToPost} from './ai/flows/best-time-to-post';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
-import * as admin from 'firebase-admin';
+import {db} from './firebase-admin';
 
-// Initialize Firebase Admin SDK
-if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      }),
-    });
-  } catch (error: any) {
-    console.error('Firebase admin initialization error:', error.stack);
-  }
-}
-
-export const db = admin.firestore();
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
