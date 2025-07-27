@@ -1,5 +1,6 @@
 
 'use server';
+import 'dotenv/config';
 
 import { trendForecast } from '@/ai/flows/trend-forecasting';
 import { generateCaptions as genCaptions } from '@/ai/flows/generate-captions';
@@ -94,3 +95,4 @@ export async function getBestTimeToPost(
       error: e.message || 'An unexpected error occurred.',
     };
   }
+}
