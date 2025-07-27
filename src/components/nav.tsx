@@ -80,7 +80,9 @@ export function Nav() {
           </SheetContent>
         </Sheet>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <Button variant="shiny" size="sm">Get Started</Button>
+          <Button variant="shiny" size="sm" asChild>
+            <Link href="/#input-section">Get Started</Link>
+          </Button>
         </div>
       </div>
     </header>

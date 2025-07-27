@@ -52,7 +52,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="py-8">
+        <div id="input-section" className="py-8 scroll-mt-20">
           <InputModule onNewResult={handleNewResult} />
         </div>
 
