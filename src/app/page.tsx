@@ -6,12 +6,11 @@ import { type TrendForecastOutput } from '@/ai/flows/trend-forecasting';
 import { Header } from '@/components/header';
 import { InputModule } from '@/components/input-module';
 import { TrendCard } from '@/components/trend-card';
-import { AdCard } from '@/components/ad-card';
-import { BlogCard } from '@/components/blog-card';
-import { Button } from '@/components/ui/button';
-import { sampleTrends, adData, blogData } from '@/lib/data';
-import { Bot, Building, PenTool } from 'lucide-react';
 import { ScrollAnimate } from '@/components/scroll-animate';
+import { CombinedCard } from '@/components/combined-card';
+import { sampleTrends, contentData } from '@/lib/data';
+import { Bot, Building, PenTool } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type TrendResult = TrendForecastOutput & {
   id: string;
@@ -38,9 +37,6 @@ export default function Home() {
     // Shuffle cards only on the client-side to avoid hydration mismatch
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
   }, [allCards]);
-
-  const allContent = useMemo(() => [...adData, ...blogData].sort(() => Math.random() - 0.5), []);
-
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -131,12 +127,13 @@ export default function Home() {
                 Go beyond the data with curated articles and partnership opportunities to grow your brand.
             </p>
           </ScrollAnimate>
-            <div className="space-y-8">
-                {adData.map(ad => (
-                    <ScrollAnimate key={ad.id}><AdCard {...ad} /></ScrollAnimate>
-                ))}
-                 {blogData.map(blog => (
-                    <ScrollAnimate key={blog.id}><BlogCard {...blog} /></ScrollAnimate>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 auto-rows-fr">
+                {contentData.map((item, index) => (
+                    <ScrollAnimate key={item.id} className={cn(
+                        item.layout === 'vertical' ? 'md:col-span-1' : 'md:col-span-2'
+                    )}>
+                        <CombinedCard item={item} />
+                    </ScrollAnimate>
                 ))}
             </div>
         </section>

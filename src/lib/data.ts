@@ -50,8 +50,9 @@ export const sampleTrends = [
   },
 ];
 
-export const adData = [
+export const contentData = [
   {
+    type: 'ad' as const,
     id: 1,
     industry: 'Automobile',
     title: 'The Future is Electric. Drive the Revolution.',
@@ -61,8 +62,21 @@ export const adData = [
     image: 'https://placehold.co/600x400',
     aiHint: 'luxury EV'
   },
-  {
+    {
+    type: 'blog' as const,
     id: 2,
+    title: 'How to Profit From the Next Social Media Hashtag Boom',
+    teaser: 'Discover the tools and strategies to identify and capitalize on trending hashtags before they go viral.',
+    tag: 'Social Media',
+    image: 'https://placehold.co/600x800',
+    aiHint: 'social media',
+    offer: 'Read on Amazon',
+    link: 'https://amzn.to/3UusOSW',
+    layout: 'vertical',
+  },
+  {
+    type: 'ad' as const,
+    id: 3,
     industry: 'Tech',
     title: 'Powering the AI Era.',
     description:
@@ -72,18 +86,43 @@ export const adData = [
     image: 'https://placehold.co/600x400',
     aiHint: 'semiconductor chip'
   },
-  {
-    id: 3,
+    {
+    type: 'blog' as const,
+    id: 4,
+    title: 'Best Gadgets for Early Adopters: 2025 Picks',
+    teaser: 'A curated list of the most innovative and game-changing gadgets set to launch in the coming year.',
+    tag: 'Technology',
+    image: 'https://placehold.co/600x400',
+    aiHint: 'futuristic gadget',
+    offer: 'Shop on Amazon',
+    link: 'https://amzn.to/456j3iN'
+  },
+   {
+    type: 'ad' as const,
+    id: 5,
     industry: 'Mobile Smart Devices',
     title: 'Experience Brilliance.',
     description: 'The latest flagship phone with a revolutionary camera system.',
     cta: 'Pre-order Today',
     link: '#',
+    image: 'https://placehold.co/600x800',
+    aiHint: 'smartphone tech',
+    layout: 'vertical',
+  },
+   {
+    type: 'blog' as const,
+    id: 6,
+    title: 'AI Trend Forecasting Tools for Marketers',
+    teaser: 'A deep dive into the AI platforms that are revolutionizing marketing by predicting consumer behavior.',
+    tag: 'AI & Marketing',
     image: 'https://placehold.co/600x400',
-    aiHint: 'smartphone tech'
+    aiHint: 'marketing dashboard',
+    offer: 'Explore Our API',
+    link: '#'
   },
   {
-    id: 4,
+    type: 'ad' as const,
+    id: 7,
     industry: 'Software',
     title: 'Build, Collaborate, and Scale.',
     description: 'Our cloud SaaS platform empowers teams to achieve more.',
@@ -92,67 +131,38 @@ export const adData = [
     image: 'https://placehold.co/600x400',
     aiHint: 'software interface'
   },
+    {
+    type: 'blog' as const,
+    id: 8,
+    title: 'The Rise of Sustainable Tech: What to Watch',
+    teaser: 'From green energy solutions to circular economy gadgets, explore the sustainable tech trends shaping our future.',
+    tag: 'Sustainability',
+    image: 'https://placehold.co/600x400',
+    aiHint: 'sustainable tech',
+    offer: 'Shop Smart Gardens',
+    link: 'https://amzn.to/3J2ZEYu'
+  },
   {
-    id: 5,
+    type: 'ad' as const,
+    id: 9,
     industry: 'Finance/Fintech',
     title: 'Invest Smarter, Not Harder.',
     description: 'Our AI-driven platform helps you navigate the markets with confidence.',
     cta: 'See Investment Trends',
     link: '#',
-    image: 'https://placehold.co/600x400',
-    aiHint: 'finance chart'
+    image: 'https://placehold.co/600x800',
+    aiHint: 'finance chart',
+    layout: 'vertical',
   },
-];
-
-export const blogData = [
-    {
-        id: 1,
-        title: 'How to Profit From the Next Social Media Hashtag Boom',
-        teaser: 'Discover the tools and strategies to identify and capitalize on trending hashtags before they go viral.',
-        tag: 'Social Media',
-        image: 'https://placehold.co/600x400',
-        aiHint: 'social media',
-        offer: 'Read on Amazon',
-        link: 'https://amzn.to/3UusOSW'
-    },
-    {
-        id: 2,
-        title: 'Best Gadgets for Early Adopters: 2025 Picks',
-        teaser: 'A curated list of the most innovative and game-changing gadgets set to launch in the coming year.',
-        tag: 'Technology',
-        image: 'https://placehold.co/600x400',
-        aiHint: 'futuristic gadget',
-        offer: 'Shop on Amazon',
-        link: 'https://amzn.to/456j3iN'
-    },
-    {
-        id: 3,
-        title: 'AI Trend Forecasting Tools for Marketers',
-        teaser: 'A deep dive into the AI platforms that are revolutionizing marketing by predicting consumer behavior.',
-        tag: 'AI & Marketing',
-        image: 'https://placehold.co/600x400',
-        aiHint: 'marketing dashboard',
-        offer: 'Explore Our API',
-        link: '#'
-    },
-    {
-        id: 4,
-        title: 'The Rise of Sustainable Tech: What to Watch',
-        teaser: 'From green energy solutions to circular economy gadgets, explore the sustainable tech trends shaping our future.',
-        tag: 'Sustainability',
-        image: 'https://placehold.co/600x400',
-        aiHint: 'sustainable tech',
-        offer: 'Shop Smart Gardens',
-        link: 'https://amzn.to/3J2ZEYu'
-    },
-    {
-        id: 5,
-        title: 'Decoding Gen Z: How They Drive Digital Trends',
-        teaser: 'Understand the platforms, aesthetics, and values that make Gen Z the most powerful force in trend creation.',
-        tag: 'Culture',
-        image: 'https://placehold.co/600x400',
-        aiHint: 'gen z fashion',
-        offer: 'Shop Vlogging Kits',
-        link: 'https://amzn.to/4meDf94'
-    }
+   {
+    type: 'blog' as const,
+    id: 10,
+    title: 'Decoding Gen Z: How They Drive Digital Trends',
+    teaser: 'Understand the platforms, aesthetics, and values that make Gen Z the most powerful force in trend creation.',
+    tag: 'Culture',
+    image: 'https://placehold.co/600x400',
+    aiHint: 'gen z fashion',
+    offer: 'Shop Vlogging Kits',
+    link: 'https://amzn.to/4meDf94'
+  }
 ];
