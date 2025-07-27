@@ -30,7 +30,7 @@ export default function PricingPage() {
       cta: 'Choose Pro',
       isFeatured: true,
       targetAudience: 'Marketing teams',
-      priceId: 'price_1PQRrJ07gM2Zl2p9jYh9H8g7', // REPLACE WITH YOUR PRO PRICE ID
+      priceId: 'price_1RpMgKHK4G9ZDA0FawwsKgsK',
     },
     {
       title: 'Enterprise',
