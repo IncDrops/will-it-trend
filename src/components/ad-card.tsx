@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 type AdCardProps = {
   industry: string;
@@ -27,27 +27,36 @@ export function AdCard({
   return (
     <div className="relative group overflow-hidden rounded-2xl h-full">
       <Card className="relative z-10 glassmorphic rounded-xl h-full m-0.5">
-        <CardContent className="p-6 flex flex-col h-full">
-          <Badge variant="secondary" className="self-start mb-4">{industry}</Badge>
-          <div className="mb-4 rounded-lg overflow-hidden">
-            <Image
-              src={image}
-              alt={title}
-              width={600}
-              height={400}
-              data-ai-hint={aiHint}
-              className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          </div>
-          <h3 className="text-xl font-bold font-headline mb-2">{title}</h3>
-          <p className="text-muted-foreground mb-4 flex-grow">{description}</p>
-          <Button asChild variant="outline" className="mt-auto self-start">
-            <Link href={link} target="_blank" rel="noopener noreferrer">
-              {cta}
-              <ArrowUpRight className="ml-2" />
-            </Link>
-          </Button>
-        </CardContent>
+        <div className="grid md:grid-cols-2 gap-6 items-center">
+            <div className="p-6">
+                <CardHeader className="p-0 mb-4">
+                    <div className="flex justify-between items-center">
+                        <Badge variant="secondary">{industry}</Badge>
+                        <Badge variant="outline">Ad</Badge>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <h3 className="text-2xl font-bold font-headline mb-3">{title}</h3>
+                    <p className="text-muted-foreground mb-6 flex-grow">{description}</p>
+                    <Button asChild variant="shiny" size="lg">
+                        <Link href={link} target="_blank" rel="noopener noreferrer">
+                        {cta}
+                        <ArrowUpRight className="ml-2" />
+                        </Link>
+                    </Button>
+                 </CardContent>
+            </div>
+            <div className="overflow-hidden h-full">
+                 <Image
+                    src={image}
+                    alt={title}
+                    width={600}
+                    height={400}
+                    data-ai-hint={aiHint}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 md:rounded-r-xl"
+                />
+            </div>
+        </div>
       </Card>
     </div>
   );

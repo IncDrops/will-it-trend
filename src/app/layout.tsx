@@ -30,7 +30,14 @@ export default function RootLayout({
           spaceGrotesk.variable
         )}
       >
-        <div className="animated-grid-background fixed inset-0 z-[-1] h-screen w-full" />
+        <div className="fixed inset-0 z-[-1] h-full w-full static-grid-background" />
+        <div className="fixed inset-0 z-[-1] h-full w-full overflow-hidden">
+            <div className="trail" style={{ left: '10%', animationDuration: '8s', animationDelay: '0s' }}></div>
+            <div className="trail" style={{ left: '25%', animationDuration: '6s', animationDelay: '-2s' }}></div>
+            <div className="trail" style={{ left: '50%', animationDuration: '7s', animationDelay: '-4s' }}></div>
+            <div className="trail" style={{ left: '75%', animationDuration: '9s', animationDelay: '-1s' }}></div>
+            <div className="trail" style={{ left: '90%', animationDuration: '6s', animationDelay: '-3s' }}></div>
+        </div>
         <div className="relative z-10">
             <Nav />
             {children}
