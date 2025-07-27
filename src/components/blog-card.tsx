@@ -13,7 +13,6 @@ type BlogCardProps = {
   aiHint: string;
   offer: string;
   link: string;
-  layout?: 'vertical' | 'default';
 };
 
 export function BlogCard({
@@ -24,31 +23,26 @@ export function BlogCard({
   aiHint,
   offer,
   link,
-  layout = 'default',
 }: BlogCardProps) {
-  const isVertical = layout === 'vertical';
   return (
     <Card
-      className={cn(
-        'glassmorphic rounded-2xl h-full overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 flex flex-col',
-        isVertical ? 'md:flex-col' : 'md:flex-row'
-      )}
+      className='glassmorphic rounded-2xl h-full overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 flex flex-col md:flex-row-reverse items-center'
     >
-      <div className={cn("overflow-hidden", isVertical ? 'h-96' : 'md:w-1/2')}>
+      <div className='overflow-hidden md:w-1/2 w-full h-64 md:h-full'>
         <Image
           src={image}
           alt={title}
           width={600}
-          height={isVertical ? 800 : 400}
+          height={400}
           data-ai-hint={aiHint}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
       </div>
-      <CardContent className="p-6 flex flex-col h-full flex-1">
+      <CardContent className="p-6 flex flex-col h-full flex-1 md:w-1/2">
         <Badge className="self-start mb-4 bg-accent text-accent-foreground hover:bg-accent/80">
           {tag}
         </Badge>
-        <h3 className="text-lg font-bold font-headline mb-2 flex-grow">
+        <h3 className="text-xl font-bold font-headline mb-2 flex-grow">
           {title}
         </h3>
         <p className="text-sm text-muted-foreground mb-4">{teaser}</p>

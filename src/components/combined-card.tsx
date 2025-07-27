@@ -1,7 +1,6 @@
 import { AdCard } from './ad-card';
 import { BlogCard } from './blog-card';
 
-// Define more specific types for your data items
 type AdData = {
   type: 'ad';
   id: number;
@@ -12,7 +11,6 @@ type AdData = {
   link: string;
   image: string;
   aiHint: string;
-  layout?: 'vertical' | 'default';
 };
 
 type BlogData = {
@@ -25,7 +23,6 @@ type BlogData = {
   aiHint: string;
   offer: string;
   link: string;
-  layout?: 'vertical' | 'default';
 };
 
 type CombinedItem = AdData | BlogData;

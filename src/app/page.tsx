@@ -127,11 +127,9 @@ export default function Home() {
                 Go beyond the data with curated articles and partnership opportunities to grow your brand.
             </p>
           </ScrollAnimate>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 auto-rows-fr">
-                {contentData.map((item, index) => (
-                    <ScrollAnimate key={item.id} className={cn(
-                        item.layout === 'vertical' ? 'md:col-span-1' : 'md:col-span-2'
-                    )}>
+            <div className="flex flex-col gap-8">
+                {contentData.map((item) => (
+                    <ScrollAnimate key={item.id}>
                         <CombinedCard item={item} />
                     </ScrollAnimate>
                 ))}
