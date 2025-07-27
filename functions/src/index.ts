@@ -10,11 +10,11 @@ import 'dotenv/config'; // Make sure this is at the top
 import {setGlobalOptions} from "firebase-functions";
 import {onRequest} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import * as express from "express";
-import { apiPredict } from '../../src/ai/flows/api-predict';
-import { generateCaptions } from '../../src/ai/flows/generate-captions';
-import { findHashtags } from '../../src/ai/flows/find-hashtags';
-import { getBestTimeToPost } from '../../src/ai/flows/best-time-to-post';
+import express, { Request, Response, NextFunction } from "express";
+import { apiPredict } from './ai/flows/api-predict';
+import { generateCaptions } from './ai/flows/generate-captions';
+import { findHashtags } from './ai/flows/find-hashtags';
+import { getBestTimeToPost } from './ai/flows/best-time-to-post';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
 import * as admin from 'firebase-admin';
@@ -49,7 +49,7 @@ const app = express();
 app.use(express.json());
 
 // Middleware for API Key Authentication and Rate Limiting
-const authenticateAndRateLimit = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const authenticateAndRateLimit = async (req: Request, res: Response, next: NextFunction) => {
     // bypass auth for checkout creation
     if(req.path.startsWith('/v1/create-checkout-session')) {
         return next();
@@ -131,7 +131,7 @@ app.use(authenticateAndRateLimit);
 // --- API Endpoints ---
 
 // POST /v1/create-checkout-session
-app.post('/v1/create-checkout-session', async (req, res) => {
+app.post('/v1/create-checkout-session', async (req: Request, res: Response) => {
     const { priceId, successUrl, cancelUrl } = req.body;
 
     if (!priceId) {
@@ -163,7 +163,7 @@ app.post('/v1/create-checkout-session', async (req, res) => {
 
 
 // GET /v1/trends
-app.get('/v1/trends', (req, res) => {
+app.get('/v1/trends', (req: Request, res: Response) => {
     // Placeholder for fetching real-time trends
     // You can apply tier-based result limiting here using res.locals.keyData
     const tier = res.locals.keyData.tier;
@@ -178,7 +178,7 @@ app.get('/v1/trends', (req, res) => {
 });
 
 // POST /v1/predict
-app.post('/v1/predict', async (req, res) => {
+app.post('/v1/predict', async (req: Request, res: Response) => {
     const { topic } = req.body;
     if (!topic) {
         return res.status(400).send({ error: 'Prediction "topic" is missing.' });
@@ -227,7 +227,7 @@ app.post('/v1/predict', async (req, res) => {
 
 
 // POST /v1/generate-captions
-app.post('/v1/generate-captions', async (req, res) => {
+app.post('/v1/generate-captions', async (req: Request, res: Response) => {
     const { topic, tone } = req.body;
     if (!topic || !tone) {
         return res.status(400).send({ error: 'Request body must include "topic" and "tone".' });
@@ -242,7 +242,7 @@ app.post('/v1/generate-captions', async (req, res) => {
 });
 
 // POST /v1/find-hashtags
-app.post('/v1/find-hashtags', async (req, res) => {
+app.post('/v1/find-hashtags', async (req: Request, res: Response) => {
     const { topic } = req.body;
     if (!topic) {
         return res.status(400).send({ error: 'Request body must include "topic".' });
@@ -257,7 +257,7 @@ app.post('/v1/find-hashtags', async (req, res) => {
 });
 
 // POST /v1/best-time-to-post
-app.post('/v1/best-time-to-post', async (req, res) => {
+app.post('/v1/best-time-to-post', async (req: Request, res: Response) => {
     const { industry, platform } = req.body;
     if (!industry || !platform) {
         return res.status(400).send({ error: 'Request body must include "industry" and "platform".' });
