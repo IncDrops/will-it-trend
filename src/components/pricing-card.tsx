@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 
 type PricingCardProps = {
   title: string;
-  price: number;
+  price?: number;
   description: string;
   features: string[];
   cta: string;
@@ -34,7 +34,7 @@ export function PricingCard({
   const handleCheckout = async () => {
     if (!priceId) {
       // Handle "Contact Sales" case
-      window.location.href = 'mailto:sales@willittrend.com';
+      window.location.href = 'mailto:ai@incdrops.com';
       return;
     }
 
@@ -82,10 +82,12 @@ export function PricingCard({
           <CardDescription>{targetAudience}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col flex-grow">
-          <div className="text-center my-4">
-            <span className="text-4xl font-extrabold">${price}</span>
-            <span className="text-muted-foreground">/one-time</span>
-          </div>
+          {price !== undefined && (
+            <div className="text-center my-4">
+              <span className="text-4xl font-extrabold">${price}</span>
+              <span className="text-muted-foreground">/one-time</span>
+            </div>
+          )}
           <p className="text-center text-muted-foreground mb-6 min-h-[40px]">{description}</p>
           <ul className="space-y-3 flex-grow">
             {features.map((feature) => (

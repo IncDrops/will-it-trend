@@ -18,26 +18,25 @@ export default function PricingPage() {
       priceId: 'price_1PQRrJ07gM2Zl2p9iJj9E9T8', // REPLACE WITH YOUR STARTER PRICE ID
     },
     {
-      title: 'Agency Pack',
-      price: 49.99,
+      title: 'Pro AI Pack',
+      price: 29.99,
       description: 'For marketing teams and agencies managing multiple clients.',
       features: [
         'Unlimited Trend Reports',
-        '250 AI Credits',
+        '500 AI Credits',
         'API Access for integrations',
         'Priority Support',
       ],
-      cta: 'Choose Agency',
+      cta: 'Choose Pro',
       isFeatured: true,
       targetAudience: 'Marketing teams',
-      priceId: 'price_1PQRrJ07gM2Zl2p9jYh9H8g7', // REPLACE WITH YOUR AGENCY PRICE ID
+      priceId: 'price_1PQRrJ07gM2Zl2p9jYh9H8g7', // REPLACE WITH YOUR PRO PRICE ID
     },
     {
-      title: 'White Label',
-      price: 299,
+      title: 'Enterprise',
       description: 'For businesses wanting to offer our reports under their own brand.',
       features: [
-        'Everything in Agency Pack',
+        'Everything in Pro AI Pack',
         'Custom Branded Reports',
         'Dedicated Account Manager',
         'White-label options',
