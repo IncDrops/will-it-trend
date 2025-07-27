@@ -1,0 +1,253 @@
+openapi: 3.0.0
+info:
+  title: WillItTrend.com API
+  version: '2.0.0'
+  description: >-
+    Programmatic access to trend intelligence and AI-powered content creation
+    tools.
+servers:
+  - url: 'https://<YOUR_PROJECT_ID>.web.app/api'
+    description: Production Server
+paths:
+  /v1/trends:
+    get:
+      summary: Get Top Trends
+      description: >-
+        Fetch a list of current top trends. The number of results depends on
+        your API tier.
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        trend:
+                          type: string
+                        score:
+                          type: number
+              example:
+                message: Trends endpoint hit successfully.
+                data:
+                  - trend: '#SampleTrend'
+                    score: 95
+  /v1/predict:
+    post:
+      summary: Predict Trend Potential
+      description: Get an AI-powered prediction for a specific topic.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topic:
+                  type: string
+              required:
+                - topic
+            example:
+              topic: AI-powered gardening tools
+      responses:
+        '200':
+          description: Successful prediction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction'
+              example:
+                message: Predict endpoint hit successfully.
+                prediction:
+                  confidenceScore: 88
+                  keyDrivers:
+                    - Growing interest in home automation.
+                    - Increased focus on sustainable living.
+                  recommendedAction: >-
+                    Target ads towards tech-savvy homeowners on Instagram and
+                    Pinterest.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+  /v1/generate-captions:
+    post:
+      summary: Generate Captions
+      description: Generate engaging social media captions for a given topic and tone.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topic:
+                  type: string
+                tone:
+                  type: string
+                  enum: [professional, casual, witty]
+              required:
+                - topic
+                - tone
+            example:
+              topic: A new coffee brand launching a dark roast.
+              tone: witty
+      responses:
+        '200':
+          description: Successful caption generation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  captions:
+                    type: array
+                    items:
+                      type: string
+              example:
+                captions:
+                  - 'Our new dark roast is here. Your search for the perfect coffee is over.'
+                  - 'Life is too short for bad coffee. We can help with that.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v1/find-hashtags:
+    post:
+      summary: Find Hashtags
+      description: >-
+        Find a mix of trending and niche hashtags to boost reach for a given
+        topic.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topic:
+                  type: string
+              required:
+                - topic
+            example:
+              topic: sustainable fashion
+      responses:
+        '200':
+          description: Successful hashtag generation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hashtags:
+                    type: array
+                    items:
+                      type: string
+              example:
+                hashtags:
+                  - sustainablefashion
+                  - ecofriendly
+                  - ethicalfashion
+                  - slowfashion
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v1/best-time-to-post:
+    post:
+      summary: Best Time to Post
+      description: >-
+        Get a data-backed recommendation for when your audience is most active
+        on a specific platform.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                industry:
+                  type: string
+                platform:
+                  type: string
+                  enum: [TikTok, Instagram, Twitter, YouTube]
+              required:
+                - industry
+                - platform
+            example:
+              industry: Tech
+              platform: TikTok
+      responses:
+        '200':
+          description: Successful time recommendation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  time:
+                    type: string
+                  reasoning:
+                    type: string
+              example:
+                time: '6:00 PM EST'
+                reasoning: >-
+                  Peak engagement for tech content on TikTok is during evening
+                  commute hours.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    Prediction:
+      type: object
+      properties:
+        confidenceScore:
+          type: integer
+          format: int32
+        keyDrivers:
+          type: array
+          items:
+            type: string
+        recommendedAction:
+          type: string
+  responses:
+    BadRequest:
+      description: Bad request, check your input parameters.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+            example:
+              error: 'Prediction "topic" is missing.'
+    RateLimitExceeded:
+      description: The user has exceeded their hourly request limit.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+            example:
+              error: Hourly request limit exceeded. Please upgrade your plan.

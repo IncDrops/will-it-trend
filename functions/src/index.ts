@@ -13,6 +13,9 @@ import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 import * as express from "express";
 import { apiPredict } from '../../src/ai/flows/api-predict';
+import { generateCaptions } from '../../src/ai/flows/generate-captions';
+import { findHashtags } from '../../src/ai/flows/find-hashtags';
+import { getBestTimeToPost } from '../../src/ai/flows/best-time-to-post';
 import * as crypto from 'crypto';
 
 
@@ -168,6 +171,53 @@ app.post('/v1/predict', async (req, res) => {
         res.status(500).send({ error: 'Failed to get prediction from AI.', details: e.message });
     }
 });
+
+
+// POST /v1/generate-captions
+app.post('/v1/generate-captions', async (req, res) => {
+    const { topic, tone } = req.body;
+    if (!topic || !tone) {
+        return res.status(400).send({ error: 'Request body must include "topic" and "tone".' });
+    }
+    try {
+        const result = await generateCaptions({ topic, tone });
+        res.status(200).send(result);
+    } catch (e: any) {
+        logger.error('Error in /v1/generate-captions:', e);
+        res.status(500).send({ error: 'Failed to generate captions.', details: e.message });
+    }
+});
+
+// POST /v1/find-hashtags
+app.post('/v1/find-hashtags', async (req, res) => {
+    const { topic } = req.body;
+    if (!topic) {
+        return res.status(400).send({ error: 'Request body must include "topic".' });
+    }
+    try {
+        const result = await findHashtags({ topic });
+        res.status(200).send(result);
+    } catch (e: any) {
+        logger.error('Error in /v1/find-hashtags:', e);
+        res.status(500).send({ error: 'Failed to find hashtags.', details: e.message });
+    }
+});
+
+// POST /v1/best-time-to-post
+app.post('/v1/best-time-to-post', async (req, res) => {
+    const { industry, platform } = req.body;
+    if (!industry || !platform) {
+        return res.status(400).send({ error: 'Request body must include "industry" and "platform".' });
+    }
+    try {
+        const result = await getBestTimeToPost({ industry, platform });
+        res.status(200).send(result);
+    } catch (e: any) {
+        logger.error('Error in /v1/best-time-to-post:', e);
+        res.status(500).send({ error: 'Failed to get best time to post.', details: e.message });
+    }
+});
+
 
 // Export the Express app as an onRequest function
 export const api = onRequest(app);

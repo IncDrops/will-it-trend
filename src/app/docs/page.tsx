@@ -1,5 +1,5 @@
 
-import { ApiDocs } from '@/components/api-docs';
+import { ApiDocsV2 } from '@/components/api-docs-v2';
 
 export default function DocsPage() {
   return (
@@ -9,10 +9,10 @@ export default function DocsPage() {
           API Documentation
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Integrate our trend intelligence into your own application.
+          Integrate our trend intelligence and AI content tools into your own application.
         </p>
       </header>
-      <ApiDocs />
+      <ApiDocsV2 />
     </div>
   );
 }

@@ -1,52 +1,100 @@
-
 openapi: 3.0.0
 info:
   title: "WillItTrend.com API"
-  description: "Programmatic access to real-time social media trend intelligence and AI-powered predictions."
-  version: "1.0.0"
+  description: |
+    Programmatic access to real-time social media trends with AI predictions.
+    ### Tier Limits
+    - **Starter**: 1,000 requests/hour
+    - **Pro**: 10,000 requests/hour  
+    - **Enterprise**: Unlimited
+  version: "1.1.0"
 servers:
-  - url: "https://your-project-id.web.app/api"
-    description: "Production Server"
+  - url: "https://{projectId}.web.app/api"
+    description: "Production"
+    variables:
+      projectId:
+        default: "your-project-id"
+  - url: "http://localhost:5000/api"
+    description: "Emulator"
+
 paths:
   /v1/trends:
     get:
       summary: "Get Real-Time Trends"
-      description: "Fetches a list of current top trends. The number of results is based on your API tier."
+      description: |
+        Returns trending topics filtered by tier access.
+        ### Tier Differences
+        - Starter: Max 10 results  
+        - Pro: Max 50 results  
+        - Enterprise: Unlimited
       security:
         - ApiKeyAuth: []
+      parameters:
+        - name: "limit"
+          in: "query"
+          schema:
+            type: "integer"
+            minimum: 1
+            maximum: 50  # Pro tier cap
+          description: "Number of results (tier-limited)"
       responses:
         '200':
-          description: "A successful response with a list of trends."
+          description: "Successful response"
+          headers:
+            x-rate-limit-limit:
+              description: "Requests per hour allowed"
+              schema:
+                type: "integer"
+                example: 1000
+            x-rate-limit-remaining:
+              description: "Requests remaining"
+              schema:
+                type: "integer"
+                example: 42
           content:
             application/json:
               schema:
-                type: object
+                type: "object"
                 properties:
-                  message:
-                    type: string
-                    example: "Trends endpoint hit successfully."
                   data:
-                    type: array
+                    type: "array"
                     items:
-                      type: object
+                      type: "object"
                       properties:
                         trend:
-                          type: string
-                          example: "#SampleTrend"
+                          type: "string"
+                          example: "#AIInfluencers"
                         score:
-                          type: number
+                          type: "number"
                           example: 95
-        '401':
-          description: "API key is missing."
-        '403':
-          description: "Invalid or inactive API key."
+                        predicted_peak:
+                          type: "string"
+                          format: "date-time"
+                          example: "2024-08-15T00:00:00Z"
         '429':
-          description: "Rate limit exceeded."
+          description: |
+            ### Rate Limit Exceeded
+            Upgrade your tier at [WillItTrend.com/pricing](https://willittrend.com/pricing)
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+                    example: "Upgrade to Pro for more requests"
+                  upgrade_url:
+                    type: "string"
+                    example: "https://willittrend.com/pricing"
 
   /v1/predict:
     post:
-      summary: "Get AI Trend Prediction"
-      description: "Get an AI-powered prediction for a specific topic, keyword, or idea."
+      summary: "Get AI Prediction"
+      description: |
+        ### AI-Powered Insights Include:
+        - Confidence score  
+        - Key trend drivers  
+        - Platform-specific recommendations
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -54,53 +102,96 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              type: "object"
               required:
-                - topic
+                - "topic"
               properties:
                 topic:
-                  type: string
-                  description: "The topic to analyze."
+                  type: "string"
                   example: "AI-powered gardening tools"
+                platforms:
+                  type: "array"
+                  items:
+                    type: "string"
+                    enum: ["tiktok", "instagram", "twitter"]
+                  example: ["instagram"]
       responses:
         '200':
-          description: "Prediction successful."
+          description: "Prediction generated"
           content:
             application/json:
               schema:
-                type: object
+                type: "object"
                 properties:
-                  message:
-                    type: string
-                    example: "Predict endpoint hit successfully."
-                  prediction:
-                    type: object
-                    properties:
-                      confidenceScore:
-                        type: number
-                        example: 88
-                      keyDrivers:
-                        type: array
-                        items:
-                          type: string
-                        example: ["Growing interest in home automation.", "Increased focus on sustainable living."]
-                      recommendedAction:
-                        type: string
-                        example: "Target ads towards tech-savvy homeowners on Instagram and Pinterest."
-        '400':
-          description: "Bad request, 'topic' is missing."
-        '401':
-          description: "API key is missing."
-        '403':
-          description: "Invalid or inactive API key."
-        '429':
-          description: "Rate limit exceeded."
-        '500':
-          description: "Internal server error."
+                  confidenceScore:
+                    type: "number"
+                    example: 88
+                  keyDrivers:
+                    type: "array"
+                    items:
+                      type: "string"
+                    example: ["Rising interest in home automation"]
+                  recommendedAction:
+                    type: "string"
+                    example: "Post Reels with #SmartHome hashtags"
+
+  /v1/webhooks/stripe:
+    post:
+      summary: "[HIDDEN] Stripe Credit Webhook"
+      description: |
+        ### Internal Use Only
+        Processes Stripe payments to add AI credits.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                event:
+                  type: "string"
+                  example: "payment_intent.succeeded"
+                data:
+                  type: "object"
+                  properties:
+                    userId:
+                      type: "string"
+                    credits:
+                      type: "integer"
+      responses:
+        '200':
+          description: "Webhook processed"
 
 components:
   securitySchemes:
     ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: x-api-key
+      type: "apiKey"
+      in: "header"
+      name: "x-api-key"
+      description: "Get keys at [WillItTrend.com/api](https://willittrend.com/api)"
+  schemas:
+    Error:
+      type: "object"
+      properties:
+        code:
+          type: "integer"
+          example: 429
+        message:
+          type: "string"
+          example: "Rate limit exceeded"
+
+x-code-samples:
+  - lang: "python"
+    label: "Python SDK"
+    source: |
+      import requests
+      response = requests.post(
+        "https://your-project-id.web.app/api/v1/predict",
+        headers={"x-api-key": "YOUR_KEY"},
+        json={"topic": "AI influencers"}
+      )
+  - lang: "javascript"
+    label: "JavaScript SDK"
+    source: |
+      fetch("https://your-project-id.web.app/api/v1/trends?limit=5", {
+        headers: {"x-api-key": "YOUR_KEY"}
+      })

@@ -27,9 +27,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import {
-  callGenerateCaptions,
-  callFindHashtags,
-  callGetBestTimeToPost,
+  generateCaptions,
+  findHashtags,
+  getBestTimeToPost,
 } from '@/lib/actions';
 import {
   Select,
@@ -92,7 +92,7 @@ export function AiTools() {
   const onCaptionSubmit = async (values: z.infer<typeof captionSchema>) => {
     setCaptionState({ loading: true, results: [] });
     try {
-      const res = await callGenerateCaptions(values);
+      const res = await generateCaptions(values);
       if (res.success && res.data) {
         setCaptionState({ loading: false, results: res.data.captions });
       } else {
@@ -107,7 +107,7 @@ export function AiTools() {
   const onHashtagSubmit = async (values: z.infer<typeof hashtagSchema>) => {
     setHashtagState({ loading: true, results: [] });
     try {
-      const res = await callFindHashtags(values);
+      const res = await findHashtags(values);
       if (res.success && res.data) {
         setHashtagState({ loading: false, results: res.data.hashtags });
       } else {
@@ -122,7 +122,7 @@ export function AiTools() {
   const onPostingTimeSubmit = async (values: z.infer<typeof postingTimeSchema>) => {
     setPostingTimeState({ loading: true, result: null });
     try {
-      const res = await callGetBestTimeToPost(values);
+      const res = await getBestTimeToPost(values);
       if (res.success && res.data) {
         setPostingTimeState({ loading: false, result: { ...res.data, ...values } });
       } else {
