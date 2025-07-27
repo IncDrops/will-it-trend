@@ -1,8 +1,11 @@
-import { Check, Sparkles } from 'lucide-react';
+'use client';
+import { Check, Sparkles, LoaderCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Badge } from './ui/badge';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 type PricingCardProps = {
   title: string;
@@ -12,6 +15,7 @@ type PricingCardProps = {
   cta: string;
   isFeatured?: boolean;
   targetAudience: string;
+  priceId?: string;
 };
 
 export function PricingCard({
@@ -22,7 +26,51 @@ export function PricingCard({
   cta,
   isFeatured = false,
   targetAudience,
+  priceId,
 }: PricingCardProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleCheckout = async () => {
+    if (!priceId) {
+      // Handle "Contact Sales" case
+      window.location.href = 'mailto:sales@willittrend.com';
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/v1/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          priceId,
+          successUrl: `${window.location.origin}/?payment=success`,
+          cancelUrl: window.location.href
+        }),
+      });
+
+      const { url, error, details } = await response.json();
+
+      if (!response.ok) {
+        throw new Error(error || details || 'An unknown error occurred.');
+      }
+
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (e: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Checkout Error',
+        description: e.message,
+      });
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={cn('relative group transition-transform duration-300 ease-in-out', isFeatured ? 'transform md:scale-110 z-10' : 'hover:scale-105')}>
       <div className={cn(
@@ -55,9 +103,17 @@ export function PricingCard({
             size="lg"
             variant={isFeatured ? 'shiny' : 'outline'}
             className="w-full mt-8"
+            onClick={handleCheckout}
+            disabled={isLoading}
           >
-            {isFeatured && <Sparkles />}
-            {cta}
+            {isLoading ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              <>
+                {isFeatured && <Sparkles />}
+                {cta}
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>

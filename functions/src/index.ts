@@ -17,6 +17,7 @@ import { generateCaptions } from '../../src/ai/flows/generate-captions';
 import { findHashtags } from '../../src/ai/flows/find-hashtags';
 import { getBestTimeToPost } from '../../src/ai/flows/best-time-to-post';
 import * as crypto from 'crypto';
+import Stripe from 'stripe';
 
 
 // Initialize Firebase Admin SDK
@@ -24,6 +25,11 @@ if (!admin.apps.length) {
     admin.initializeApp();
 }
 const db = admin.firestore();
+
+// Initialize Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: '2024-06-20',
+});
 
 // Set global options for functions
 setGlobalOptions({ maxInstances: 10 });
@@ -33,6 +39,10 @@ app.use(express.json());
 
 // Middleware for API Key Authentication and Rate Limiting
 const authenticateAndRateLimit = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // bypass auth for checkout creation
+    if(req.path.startsWith('/v1/create-checkout-session')) {
+        return next();
+    }
     const apiKey = req.headers['x-api-key'] as string;
 
     if (!apiKey) {
@@ -110,6 +120,38 @@ const authenticateAndRateLimit = async (req: express.Request, res: express.Respo
 app.use(authenticateAndRateLimit);
 
 // --- API Endpoints ---
+
+// POST /v1/create-checkout-session
+app.post('/v1/create-checkout-session', async (req, res) => {
+    const { priceId, successUrl, cancelUrl } = req.body;
+
+    if (!priceId) {
+        return res.status(400).send({ error: 'Price ID is missing.' });
+    }
+     if (!successUrl || !cancelUrl) {
+        return res.status(400).send({ error: 'Success and cancel URLs are required.' });
+    }
+
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [{
+                price: priceId,
+                quantity: 1,
+            }],
+            mode: 'payment',
+            success_url: successUrl,
+            cancel_url: cancelUrl,
+        });
+
+        res.status(200).send({ sessionId: session.id, url: session.url });
+
+    } catch (e: any) {
+        logger.error('Stripe checkout session error:', e);
+        res.status(500).send({ error: 'Failed to create checkout session.', details: e.message });
+    }
+});
+
 
 // GET /v1/trends
 app.get('/v1/trends', (req, res) => {

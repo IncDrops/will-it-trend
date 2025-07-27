@@ -15,6 +15,7 @@ export default function PricingPage() {
       cta: 'Get Started',
       isFeatured: false,
       targetAudience: 'Solo creators',
+      priceId: 'price_1PQRrJ07gM2Zl2p9iJj9E9T8', // REPLACE WITH YOUR STARTER PRICE ID
     },
     {
       title: 'Agency Pack',
@@ -29,6 +30,7 @@ export default function PricingPage() {
       cta: 'Choose Agency',
       isFeatured: true,
       targetAudience: 'Marketing teams',
+      priceId: 'price_1PQRrJ07gM2Zl2p9jYh9H8g7', // REPLACE WITH YOUR AGENCY PRICE ID
     },
     {
       title: 'White Label',
@@ -43,6 +45,7 @@ export default function PricingPage() {
       cta: 'Contact Sales',
       isFeatured: false,
       targetAudience: 'Influencers & Agencies',
+      priceId: '', // No price ID for contact sales
     },
   ];
 
@@ -69,6 +72,7 @@ export default function PricingPage() {
             cta={plan.cta}
             isFeatured={plan.isFeatured}
             targetAudience={plan.targetAudience}
+            priceId={plan.priceId}
           />
         ))}
       </div>
