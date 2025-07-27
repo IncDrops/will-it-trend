@@ -12,6 +12,9 @@ import {onRequest} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 import * as express from "express";
+import { apiPredict } from '../../src/ai/flows/api-predict';
+import * as crypto from 'crypto';
+
 
 // Initialize Firebase Admin SDK
 admin.initializeApp();
@@ -21,6 +24,7 @@ const db = admin.firestore();
 setGlobalOptions({ maxInstances: 10 });
 
 const app = express();
+app.use(express.json());
 
 // Middleware for API Key Authentication and Rate Limiting
 const authenticateAndRateLimit = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -39,12 +43,12 @@ const authenticateAndRateLimit = async (req: express.Request, res: express.Respo
         }
 
         const keyData = apiKeyDoc.data()!;
-        const { tier, request_count, last_request_timestamp } = keyData;
+        const { tier, request_count = 0, last_request_timestamp } = keyData;
         
-        // Define Tier Limits
+        // Define Tier Limits (requests per hour)
         const tiers: { [key: string]: { limit: number } } = {
-            'starter': { limit: 1000 },
-            'pro': { limit: 10000 },
+            'starter': { limit: 10 },
+            'pro': { limit: 100 },
             'enterprise': { limit: Infinity }
         };
 
@@ -54,20 +58,22 @@ const authenticateAndRateLimit = async (req: express.Request, res: express.Respo
             return res.status(403).send({ error: 'Invalid API tier.' });
         }
         
-        // Check if usage is for the current month
+        // Check if usage is for the current hour
         const now = admin.firestore.Timestamp.now();
-        const currentMonth = now.toDate().getMonth();
-        const lastRequestMonth = last_request_timestamp?.toDate().getMonth();
+        const currentHour = now.toDate().getHours();
+        const lastRequestHour = last_request_timestamp?.toDate().getHours();
+        const isNewHour = last_request_timestamp ? now.toMillis() - last_request_timestamp.toMillis() > 3600 * 1000 : true;
+
 
         let currentRequestCount = request_count;
 
-        // Reset count if it's a new month
-        if (lastRequestMonth !== currentMonth) {
+        // Reset count if it's a new hour
+        if (isNewHour) {
             currentRequestCount = 0;
         }
 
         if (currentRequestCount >= tierLimit) {
-            return res.status(429).send({ error: 'Monthly request limit exceeded. Please upgrade your plan.' });
+            return res.status(429).send({ error: 'Hourly request limit exceeded. Please upgrade your plan.' });
         }
 
         // Log the request and update the count
@@ -84,7 +90,8 @@ const authenticateAndRateLimit = async (req: express.Request, res: express.Respo
         apiKeyDocRef.collection('usage_logs').add({
             timestamp: now,
             path: req.path,
-            method: req.method
+            method: req.method,
+            status: res.statusCode,
         });
 
         next();
@@ -103,27 +110,63 @@ app.use(authenticateAndRateLimit);
 app.get('/v1/trends', (req, res) => {
     // Placeholder for fetching real-time trends
     // You can apply tier-based result limiting here using res.locals.keyData
+    const tier = res.locals.keyData.tier;
+    let limit = 10; // Default for starter
+    if (tier === 'pro') limit = 50;
+    if (tier === 'enterprise') limit = 100; // Or some other high number
+
     res.status(200).send({
         message: 'Trends endpoint hit successfully.',
-        data: [{ trend: '#SampleTrend', score: 95 }]
+        data: [{ trend: '#SampleTrend', score: 95 }].slice(0, limit)
     });
 });
 
 // POST /v1/predict
-app.post('/v1/predict', (req, res) => {
-    // Placeholder for calling Vertex AI
-     const { input } = req.body;
-    if (!input) {
-        return res.status(400).send({ error: 'Prediction input is missing.' });
+app.post('/v1/predict', async (req, res) => {
+    const { topic } = req.body;
+    if (!topic) {
+        return res.status(400).send({ error: 'Prediction "topic" is missing.' });
     }
-    res.status(200).send({
-        message: 'Predict endpoint hit successfully.',
-        prediction: {
-            input: input,
-            trendScore: 88,
-            rationale: "AI-powered prediction based on your input."
+
+    const cacheKey = crypto.createHash('md5').update(topic).digest('hex');
+    const cacheRef = db.collection('predictions_cache').doc(cacheKey);
+
+    try {
+        // Check cache first
+        const cachedDoc = await cacheRef.get();
+        if (cachedDoc.exists) {
+            const data = cachedDoc.data();
+            const now = admin.firestore.Timestamp.now().toMillis();
+            const cacheTime = data?.timestamp.toMillis();
+            // Cache valid for 1 hour
+            if (now - cacheTime < 3600 * 1000) {
+                 logger.info(`Returning cached result for topic: ${topic}`);
+                return res.status(200).send({ 
+                    message: 'Prediction successful from cache.',
+                    prediction: data?.prediction 
+                });
+            }
         }
-    });
+        
+        // If not in cache or expired, call AI
+        logger.info(`Calling AI for topic: ${topic}`);
+        const prediction = await apiPredict({ topic });
+
+        // Save to cache
+        await cacheRef.set({
+            prediction,
+            timestamp: admin.firestore.Timestamp.now()
+        });
+        
+        res.status(200).send({
+            message: 'Predict endpoint hit successfully.',
+            prediction
+        });
+
+    } catch(e: any) {
+        logger.error('Error in /v1/predict:', e);
+        res.status(500).send({ error: 'Failed to get prediction from AI.', details: e.message });
+    }
 });
 
 // Export the Express app as an onRequest function
