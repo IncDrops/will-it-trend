@@ -112,8 +112,8 @@ export const blogData = [
         tag: 'Social Media',
         image: 'https://placehold.co/600x400',
         aiHint: 'social media',
-        offer: 'Use XYZ Tools – Get 20% Off',
-        link: '#'
+        offer: 'Read on Amazon',
+        link: 'https://amzn.to/3UusOSW'
     },
     {
         id: 2,
