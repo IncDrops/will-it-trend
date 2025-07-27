@@ -3,7 +3,9 @@
 
 import * as admin from 'firebase-admin';
 
-if (!admin.apps.length) {
+let db: admin.firestore.Firestore;
+
+if (admin.apps.length === 0) {
   try {
     admin.initializeApp();
   } catch (error: any) {
@@ -11,4 +13,6 @@ if (!admin.apps.length) {
   }
 }
 
-export const db = admin.firestore();
+db = admin.firestore();
+
+export { db };
