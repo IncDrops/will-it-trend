@@ -6,35 +6,18 @@
  *
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
-import 'dotenv/config';
+import 'dotenv/config'; // Make sure this is at the top
 import {setGlobalOptions} from "firebase-functions";
 import {onRequest} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import * as admin from "firebase-admin";
 import * as express from "express";
+import { db } from '../../src/lib/firebase-admin'; // Import the initialized db instance
 import { apiPredict } from '../../src/ai/flows/api-predict';
 import { generateCaptions } from '../../src/ai/flows/generate-captions';
 import { findHashtags } from '../../src/ai/flows/find-hashtags';
 import { getBestTimeToPost } from '../../src/ai/flows/best-time-to-post';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
-
-
-// Initialize Firebase Admin SDK
-if (!admin.apps.length) {
-    try {
-        admin.initializeApp({
-        credential: admin.credential.cert({
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        }),
-        });
-    } catch (error: any) {
-        console.error('Firebase admin initialization error', error.stack);
-    }
-}
-const db = admin.firestore();
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
@@ -84,10 +67,8 @@ const authenticateAndRateLimit = async (req: express.Request, res: express.Respo
         }
         
         // Check if usage is for the current hour
-        const now = admin.firestore.Timestamp.now();
-        const currentHour = now.toDate().getHours();
-        const lastRequestHour = last_request_timestamp?.toDate().getHours();
-        const isNewHour = last_request_timestamp ? now.toMillis() - last_request_timestamp.toMillis() > 3600 * 1000 : true;
+        const now = new Date();
+        const isNewHour = last_request_timestamp ? now.getTime() - last_request_timestamp.toDate().getTime() > 3600 * 1000 : true;
 
 
         let currentRequestCount = request_count;
@@ -193,8 +174,8 @@ app.post('/v1/predict', async (req, res) => {
         const cachedDoc = await cacheRef.get();
         if (cachedDoc.exists) {
             const data = cachedDoc.data();
-            const now = admin.firestore.Timestamp.now().toMillis();
-            const cacheTime = data?.timestamp.toMillis();
+            const now = new Date().getTime();
+            const cacheTime = data?.timestamp.toDate().getTime();
             // Cache valid for 1 hour
             if (now - cacheTime < 3600 * 1000) {
                  logger.info(`Returning cached result for topic: ${topic}`);
@@ -212,7 +193,7 @@ app.post('/v1/predict', async (req, res) => {
         // Save to cache
         await cacheRef.set({
             prediction,
-            timestamp: admin.firestore.Timestamp.now()
+            timestamp: new Date()
         });
         
         res.status(200).send({

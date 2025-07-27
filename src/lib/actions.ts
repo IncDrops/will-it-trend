@@ -1,6 +1,7 @@
 
 'use server';
 
+import { db } from '@/lib/firebase-admin';
 import { trendForecast } from '@/ai/flows/trend-forecasting';
 import { generateCaptions as genCaptions } from '@/ai/flows/generate-captions';
 import { findHashtags as findTags } from '@/ai/flows/find-hashtags';
@@ -12,8 +13,6 @@ import type { FindHashtagsInput } from '@/ai/flows/find-hashtags';
 import type { BestTimeToPostInput } from '@/ai/flows/best-time-to-post';
 
 import { headers } from 'next/headers';
-import { db } from '@/lib/firebase-admin';
-
 
 const FREE_TIER_LIMIT = 2; // 2 requests per day
 
