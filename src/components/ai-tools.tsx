@@ -36,7 +36,6 @@ import {
   SelectValue,
 } from './ui/select';
 import { Badge } from './ui/badge';
-import { useAuth } from '@/hooks/use-auth';
 
 // Schemas
 const captionSchema = z.object({
@@ -56,7 +55,6 @@ const postingTimeSchema = z.object({
 
 export function AiTools() {
   const { toast } = useToast();
-  const { user } = useAuth();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('caption');
 
@@ -98,15 +96,10 @@ export function AiTools() {
   };
 
   const makeApiCall = async (endpoint: string, body: any) => {
-    if (!user) {
-        throw new Error('You must be signed in to use the AI tools.');
-    }
-    const idToken = await user.getIdToken();
     const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`,
         },
         body: JSON.stringify(body),
     });
@@ -397,5 +390,3 @@ export function AiTools() {
     </Tabs>
   );
 }
-
-    

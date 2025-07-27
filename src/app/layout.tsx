@@ -8,7 +8,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { Footer } from '@/components/footer';
 import { cn } from '@/lib/utils';
 import { Nav } from '@/components/nav';
-import { AuthProvider } from '@/hooks/use-auth';
 import React from 'react';
 
 const spaceGrotesk = Space_Grotesk({
@@ -41,7 +40,6 @@ export default function RootLayout({
           spaceGrotesk.variable
         )}
       >
-        <AuthProvider>
           <div className="fixed inset-0 z-[-1] h-full w-full static-grid-background" />
           <div className="fixed inset-0 z-[-1] h-full w-full overflow-hidden">
               <div className="trail" style={{ left: '10%', animationDuration: '8s', animationDelay: '0s' }}></div>
@@ -56,7 +54,6 @@ export default function RootLayout({
               <Toaster />
               <Footer />
           </div>
-        </AuthProvider>
       </body>
     </html>
   );

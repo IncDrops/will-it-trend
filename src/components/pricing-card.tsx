@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/
 import { Badge } from './ui/badge';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/use-auth';
 
 type PricingCardProps = {
   title: string;
@@ -32,22 +31,11 @@ export function PricingCard({
 }: PricingCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { user, loading } = useAuth();
 
   const handleCheckout = async () => {
     if (!priceId) {
       // Handle "Contact Sales" case
       window.location.href = 'mailto:ai@incdrops.com';
-      return;
-    }
-    
-    if (!user) {
-      toast({
-        variant: 'destructive',
-        title: 'Authentication Required',
-        description: 'You must be logged in to make a purchase.',
-      });
-      // Here you might want to trigger a login modal
       return;
     }
 
@@ -62,7 +50,6 @@ export function PricingCard({
           priceId,
           successUrl: `${window.location.origin}/?payment=success`,
           cancelUrl: window.location.href,
-          userId: user.uid,
         }),
       });
 
@@ -85,7 +72,7 @@ export function PricingCard({
     }
   };
   
-  const buttonDisabled = isLoading || loading;
+  const buttonDisabled = isLoading;
 
 
   return (

@@ -28,8 +28,6 @@ setGlobalOptions({maxInstances: 10});
 
 const app = express();
 
-const FREE_TIER_LIMIT = 2; // 2 requests per day
-
 // --- Stripe Webhook ---
 // We need to use express.raw for the webhook endpoint so that the raw body is preserved.
 // Stripe requires the raw body to verify the signature.
@@ -56,21 +54,25 @@ app.post('/v1/stripe-webhook', express.raw({type: 'application/json'}), async (r
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object as Stripe.Checkout.Session;
         
-        const userId = session.metadata?.userId;
+        // IMPORTANT: Since we no longer have a userId, you will need to find the user
+        // based on the email from the checkout session and manually apply credits.
+        // This logic is commented out as it requires a user management system.
+        
+        // const customerEmail = session.customer_details?.email;
         const priceId = session.line_items?.data[0]?.price?.id;
 
-        if (!userId || !priceId) {
-            logger.error('Missing userId or priceId in checkout session metadata.', { session_id: session.id });
-            return res.status(400).send('Webhook Error: Missing metadata.');
-        }
+        // if (!customerEmail || !priceId) {
+        //     logger.error('Missing customer email or priceId in checkout session.', { session_id: session.id });
+        //     return res.status(400).send('Webhook Error: Missing metadata.');
+        // }
         
-        logger.info(`Processing successful payment for user: ${userId}, price: ${priceId}`);
+        logger.info(`Processing successful payment for price: ${priceId}`);
 
-        const result = await addCreditsToUser(userId, priceId);
+        // const result = await addCreditsToUser(userId, priceId);
         
-        if (!result.success) {
-            return res.status(500).send({ error: result.error });
-        }
+        // if (!result.success) {
+        //     return res.status(500).send({ error: result.error });
+        // }
     }
 
     res.status(200).send({ received: true });
@@ -80,37 +82,12 @@ app.post('/v1/stripe-webhook', express.raw({type: 'application/json'}), async (r
 // All other routes should use express.json()
 app.use(express.json());
 
-
-// Middleware to authenticate Firebase ID token
-const authenticateFirebaseToken = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).send({ error: 'Unauthorized: No token provided.' });
-    }
-    const idToken = authHeader.split('Bearer ')[1];
-    try {
-      const decodedToken = await getAuth().verifyIdToken(idToken);
-      (req as any).user = decodedToken; // Add user to request object
-      next();
-    } catch (error) {
-      logger.error('Error verifying Firebase ID token:', error);
-      return res.status(403).send({ error: 'Unauthorized: Invalid token.' });
-    }
-  };
-
-
 // Middleware for API Key Authentication and Rate Limiting
 const authenticateAndRateLimit = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  // This middleware is for API key users only. UI users are handled by authenticateFirebaseToken.
-  // We can add a check here to see if the user is already authenticated via Firebase token.
-  if ((req as any).user) {
-    return next();
-  }
-
   const db = getDb();
   const apiKey = req.headers['x-api-key'] as string;
 
@@ -188,11 +165,11 @@ const authenticateAndRateLimit = async (
 
 // --- API Endpoints ---
 
-// POST /v1/create-checkout-session - Public, but requires a userId
+// POST /v1/create-checkout-session - Public
 app.post(
   '/v1/create-checkout-session',
   async (req: Request, res: Response) => {
-    const {priceId, successUrl, cancelUrl, userId} = req.body;
+    const {priceId, successUrl, cancelUrl} = req.body;
 
     if (!priceId) {
       return res.status(400).send({error: 'Price ID is missing.'});
@@ -202,10 +179,7 @@ app.post(
         .status(400)
         .send({error: 'Success and cancel URLs are required.'});
     }
-     if (!userId) {
-      return res.status(400).send({ error: 'User ID is missing.' });
-    }
-
+    
     try {
       // Initialize Stripe
       const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
@@ -222,9 +196,6 @@ app.post(
         mode: 'payment',
         success_url: successUrl,
         cancel_url: cancelUrl,
-        metadata: {
-            userId: userId,
-        }
       });
 
       return res.status(200).send({sessionId: session.id, url: session.url});
@@ -238,30 +209,17 @@ app.post(
 );
 
 
-// POST /v1/trend-forecast - New endpoint for the main app UI
-app.post('/v1/trend-forecast', authenticateFirebaseToken, async (req: Request, res: Response) => {
+// POST /v1/trend-forecast - Public endpoint for the main app UI
+app.post('/v1/trend-forecast', async (req: Request, res: Response) => {
     const { input, timeHorizon } = req.body;
-    const user = (req as any).user;
     
     if (!input || !timeHorizon) {
       return res.status(400).send({ error: 'Request must include "input" and "timeHorizon".' });
     }
   
     try {
-      const db = getDb();
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-      const usageDocRef = db.collection('daily_usage').doc(`${user.uid}_${today}`);
-      const usageDoc = await usageDocRef.get();
-  
-      if (usageDoc.exists && (usageDoc.data()?.count || 0) >= FREE_TIER_LIMIT) {
-        return res.status(429).send({ error: 'You have exceeded the free daily limit of 2 trend reports.' });
-      }
-  
+      // Free tier limit has been removed as there is no user identity
       const result = await trendForecast({ input, timeHorizon });
-      
-      const currentCount = usageDoc.exists ? (usageDoc.data()?.count || 0) : 0;
-      await usageDocRef.set({ count: currentCount + 1, lastRequest: new Date() }, { merge: true });
-  
       return res.status(200).send({ success: true, data: result });
     } catch (e: any) {
       logger.error('Error in /v1/trend-forecast:', e);
@@ -334,11 +292,7 @@ app.post('/v1/predict', authenticateAndRateLimit, async (req: Request, res: Resp
   }
 });
 
-// --- AI TOOLS - Require Firebase Auth for UI usage ---
-app.use('/v1/generate-captions', authenticateFirebaseToken);
-app.use('/v1/find-hashtags', authenticateFirebaseToken);
-app.use('/v1/best-time-to-post', authenticateFirebaseToken);
-
+// --- AI TOOLS - Now public for UI usage ---
 
 // POST /v1/generate-captions
 app.post('/v1/generate-captions', async (req: Request, res: Response) => {
@@ -397,5 +351,3 @@ app.post('/v1/best-time-to-post', async (req: Request, res: Response) => {
 
 // Export the Express app as an onRequest function
 export const api = onRequest(app);
-
-    
