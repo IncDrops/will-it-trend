@@ -1,8 +1,9 @@
-import { Flame, Clock, TrendingUp, Cpu } from 'lucide-react';
+import { Flame, Cpu, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 type TrendCardProps = {
   query: string;
@@ -61,7 +62,9 @@ export function TrendCard({
           </div>
         </CardContent>
         <div className="p-6 pt-0">
-          <Button className="w-full" variant="outline">Generate Post Ideas</Button>
+          <Button className="w-full" variant="outline" asChild>
+            <Link href={`/tools?topic=${encodeURIComponent(query)}`}>Generate Post Ideas</Link>
+          </Button>
         </div>
       </Card>
   );

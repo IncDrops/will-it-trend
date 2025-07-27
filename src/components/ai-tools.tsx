@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -58,6 +59,7 @@ const postingTimeSchema = z.object({
 
 export function AiTools() {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('caption');
 
   // State for each tool
@@ -81,6 +83,14 @@ export function AiTools() {
     defaultValues: { industry: 'Tech', platform: 'TikTok' },
   });
   
+  useEffect(() => {
+    const topicFromUrl = searchParams.get('topic');
+    if (topicFromUrl) {
+      captionForm.setValue('topic', topicFromUrl);
+      setActiveTab('caption');
+    }
+  }, [searchParams, captionForm]);
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast({
@@ -136,7 +146,7 @@ export function AiTools() {
   
 
   return (
-    <Tabs defaultValue="caption" className="max-w-2xl mx-auto" onValueChange={setActiveTab}>
+    <Tabs defaultValue={activeTab} value={activeTab} className="max-w-2xl mx-auto" onValueChange={setActiveTab}>
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="caption">Caption Generator</TabsTrigger>
         <TabsTrigger value="hashtags">Hashtag Finder</TabsTrigger>
