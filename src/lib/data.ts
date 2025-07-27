@@ -57,7 +57,7 @@ export const adData = [
     title: 'The Future is Electric. Drive the Revolution.',
     description: 'Introducing the new luxury EV. Unmatched performance and design.',
     cta: 'Explore Now',
-    link: '#',
+    link: 'https://amzn.to/4o9Dowh',
     image: 'https://placehold.co/600x400',
     aiHint: 'luxury EV'
   },
