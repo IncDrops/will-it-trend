@@ -20,7 +20,9 @@ import * as crypto from 'crypto';
 
 
 // Initialize Firebase Admin SDK
-admin.initializeApp();
+if (!admin.apps.length) {
+    admin.initializeApp();
+}
 const db = admin.firestore();
 
 // Set global options for functions

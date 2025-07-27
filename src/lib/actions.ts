@@ -15,6 +15,7 @@ import type { BestTimeToPostInput } from '@/ai/flows/best-time-to-post';
 import { headers } from 'next/headers';
 import { db } from '@/lib/firebase-admin';
 
+
 const FREE_TIER_LIMIT = 2; // 2 requests per day
 
 export async function getTrendForecast(
