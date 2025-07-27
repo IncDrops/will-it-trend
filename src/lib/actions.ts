@@ -11,11 +11,36 @@ import type { GenerateCaptionsInput } from '@/ai/flows/generate-captions';
 import type { FindHashtagsInput } from '@/ai/flows/find-hashtags';
 import type { BestTimeToPostInput } from '@/ai/flows/best-time-to-post';
 
+import { headers } from 'next/headers';
+import { db } from '@/lib/firebase-admin';
+
+const FREE_TIER_LIMIT = 2; // 2 requests per day
+
 export async function getTrendForecast(
   input: TrendForecastInput
 ): Promise<{ success: boolean; data?: any; error?: string }> {
   try {
+    const headersList = headers();
+    const ip = (headersList.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
+    
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const usageDocRef = db.collection('usage').doc(`${ip}_${today}`);
+    const usageDoc = await usageDocRef.get();
+
+    if (usageDoc.exists && usageDoc.data()?.count >= FREE_TIER_LIMIT) {
+      return {
+        success: false,
+        error: 'You have exceeded the free daily limit of 2 trend reports.',
+      };
+    }
+
     const result = await trendForecast(input);
+    
+    // Increment usage count on successful forecast
+    const currentCount = usageDoc.exists ? usageDoc.data()?.count : 0;
+    await usageDocRef.set({ count: currentCount + 1, lastRequest: new Date() }, { merge: true });
+
+
     return { success: true, data: result };
   } catch (e: any) {
     console.error('Error in getTrendForecast:', e);
@@ -69,4 +94,3 @@ export async function getBestTimeToPost(
       error: e.message || 'An unexpected error occurred.',
     };
   }
-}
