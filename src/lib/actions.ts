@@ -1,7 +1,7 @@
 
 'use server';
 
-import { getFirestoreInstance } from '@/lib/firebase-admin';
+import { db } from '@/lib/firebase-admin';
 import { trendForecast } from '@/ai/flows/trend-forecasting';
 import { generateCaptions as genCaptions } from '@/ai/flows/generate-captions';
 import { findHashtags as findTags } from '@/ai/flows/find-hashtags';
@@ -20,7 +20,6 @@ export async function getTrendForecast(
   input: TrendForecastInput
 ): Promise<{ success: boolean; data?: any; error?: string }> {
   try {
-    const db = getFirestoreInstance();
     const headersList = headers();
     const ip = (headersList.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
     
