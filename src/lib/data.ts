@@ -1,43 +1,51 @@
 export const sampleTrends = [
   {
     id: 1,
-    query: '“EcoSnap” (a smart water bottle concept)',
-    timer: '3 days',
+    query: '“Eco-friendly packaging reveals”',
+    platform: 'Instagram',
+    timer: '1h',
     score: 83,
-    rationale:
-      'EcoSnap’s social buzz is rising, with strong Gen Z engagement this week.',
+    rationale: 'High engagement from sustainability-focused accounts and DIY communities.',
   },
   {
     id: 2,
-    query: '“#CodeInColor” (diversity in coding movement)',
-    timer: '1 week',
-    score: 78,
-    rationale:
-      'New campaigns and major tech influencers are boosting this hashtag’s visibility.',
+    query: '“#AIcoversongs”',
+    platform: 'TikTok',
+    timer: '24h',
+    score: 91,
+    rationale: 'Explosive virality due to novelty and celebrity voice mimicry. Low barrier to entry.',
   },
   {
     id: 3,
-    query: '“SilentAir headphones” (noise-cancelling tech)',
+    query: '“Vintage tech teardowns”',
+    platform: 'YouTube',
     timer: '7 days',
-    score: 61,
-    rationale:
-      'Interest grows in forums, but competition is fierce from established brands.',
+    score: 76,
+    rationale: 'Consistent growth in niche tech and nostalgia communities. High-quality content is key.',
   },
   {
     id: 4,
-    query: '“PetFitness app” (AI pet health tracker)',
-    timer: '5 days',
-    score: 89,
-    rationale:
-      'Pet ownership surges post-pandemic; pet-tech is set for a big wave.',
+    query: '“Main character energy” meme',
+    platform: 'Twitter',
+    timer: '3h',
+    score: 88,
+    rationale: 'Relatable concept spreading rapidly through quote tweets and commentary channels.',
   },
   {
     id: 5,
-    query: '“ZeroCharge” (wireless EV charging concept)',
-    timer: '10 days',
-    score: 73,
-    rationale:
-      'EV blogs and news outlets are covering wireless tech; media mentions climbing.',
+    query: '“Butter board” recipes',
+    platform: 'Pinterest',
+    timer: '3 days',
+    score: 68,
+    rationale: 'Steady interest in food and hosting niches, but may be nearing saturation point.',
+  },
+   {
+    id: 6,
+    query: '“Hyper-realistic cake decorating”',
+    platform: 'TikTok',
+    timer: '6h',
+    score: 95,
+    rationale: 'Visually stunning content with a high "wow" factor, driving shares and comments.',
   },
 ];
 

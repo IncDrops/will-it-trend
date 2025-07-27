@@ -6,7 +6,7 @@ export default function Loading() {
       <div className="flex items-center gap-3 text-center">
         <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
         <h1 className="text-2xl font-semibold text-foreground">
-          Loading Trendcast AI...
+          Loading WillItTrend.com...
         </h1>
       </div>
     </div>

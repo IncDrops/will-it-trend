@@ -94,11 +94,11 @@ export function InputModule({ onNewResult }: InputModuleProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-lg font-medium">
-                  Describe an idea, hashtag, or product...
+                  Enter a trend, topic, or idea...
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="e.g., A smart water bottle that tracks hydration and glows to remind you to drink."
+                    placeholder="e.g., 'Cottagecore aesthetic' or '#TikTokMadeMeBuyIt'"
                     className="resize-none text-base"
                     rows={3}
                     {...field}
@@ -109,48 +109,43 @@ export function InputModule({ onNewResult }: InputModuleProps) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="timeHorizon"
-            render={({ field }) => (
-              <FormItem className="w-full md:w-1/3">
-                <FormLabel>Time Horizon</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a time horizon" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="5 minutes">5 minutes</SelectItem>
-                    <SelectItem value="1 hour">1 hour</SelectItem>
-                    <SelectItem value="1 day">1 day</SelectItem>
-                    <SelectItem value="7 days">7 days</SelectItem>
-                    <SelectItem value="31 days">31 days</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-             <p className="text-xs text-muted-foreground">
-                No sign-up needed. No data saved except for result delivery.
-              </p>
+            <FormField
+              control={form.control}
+              name="timeHorizon"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/3">
+                  <FormLabel>Platform</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a platform" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="tiktok">TikTok</SelectItem>
+                      <SelectItem value="instagram">Instagram</SelectItem>
+                      <SelectItem value="twitter">Twitter</SelectItem>
+                      <SelectItem value="all">All Platforms</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" size="lg" variant="shiny" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <LoaderCircle className="animate-spin" />
-                  Forecasting...
+                  Predicting...
                 </>
               ) : (
                 <>
                   <Sparkles />
-                  Check Trend 🚀 $1
+                  Will This Trend?
                 </>
               )}
             </Button>

@@ -1,21 +1,19 @@
-import { Gem } from 'lucide-react';
+import { Button } from './ui/button';
+import { Sparkles } from 'lucide-react';
 
 export function Header() {
   return (
-    <header className="container mx-auto px-4 py-8 text-center">
-      <div className="inline-flex items-center gap-2 mb-4">
-        <Gem className="w-8 h-8 text-primary" />
-        <h1 className="text-4xl font-bold tracking-tighter bg-gradient-to-br from-gray-300 via-gray-500 to-gray-300 dark:from-gray-100 dark:via-gray-300 dark:to-gray-100 bg-clip-text text-transparent">
-          Trendcast AI
-        </h1>
-      </div>
-      <p className="text-2xl md:text-3xl font-headline font-medium max-w-3xl mx-auto">
-        What’s the next big thing? <span className="text-gradient">Ask our AI.</span>
+    <header className="container mx-auto px-4 py-16 text-center">
+       <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+        See Viral Trends Before They Blow Up—<br/>Then <span className="text-gradient">Ride the Wave</span>
+      </h1>
+      <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+        WillItTrend.com tracks rising trends in real-time and gives you AI-powered strategies to capitalize on them—no guessing, no sign-up.
       </p>
-      <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-        Get instant, AI-powered trend forecasts for ideas, hashtags, products,
-        memes, and more.
-      </p>
+       <Button size="lg" variant="shiny">
+        <Sparkles className="mr-2" />
+        Get Started (Free Trend Report)
+      </Button>
     </header>
   );
 }

@@ -1,19 +1,20 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Footer } from '@/components/footer';
 import { cn } from '@/lib/utils';
+import { Nav } from '@/components/nav';
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
-  title: 'Trendcast AI - Predict the Next Big Thing',
+  title: 'Will It Trend? - See Viral Trends Before They Blow Up',
   description:
-    'Get instant, AI-powered trend forecasts for ideas, hashtags, products, memes, and more.',
+    'Track rising trends in real-time and get AI-powered strategies to capitalize on them—no guessing, no sign-up.',
 };
 
 export default function RootLayout({
@@ -26,9 +27,10 @@ export default function RootLayout({
       <body
         className={cn(
           'min-h-screen bg-background font-body antialiased',
-          spaceGrotesk.variable
+          inter.variable
         )}
       >
+        <Nav />
         {children}
         <Toaster />
         <Footer />
