@@ -16,9 +16,10 @@ import {apiPredict} from './ai/flows/api-predict';
 import {generateCaptions} from './ai/flows/generate-captions';
 import {findHashtags} from './ai/flows/find-hashtags';
 import {getBestTimeToPost} from './ai/flows/best-time-to-post';
+import {trendForecast} from './ai/flows/trend-forecasting';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
-import {db} from './firebase-admin';
+import { getDb, getAuth } from './firebase-admin';
 import { addCreditsToUser } from './services/users';
 
 
@@ -27,6 +28,7 @@ setGlobalOptions({maxInstances: 10});
 
 const app = express();
 
+const FREE_TIER_LIMIT = 2; // 2 requests per day
 
 // --- Stripe Webhook ---
 // We need to use express.raw for the webhook endpoint so that the raw body is preserved.
@@ -78,16 +80,42 @@ app.post('/v1/stripe-webhook', express.raw({type: 'application/json'}), async (r
 // All other routes should use express.json()
 app.use(express.json());
 
+
+// Middleware to authenticate Firebase ID token
+const authenticateFirebaseToken = async (req: Request, res: Response, next: NextFunction) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).send({ error: 'Unauthorized: No token provided.' });
+    }
+    const idToken = authHeader.split('Bearer ')[1];
+    try {
+      const decodedToken = await getAuth().verifyIdToken(idToken);
+      (req as any).user = decodedToken; // Add user to request object
+      next();
+    } catch (error) {
+      logger.error('Error verifying Firebase ID token:', error);
+      return res.status(403).send({ error: 'Unauthorized: Invalid token.' });
+    }
+  };
+
+
 // Middleware for API Key Authentication and Rate Limiting
 const authenticateAndRateLimit = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const db = getDb();
   // bypass auth for checkout creation and webhooks
   if (req.path.startsWith('/v1/create-checkout-session') || req.path.startsWith('/api/v1/stripe-webhook')) {
     return next();
   }
+
+  // Bypass API key check for trend-forecast route, which uses Firebase Auth
+  if (req.path === '/v1/trend-forecast') {
+      return next();
+  }
+
   const apiKey = req.headers['x-api-key'] as string;
 
   if (!apiKey) {
@@ -215,6 +243,38 @@ app.post(
   }
 );
 
+
+// POST /v1/trend-forecast - New endpoint for the main app UI
+app.post('/v1/trend-forecast', authenticateFirebaseToken, async (req: Request, res: Response) => {
+    const { input, timeHorizon } = req.body;
+    const user = (req as any).user;
+    
+    if (!input || !timeHorizon) {
+      return res.status(400).send({ error: 'Request must include "input" and "timeHorizon".' });
+    }
+  
+    try {
+      const db = getDb();
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const usageDocRef = db.collection('daily_usage').doc(`${user.uid}_${today}`);
+      const usageDoc = await usageDocRef.get();
+  
+      if (usageDoc.exists && (usageDoc.data()?.count || 0) >= FREE_TIER_LIMIT) {
+        return res.status(429).send({ error: 'You have exceeded the free daily limit of 2 trend reports.' });
+      }
+  
+      const result = await trendForecast({ input, timeHorizon });
+      
+      const currentCount = usageDoc.exists ? (usageDoc.data()?.count || 0) : 0;
+      await usageDocRef.set({ count: currentCount + 1, lastRequest: new Date() }, { merge: true });
+  
+      return res.status(200).send({ success: true, data: result });
+    } catch (e: any) {
+      logger.error('Error in /v1/trend-forecast:', e);
+      return res.status(500).send({ success: false, error: e.message || 'An unexpected error occurred.' });
+    }
+  });
+
 // GET /v1/trends
 app.get('/v1/trends', (req: Request, res: Response) => {
   // Placeholder for fetching real-time trends
@@ -237,6 +297,7 @@ app.post('/v1/predict', async (req: Request, res: Response) => {
     return res.status(400).send({error: 'Prediction "topic" is missing.'});
   }
 
+  const db = getDb();
   const cacheKey = crypto.createHash('md5').update(topic).digest('hex');
   const cacheRef = db.collection('predictions_cache').doc(cacheKey);
 

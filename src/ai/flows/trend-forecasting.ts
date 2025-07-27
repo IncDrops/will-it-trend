@@ -44,9 +44,7 @@ Consider the following:
 - Potential for virality
 - Novelty and uniqueness
 
-Output a trend score (0-100) and a rationale for the score.
-Trend Score: {{trendScore}}
-Rationale: {{rationale}}`,
+Output a trend score (0-100) and a rationale for the score.`,
 });
 
 const trendForecastFlow = ai.defineFlow(
