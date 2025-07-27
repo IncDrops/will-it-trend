@@ -1,7 +1,7 @@
 
 'use server';
 
-import { db } from '@/lib/firebase-admin';
+import { getDb } from '@/lib/firebase-admin';
 import { trendForecast } from '@/ai/flows/trend-forecasting';
 import { generateCaptions as genCaptions } from '@/ai/flows/generate-captions';
 import { findHashtags as findTags } from '@/ai/flows/find-hashtags';
@@ -23,6 +23,7 @@ export async function getTrendForecast(
     const headersList = headers();
     const ip = (headersList.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
     
+    const db = getDb();
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const usageDocRef = db.collection('usage').doc(`${ip}_${today}`);
     const usageDoc = await usageDocRef.get();
