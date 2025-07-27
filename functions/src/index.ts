@@ -21,11 +21,6 @@ import Stripe from 'stripe';
 import {db} from './firebase-admin';
 
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2024-06-20',
-});
-
 // Set global options for functions
 setGlobalOptions({maxInstances: 10});
 
@@ -136,6 +131,10 @@ app.post(
     }
 
     try {
+      // Initialize Stripe
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+        apiVersion: '2024-06-20',
+      });
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
