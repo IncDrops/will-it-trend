@@ -142,8 +142,8 @@ export const blogData = [
         tag: 'Sustainability',
         image: 'https://placehold.co/600x400',
         aiHint: 'sustainable tech',
-        offer: 'Invest in Green Tech',
-        link: '#'
+        offer: 'Shop Smart Gardens',
+        link: 'https://amzn.to/3J2ZEYu'
     },
     {
         id: 5,
