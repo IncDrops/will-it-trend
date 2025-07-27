@@ -5,9 +5,6 @@ import * as admin from 'firebase-admin';
 
 let db: admin.firestore.Firestore;
 
-// Check if we are in the Firebase Emulator environment
-const isEmulating = process.env.FUNCTIONS_EMULATOR === 'true';
-
 if (admin.apps.length === 0) {
   try {
     // Initialize without credentials in the emulator,
