@@ -38,6 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Badge } from './ui/badge';
 
 // Schemas
 const captionSchema = z.object({
