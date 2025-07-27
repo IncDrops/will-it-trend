@@ -1,3 +1,4 @@
+
 import { PricingCard } from '@/components/pricing-card';
 import { Check } from 'lucide-react';
 
@@ -15,7 +16,7 @@ export default function PricingPage() {
       cta: 'Get Started',
       isFeatured: false,
       targetAudience: 'Solo creators',
-      priceId: 'price_1PQRrJ07gM2Zl2p9iJj9E9T8', // REPLACE WITH YOUR STARTER PRICE ID
+      priceId: 'price_1RpMQpHK4G9ZDA0F4OJxhrD6',
     },
     {
       title: 'Pro AI Pack',
