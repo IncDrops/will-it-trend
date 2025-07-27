@@ -4,40 +4,32 @@
 /node_modules
 /.pnp
 .pnp.js
-.yarn/install-state.gz
 
 # Testing
 /coverage
 
-# Next.js
+# Next.js build
 /.next/
 /out/
 
 # Production
 /build
+/dist
 
 # Misc
 .DS_Store
 *.pem
 
-# debug
+# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-firebase-debug.log
-firebase-debug.*.log
+pnpm-debug.log*
 
 # Local Environment Variables
-.env
 .env*.local
-*.env
+.env
 
-# Firebase
-.firebase
-hosting.details
-
-# Functions
-functions/node_modules
-functions/lib
-aitrends/node_modules
-aitrends/lib
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
