@@ -24,10 +24,11 @@ export function PricingCard({
   targetAudience,
 }: PricingCardProps) {
   return (
-    <div className={cn('relative group transition-transform duration-300 ease-in-out hover:scale-105', isFeatured && 'transform md:scale-110 z-10')}>
-      {isFeatured && (
-        <div className="absolute -inset-1.5 bg-gradient-animated rounded-2xl blur-lg" />
-      )}
+    <div className={cn('relative group transition-transform duration-300 ease-in-out', isFeatured ? 'transform md:scale-110 z-10' : 'hover:scale-105')}>
+      <div className={cn(
+          "absolute -inset-1.5 bg-gradient-animated rounded-2xl blur-lg opacity-0 transition-opacity duration-300 group-hover:opacity-75",
+          isFeatured && "opacity-75"
+        )} />
       <Card className="glassmorphic rounded-2xl h-full flex flex-col relative overflow-hidden transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20">
         {isFeatured && (
           <Badge className="absolute top-4 right-4" variant="default">Most Popular</Badge>
