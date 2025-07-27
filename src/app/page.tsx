@@ -16,19 +16,24 @@ type TrendResult = TrendForecastOutput & {
 
 export default function Home() {
   const [results, setResults] = useState<TrendResult[]>([]);
+  const [shuffledCards, setShuffledCards] = useState<any[]>([]);
 
   const handleNewResult = (result: TrendResult) => {
     setResults((prevResults) => [result, ...prevResults]);
   };
   
   const allCards = useMemo(() => {
-    const cards: { type: 'trend' | 'sample'; data: any; id: string; }[] = [
+    return [
       ...sampleTrends.map(t => ({ type: 'sample' as const, data: t, id: `sample-${t.id}`})),
       ...results.map(r => ({ type: 'trend' as const, data: r, id: `result-${r.id}`})),
-    ].sort(() => Math.random() - 0.5); // Randomize card order for dynamic layout
-    
-    return cards;
+    ];
   }, [results]);
+
+  useEffect(() => {
+    // Shuffle cards only on the client-side to avoid hydration mismatch
+    setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
+  }, [allCards]);
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -69,7 +74,7 @@ export default function Home() {
             its projected score, and the rationale behind it.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-            {allCards.map((card) => (
+            {shuffledCards.map((card) => (
                 <TrendCard
                   key={card.id}
                   query={card.data.query}
