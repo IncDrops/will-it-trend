@@ -105,17 +105,13 @@ const authenticateAndRateLimit = async (
   res: Response,
   next: NextFunction
 ) => {
-  const db = getDb();
-  // bypass auth for checkout creation and webhooks
-  if (req.path.startsWith('/v1/create-checkout-session') || req.path.startsWith('/api/v1/stripe-webhook')) {
+  // This middleware is for API key users only. UI users are handled by authenticateFirebaseToken.
+  // We can add a check here to see if the user is already authenticated via Firebase token.
+  if ((req as any).user) {
     return next();
   }
 
-  // Bypass API key check for trend-forecast route, which uses Firebase Auth
-  if (req.path === '/v1/trend-forecast') {
-      return next();
-  }
-
+  const db = getDb();
   const apiKey = req.headers['x-api-key'] as string;
 
   if (!apiKey) {
@@ -190,11 +186,9 @@ const authenticateAndRateLimit = async (
   }
 };
 
-app.use(authenticateAndRateLimit);
-
 // --- API Endpoints ---
 
-// POST /v1/create-checkout-session
+// POST /v1/create-checkout-session - Public, but requires a userId
 app.post(
   '/v1/create-checkout-session',
   async (req: Request, res: Response) => {
@@ -275,8 +269,8 @@ app.post('/v1/trend-forecast', authenticateFirebaseToken, async (req: Request, r
     }
   });
 
-// GET /v1/trends
-app.get('/v1/trends', (req: Request, res: Response) => {
+// GET /v1/trends - API Key Auth
+app.get('/v1/trends', authenticateAndRateLimit, (req: Request, res: Response) => {
   // Placeholder for fetching real-time trends
   // You can apply tier-based result limiting here using res.locals.keyData
   const tier = res.locals.keyData.tier;
@@ -290,8 +284,8 @@ app.get('/v1/trends', (req: Request, res: Response) => {
   });
 });
 
-// POST /v1/predict
-app.post('/v1/predict', async (req: Request, res: Response) => {
+// POST /v1/predict - API Key Auth
+app.post('/v1/predict', authenticateAndRateLimit, async (req: Request, res: Response) => {
   const {topic} = req.body;
   if (!topic) {
     return res.status(400).send({error: 'Prediction "topic" is missing.'});
@@ -339,6 +333,12 @@ app.post('/v1/predict', async (req: Request, res: Response) => {
       .send({error: 'Failed to get prediction from AI.', details: e.message});
   }
 });
+
+// --- AI TOOLS - Require Firebase Auth for UI usage ---
+app.use('/v1/generate-captions', authenticateFirebaseToken);
+app.use('/v1/find-hashtags', authenticateFirebaseToken);
+app.use('/v1/best-time-to-post', authenticateFirebaseToken);
+
 
 // POST /v1/generate-captions
 app.post('/v1/generate-captions', async (req: Request, res: Response) => {
@@ -397,3 +397,5 @@ app.post('/v1/best-time-to-post', async (req: Request, res: Response) => {
 
 // Export the Express app as an onRequest function
 export const api = onRequest(app);
+
+    

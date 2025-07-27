@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -28,11 +29,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import {
-  generateCaptions,
-  findHashtags,
-  getBestTimeToPost,
-} from '@/lib/actions';
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -40,6 +36,7 @@ import {
   SelectValue,
 } from './ui/select';
 import { Badge } from './ui/badge';
+import { useAuth } from '@/hooks/use-auth';
 
 // Schemas
 const captionSchema = z.object({
@@ -59,6 +56,7 @@ const postingTimeSchema = z.object({
 
 export function AiTools() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('caption');
 
@@ -87,9 +85,10 @@ export function AiTools() {
     const topicFromUrl = searchParams.get('topic');
     if (topicFromUrl) {
       captionForm.setValue('topic', topicFromUrl);
+      hashtagForm.setValue('topic', topicFromUrl);
       setActiveTab('caption');
     }
-  }, [searchParams, captionForm]);
+  }, [searchParams, captionForm, hashtagForm]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -98,16 +97,32 @@ export function AiTools() {
     });
   };
 
+  const makeApiCall = async (endpoint: string, body: any) => {
+    if (!user) {
+        throw new Error('You must be signed in to use the AI tools.');
+    }
+    const idToken = await user.getIdToken();
+    const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`,
+        },
+        body: JSON.stringify(body),
+    });
+    const result = await response.json();
+    if (!response.ok) {
+        throw new Error(result.error || result.details || 'An unknown error occurred.');
+    }
+    return result;
+  }
+
   // Handlers
   const onCaptionSubmit = async (values: z.infer<typeof captionSchema>) => {
     setCaptionState({ loading: true, results: [] });
     try {
-      const res = await generateCaptions(values);
-      if (res.success && res.data) {
-        setCaptionState({ loading: false, results: res.data.captions });
-      } else {
-        throw new Error(res.error || 'Failed to generate captions.');
-      }
+      const res = await makeApiCall('/api/v1/generate-captions', values);
+      setCaptionState({ loading: false, results: res.captions });
     } catch (e: any) {
       toast({ variant: 'destructive', title: 'Error', description: e.message });
       setCaptionState({ loading: false, results: [] });
@@ -117,12 +132,8 @@ export function AiTools() {
   const onHashtagSubmit = async (values: z.infer<typeof hashtagSchema>) => {
     setHashtagState({ loading: true, results: [] });
     try {
-      const res = await findHashtags(values);
-      if (res.success && res.data) {
-        setHashtagState({ loading: false, results: res.data.hashtags });
-      } else {
-        throw new Error(res.error || 'Failed to find hashtags.');
-      }
+      const res = await makeApiCall('/api/v1/find-hashtags', values);
+      setHashtagState({ loading: false, results: res.hashtags });
     } catch (e: any) {
       toast({ variant: 'destructive', title: 'Error', description: e.message });
       setHashtagState({ loading: false, results: [] });
@@ -132,12 +143,8 @@ export function AiTools() {
   const onPostingTimeSubmit = async (values: z.infer<typeof postingTimeSchema>) => {
     setPostingTimeState({ loading: true, result: null });
     try {
-      const res = await getBestTimeToPost(values);
-      if (res.success && res.data) {
-        setPostingTimeState({ loading: false, result: { ...res.data, ...values } });
-      } else {
-        throw new Error(res.error || 'Failed to get recommendation.');
-      }
+      const res = await makeApiCall('/api/v1/best-time-to-post', values);
+      setPostingTimeState({ loading: false, result: { ...res, ...values } });
     } catch (e: any) {
       toast({ variant: 'destructive', title: 'Error', description: e.message });
       setPostingTimeState({ loading: false, result: null });
@@ -390,3 +397,5 @@ export function AiTools() {
     </Tabs>
   );
 }
+
+    
