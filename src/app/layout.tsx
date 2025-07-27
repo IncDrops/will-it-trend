@@ -30,10 +30,13 @@ export default function RootLayout({
           spaceGrotesk.variable
         )}
       >
-        <Nav />
-        {children}
-        <Toaster />
-        <Footer />
+        <div className="animated-grid-background fixed inset-0 z-[-1] h-screen w-full" />
+        <div className="relative z-10">
+            <Nav />
+            {children}
+            <Toaster />
+            <Footer />
+        </div>
       </body>
     </html>
   );

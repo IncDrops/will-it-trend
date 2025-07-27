@@ -25,8 +25,7 @@ export function AdCard({
   aiHint,
 }: AdCardProps) {
   return (
-    <div className="relative group overflow-hidden rounded-2xl">
-      <div className="absolute inset-0 z-0 animate-border-spin rounded-[inherit] bg-[linear-gradient(110deg,hsl(var(--primary)),45%,hsl(var(--accent)),55%,hsl(var(--primary)))] bg-[length:200%_100%]" />
+    <div className="relative group overflow-hidden rounded-2xl h-full">
       <Card className="relative z-10 glassmorphic rounded-xl h-full m-0.5">
         <CardContent className="p-6 flex flex-col h-full">
           <Badge variant="secondary" className="self-start mb-4">{industry}</Badge>

@@ -68,7 +68,7 @@
   }
   
   .bg-gradient-animated {
-    @apply bg-gradient-to-br from-primary via-accent to-primary animate-gradient;
+    @apply bg-gradient-to-br from-primary via-accent to-primary;
     background-size: 200% 200%;
   }
 }
@@ -85,12 +85,34 @@
   }
 }
 
-@keyframes border-spin {
-  100% {
-    transform: rotate(360deg);
+@keyframes animate-grid {
+  from {
+    background-position-y: 0;
+  }
+  to {
+    background-position-y: -64px;
   }
 }
 
-.animate-border-spin {
-  animation: border-spin 3s linear infinite;
+.animated-grid-background {
+  --grid-color: hsl(var(--primary) / 0.15);
+  --dot-color: hsl(var(--foreground) / 0.1);
+  animation: animate-grid 10s linear infinite;
+  background-image: linear-gradient(
+      to bottom,
+      transparent 62px,
+      var(--grid-color) 62px,
+      var(--grid-color) 63px,
+      transparent 63px
+    ),
+    linear-gradient(
+      to right,
+      transparent 62px,
+      var(--grid-color) 62px,
+      var(--grid-color) 63px,
+      transparent 63px
+    ),
+    radial-gradient(circle at center, var(--dot-color) 1px, transparent 1px);
+  background-size: 64px 64px, 64px 64px, 64px 64px;
+  background-color: transparent;
 }
