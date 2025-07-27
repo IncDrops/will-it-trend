@@ -7,10 +7,15 @@ import { Header } from '@/components/header';
 import { InputModule } from '@/components/input-module';
 import { TrendCard } from '@/components/trend-card';
 import { ScrollAnimate } from '@/components/scroll-animate';
-import { CombinedCard } from '@/components/combined-card';
-import { sampleTrends, contentData } from '@/lib/data';
-import { Bot, Building, PenTool } from 'lucide-react';
+import { sampleTrends, contentData, type ContentItem } from '@/lib/data';
+import { Bot, Building, PenTool, Car, TrendingUp, Cpu, Brain, Leaf, Briefcase, Laptop, Smartphone, Tablet, TrendingUpIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PageSizeCard } from '@/components/page-size-card';
+import { InstagramPostCard } from '@/components/instagram-post-card';
+import { AdCard } from '@/components/ad-card';
+import { PhoneSizeCard } from '@/components/phone-size-card';
+import { BlogCard } from '@/components/blog-card';
+import { IconSeparator } from '@/components/icon-separator';
 
 type TrendResult = TrendForecastOutput & {
   id: string;
@@ -37,6 +42,20 @@ export default function Home() {
     // Shuffle cards only on the client-side to avoid hydration mismatch
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
   }, [allCards]);
+
+  const [
+    autoAd,
+    socialBlog,
+    techAd,
+    gadgetBlog,
+    mobileAd,
+    marketingBlog,
+    softwareAd,
+    sustainBlog,
+    financeAd,
+    genZBlog,
+  ] = contentData;
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -127,16 +146,58 @@ export default function Home() {
                 Go beyond the data with curated articles and partnership opportunities to grow your brand.
             </p>
           </ScrollAnimate>
-            <div className="flex flex-col gap-8">
-                {contentData.map((item) => (
-                    <ScrollAnimate key={item.id}>
-                        <CombinedCard item={item} />
-                    </ScrollAnimate>
-                ))}
+          <div className="flex flex-col items-center gap-8">
+            {autoAd.type === 'ad' && <PageSizeCard item={autoAd} />}
+            <IconSeparator icon={Car} />
+
+            {socialBlog.type === 'blog' && <InstagramPostCard item={socialBlog} />}
+            <IconSeparator icon={TrendingUp} />
+
+            {techAd.type === 'ad' && (
+              <div className="w-full max-w-4xl"><AdCard {...techAd} /></div>
+            )}
+            <IconSeparator icon={Cpu} />
+
+            {gadgetBlog.type === 'blog' && <PageSizeCard item={gadgetBlog} />}
+            <IconSeparator icon={Laptop} />
+            
+            {mobileAd.type === 'ad' && <PhoneSizeCard item={mobileAd} />}
+            <IconSeparator icons={[Smartphone, Tablet, Laptop]} />
+
+            {marketingBlog.type === 'blog' && (
+               <div className="w-full max-w-4xl"> <BlogCard {...marketingBlog}/> </div>
+            )}
+            <IconSeparator icon={Brain} />
+            
+            <div className="flex w-full items-center justify-center gap-4">
+                <Leaf className="w-8 h-8 text-primary/70" />
+                {softwareAd.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCard {...softwareAd} /></div>}
+                <Briefcase className="w-8 h-8 text-primary/70" />
             </div>
+             <IconSeparator icon={Leaf} />
+            
+             {sustainBlog.type === 'blog' && (
+                 <div className="w-full max-w-4xl"> <BlogCard {...sustainBlog}/> </div>
+            )}
+             <IconSeparator icon={Laptop} />
+
+            {financeAd.type === 'ad' && (
+                <div className="w-full max-w-2xl aspect-square"><AdCard {...financeAd} /></div>
+            )}
+            <IconSeparator icon={TrendingUpIcon} />
+
+
+            {genZBlog.type === 'blog' && <PageSizeCard item={genZBlog} />}
+            
+            <div className="mt-16 flex flex-col items-center space-y-2">
+                <TrendingUpIcon className="h-8 w-8 text-primary" />
+                <span className="text-xl font-bold">WillItTrend.com</span>
+            </div>
+          </div>
         </section>
 
       </main>
     </div>
   );
 }
+

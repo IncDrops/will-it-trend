@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import './globals.css';
@@ -31,7 +32,7 @@ export default function RootLayout({
         )}
       >
         <div className="fixed inset-0 z-[-1] h-full w-full static-grid-background" />
-        <div className="fixed inset-0 z-[-1] h-full w-full overflow-hidden">
+         <div className="fixed inset-0 z-[-1] h-full w-full overflow-hidden">
             <div className="trail" style={{ left: '10%', animationDuration: '8s', animationDelay: '0s' }}></div>
             <div className="trail" style={{ left: '25%', animationDuration: '6s', animationDelay: '-2s' }}></div>
             <div className="trail" style={{ left: '50%', animationDuration: '7s', animationDelay: '-4s' }}></div>
