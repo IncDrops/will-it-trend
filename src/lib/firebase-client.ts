@@ -6,13 +6,13 @@ import { getAuth } from 'firebase/auth';
 
 // IMPORTANT: Replace this with your actual Firebase config from the Firebase console
 const firebaseConfig = {
-  "apiKey": "AIzaSyDN4rO3FpQGqJAEfrQdYr3T4fAd1FpDFoM",
-  "authDomain": "will-it-trend16.firebaseapp.com",
-  "projectId": "will-it-trend16",
-  "storageBucket": "will-it-trend16.appspot.com",
-  "messagingSenderId": "1002442340537",
-  "appId": "1:1002442340537:web:f8373a6a4c2813c909c259",
-  "measurementId": "G-5Z3B6E8X6E"
+  "apiKey": "AIzaSyAhHU9N7V5sIy3hFbiaNs7iaicibDp_WIE",
+  "authDomain": "launch16304.firebaseapp.com",
+  "projectId": "launch16304launch16304.firebasestorage.app",
+  "storageBucket": "launch16304.firebasestorage.app",
+  "messagingSenderId": "451925187787",
+  "appId": "1:451925187787:web:70e0acb65cba356f8fcf4e",
+  "measurementId": ""
 };
 
 // Initialize Firebase
