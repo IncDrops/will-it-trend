@@ -152,7 +152,7 @@ export const blogData = [
         tag: 'Culture',
         image: 'https://placehold.co/600x400',
         aiHint: 'gen z fashion',
-        offer: 'Read the Full Report',
-        link: '#'
+        offer: 'Shop Vlogging Kits',
+        link: 'https://amzn.to/4meDf94'
     }
 ];
