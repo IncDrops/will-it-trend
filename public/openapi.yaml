@@ -1,0 +1,106 @@
+
+openapi: 3.0.0
+info:
+  title: "WillItTrend.com API"
+  description: "Programmatic access to real-time social media trend intelligence and AI-powered predictions."
+  version: "1.0.0"
+servers:
+  - url: "https://your-project-id.web.app/api"
+    description: "Production Server"
+paths:
+  /v1/trends:
+    get:
+      summary: "Get Real-Time Trends"
+      description: "Fetches a list of current top trends. The number of results is based on your API tier."
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: "A successful response with a list of trends."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Trends endpoint hit successfully."
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        trend:
+                          type: string
+                          example: "#SampleTrend"
+                        score:
+                          type: number
+                          example: 95
+        '401':
+          description: "API key is missing."
+        '403':
+          description: "Invalid or inactive API key."
+        '429':
+          description: "Rate limit exceeded."
+
+  /v1/predict:
+    post:
+      summary: "Get AI Trend Prediction"
+      description: "Get an AI-powered prediction for a specific topic, keyword, or idea."
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - topic
+              properties:
+                topic:
+                  type: string
+                  description: "The topic to analyze."
+                  example: "AI-powered gardening tools"
+      responses:
+        '200':
+          description: "Prediction successful."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Predict endpoint hit successfully."
+                  prediction:
+                    type: object
+                    properties:
+                      confidenceScore:
+                        type: number
+                        example: 88
+                      keyDrivers:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Growing interest in home automation.", "Increased focus on sustainable living."]
+                      recommendedAction:
+                        type: string
+                        example: "Target ads towards tech-savvy homeowners on Instagram and Pinterest."
+        '400':
+          description: "Bad request, 'topic' is missing."
+        '401':
+          description: "API key is missing."
+        '403':
+          description: "Invalid or inactive API key."
+        '429':
+          description: "Rate limit exceeded."
+        '500':
+          description: "Internal server error."
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
