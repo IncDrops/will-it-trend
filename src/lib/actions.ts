@@ -1,6 +1,5 @@
 
 'use server';
-import 'dotenv/config';
 
 import { trendForecast } from '@/ai/flows/trend-forecasting';
 import { generateCaptions as genCaptions } from '@/ai/flows/generate-captions';

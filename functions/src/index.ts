@@ -22,7 +22,17 @@ import Stripe from 'stripe';
 
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
-    admin.initializeApp();
+    try {
+        admin.initializeApp({
+        credential: admin.credential.cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        }),
+        });
+    } catch (error: any) {
+        console.error('Firebase admin initialization error', error.stack);
+    }
 }
 const db = admin.firestore();
 
