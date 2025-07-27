@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -5,8 +6,11 @@ import { type TrendForecastOutput } from '@/ai/flows/trend-forecasting';
 import { Header } from '@/components/header';
 import { InputModule } from '@/components/input-module';
 import { TrendCard } from '@/components/trend-card';
+import { AdCard } from '@/components/ad-card';
+import { BlogCard } from '@/components/blog-card';
 import { Button } from '@/components/ui/button';
-import { sampleTrends } from '@/lib/data';
+import { sampleTrends, adData, blogData } from '@/lib/data';
+import { Bot, Building, PenTool } from 'lucide-react';
 
 type TrendResult = TrendForecastOutput & {
   id: string;
@@ -17,6 +21,7 @@ type TrendResult = TrendForecastOutput & {
 export default function Home() {
   const [results, setResults] = useState<TrendResult[]>([]);
   const [shuffledCards, setShuffledCards] = useState<any[]>([]);
+  const [shuffledContent, setShuffledContent] = useState<any[]>([]);
 
   const handleNewResult = (result: TrendResult) => {
     setResults((prevResults) => [result, ...prevResults]);
@@ -29,10 +34,18 @@ export default function Home() {
     ];
   }, [results]);
 
+  const allContent = useMemo(() => {
+    return [
+      ...adData.map(ad => ({ type: 'ad' as const, data: ad, id: `ad-${ad.id}` })),
+      ...blogData.map(blog => ({ type: 'blog' as const, data: blog, id: `blog-${blog.id}` })),
+    ];
+  }, []);
+
   useEffect(() => {
     // Shuffle cards only on the client-side to avoid hydration mismatch
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
-  }, [allCards]);
+    setShuffledContent([...allContent].sort(() => Math.random() - 0.5));
+  }, [allCards, allContent]);
 
 
   return (
@@ -64,6 +77,25 @@ export default function Home() {
                 </div>
             </div>
         </section>
+        
+        <section className="mt-24 text-center">
+          <h3 className="text-lg font-semibold text-muted-foreground">Trusted by over 10,000+ creators and brands</h3>
+           <div className="mt-8 flex justify-center items-center gap-x-8 md:gap-x-12 lg:gap-x-16 grayscale opacity-60">
+                <div className="flex items-center gap-2">
+                    <Bot size={24} />
+                    <span className="text-xl font-bold">AI Innovators</span>
+                </div>
+                 <div className="flex items-center gap-2">
+                    <Building size={24} />
+                    <span className="text-xl font-bold">Agency Co.</span>
+                </div>
+                 <div className="flex items-center gap-2">
+                    <PenTool size={24} />
+                    <span className="text-xl font-bold">Creator Hub</span>
+                </div>
+            </div>
+        </section>
+
 
         <section className="mt-24">
           <h2 className="text-3xl font-bold text-center mb-2">
@@ -86,6 +118,26 @@ export default function Home() {
                 />
             ))}
           </div>
+        </section>
+        
+        <section className="mt-24">
+            <h2 className="text-3xl font-bold text-center mb-2">
+                Strategy & Insights
+            </h2>
+            <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
+                Go beyond the data with curated articles and partnership opportunities to grow your brand.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+                {shuffledContent.map(content => {
+                    if (content.type === 'ad') {
+                        return <AdCard key={content.id} {...content.data} />
+                    }
+                    if (content.type === 'blog') {
+                         return <BlogCard key={content.id} {...content.data} />
+                    }
+                    return null;
+                })}
+            </div>
         </section>
 
       </main>
