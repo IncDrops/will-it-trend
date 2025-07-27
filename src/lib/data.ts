@@ -1,3 +1,4 @@
+
 export const sampleTrends = [
   {
     id: 1,
@@ -122,7 +123,7 @@ export const blogData = [
         image: 'https://placehold.co/600x400',
         aiHint: 'futuristic gadget',
         offer: 'Shop on Amazon',
-        link: '#'
+        link: 'https://amzn.to/456j3iN'
     },
     {
         id: 3,
