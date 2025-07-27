@@ -16,11 +16,17 @@ const FindHashtagsInputSchema = z.object({
 export type FindHashtagsInput = z.infer<typeof FindHashtagsInputSchema>;
 
 const FindHashtagsOutputSchema = z.object({
-  hashtags: z.array(z.string()).describe('A list of 10-15 relevant hashtags, including a mix of popular and niche ones.'),
+  hashtags: z
+    .array(z.string())
+    .describe(
+      'A list of 10-15 relevant hashtags, including a mix of popular and niche ones.'
+    ),
 });
 export type FindHashtagsOutput = z.infer<typeof FindHashtagsOutputSchema>;
 
-export async function findHashtags(input: FindHashtagsInput): Promise<FindHashtagsOutput> {
+export async function findHashtags(
+  input: FindHashtagsInput
+): Promise<FindHashtagsOutput> {
   return findHashtagsFlow(input);
 }
 

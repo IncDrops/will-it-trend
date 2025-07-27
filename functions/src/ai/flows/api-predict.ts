@@ -16,13 +16,23 @@ const ApiPredictInputSchema = z.object({
 export type ApiPredictInput = z.infer<typeof ApiPredictInputSchema>;
 
 const ApiPredictOutputSchema = z.object({
-  confidenceScore: z.number().min(0).max(100).describe('A score from 0-100 representing the viral potential.'),
-  keyDrivers: z.array(z.string()).describe('A list of key factors driving the prediction.'),
-  recommendedAction: z.string().describe('A suggested action to capitalize on the trend.'),
+  confidenceScore: z
+    .number()
+    .min(0)
+    .max(100)
+    .describe('A score from 0-100 representing the viral potential.'),
+  keyDrivers: z
+    .array(z.string())
+    .describe('A list of key factors driving the prediction.'),
+  recommendedAction: z
+    .string()
+    .describe('A suggested action to capitalize on the trend.'),
 });
 export type ApiPredictOutput = z.infer<typeof ApiPredictOutputSchema>;
 
-export async function apiPredict(input: ApiPredictInput): Promise<ApiPredictOutput> {
+export async function apiPredict(
+  input: ApiPredictInput
+): Promise<ApiPredictOutput> {
   return apiPredictFlow(input);
 }
 

@@ -12,16 +12,26 @@ import {z} from 'genkit';
 
 const GenerateCaptionsInputSchema = z.object({
   topic: z.string().describe('The topic or idea for the captions.'),
-  tone: z.string().describe("The desired tone for the captions (e.g., 'Professional', 'Casual', 'Witty')."),
+  tone: z
+    .string()
+    .describe(
+      "The desired tone for the captions (e.g., 'Professional', 'Casual', 'Witty')."
+    ),
 });
-export type GenerateCaptionsInput = z.infer<typeof GenerateCaptionsInputSchema>;
+export type GenerateCaptionsInput = z.infer<
+  typeof GenerateCaptionsInputSchema
+>;
 
 const GenerateCaptionsOutputSchema = z.object({
   captions: z.array(z.string()).describe('A list of 5 generated captions.'),
 });
-export type GenerateCaptionsOutput = z.infer<typeof GenerateCaptionsOutputSchema>;
+export type GenerateCaptionsOutput = z.infer<
+  typeof GenerateCaptionsOutputSchema
+>;
 
-export async function generateCaptions(input: GenerateCaptionsInput): Promise<GenerateCaptionsOutput> {
+export async function generateCaptions(
+  input: GenerateCaptionsInput
+): Promise<GenerateCaptionsOutput> {
   return generateCaptionsFlow(input);
 }
 

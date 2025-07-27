@@ -12,17 +12,29 @@ import {z} from 'genkit';
 
 const BestTimeToPostInputSchema = z.object({
   industry: z.string().describe('The industry or topic of the content.'),
-  platform: z.string().describe('The social media platform (e.g., TikTok, Instagram).'),
+  platform: z
+    .string()
+    .describe('The social media platform (e.g., TikTok, Instagram).'),
 });
 export type BestTimeToPostInput = z.infer<typeof BestTimeToPostInputSchema>;
 
 const BestTimeToPostOutputSchema = z.object({
-  time: z.string().describe('The recommended posting time, including timezone (e.g., "9:00 AM EST").'),
-  reasoning: z.string().describe('A brief explanation for the recommendation (e.g., "Highest engagement on Tuesdays").'),
+  time: z
+    .string()
+    .describe(
+      'The recommended posting time, including timezone (e.g., "9:00 AM EST").'
+    ),
+  reasoning: z
+    .string()
+    .describe(
+      'A brief explanation for the recommendation (e.g., "Highest engagement on Tuesdays").'
+    ),
 });
 export type BestTimeToPostOutput = z.infer<typeof BestTimeToPostOutputSchema>;
 
-export async function getBestTimeToPost(input: BestTimeToPostInput): Promise<BestTimeToPostOutput> {
+export async function getBestTimeToPost(
+  input: BestTimeToPostInput
+): Promise<BestTimeToPostOutput> {
   return bestTimeToPostFlow(input);
 }
 
