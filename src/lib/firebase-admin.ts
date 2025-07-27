@@ -5,32 +5,52 @@ import * as admin from 'firebase-admin';
 import 'dotenv/config';
 
 let db: admin.firestore.Firestore;
+let auth: admin.auth.Auth;
 
-function getDb() {
-  if (db) {
-    return db;
-  }
-
+function initializeFirebaseAdmin() {
   if (admin.apps.length === 0) {
     try {
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId: process.env.FIREBASE_PROJECT_ID,
-          privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        }),
-      });
-    } catch (error: any) {
-       if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
-        throw new Error('Firebase environment variables are not set. Please check your .env file.');
+      const serviceAccount = {
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      };
+
+      if (!serviceAccount.projectId || !serviceAccount.clientEmail || !serviceAccount.privateKey) {
+        console.warn('Firebase admin environment variables are not set. Skipping admin initialization. This is expected for client-side rendering.');
+        return;
        }
-       throw new Error(`Firebase admin initialization error: ${error.message}`);
+
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+      console.log("Firebase Admin SDK initialized successfully.");
+    } catch (error: any) {
+       console.error(`Firebase admin initialization error: ${error.message}`);
+       throw error;
     }
   }
   
   db = admin.firestore();
+  auth = admin.auth();
+}
+
+initializeFirebaseAdmin();
+
+
+function getDb() {
+  if (!db) {
+    console.warn("Firestore is not initialized. Make sure admin credentials are set for backend operations.");
+  }
   return db;
 }
 
+function getAuth() {
+  if (!auth) {
+    console.warn("Firebase Auth is not initialized. Make sure admin credentials are set for backend operations.");
+  }
+  return auth;
+}
 
-export { getDb };
+
+export { getDb, getAuth };

@@ -1,3 +1,4 @@
+
 'use client';
 import { Check, Sparkles, LoaderCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -6,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/
 import { Badge } from './ui/badge';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/use-auth';
 
 type PricingCardProps = {
   title: string;
@@ -30,11 +32,22 @@ export function PricingCard({
 }: PricingCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { user, loading } = useAuth();
 
   const handleCheckout = async () => {
     if (!priceId) {
       // Handle "Contact Sales" case
       window.location.href = 'mailto:ai@incdrops.com';
+      return;
+    }
+    
+    if (!user) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Required',
+        description: 'You must be logged in to make a purchase.',
+      });
+      // Here you might want to trigger a login modal
       return;
     }
 
@@ -48,7 +61,8 @@ export function PricingCard({
         body: JSON.stringify({ 
           priceId,
           successUrl: `${window.location.origin}/?payment=success`,
-          cancelUrl: window.location.href
+          cancelUrl: window.location.href,
+          userId: user.uid,
         }),
       });
 
@@ -70,6 +84,9 @@ export function PricingCard({
       setIsLoading(false);
     }
   };
+  
+  const buttonDisabled = isLoading || loading;
+
 
   return (
     <div className={cn('relative group transition-transform duration-300 ease-in-out', isFeatured ? 'transform md:scale-110 z-10' : 'hover:scale-105')}>
@@ -82,10 +99,14 @@ export function PricingCard({
           <CardDescription>{targetAudience}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col flex-grow">
-          {price !== undefined && (
+          {price !== undefined ? (
             <div className="text-center my-4">
               <span className="text-4xl font-extrabold">${price}</span>
               <span className="text-muted-foreground">/one-time</span>
+            </div>
+          ) : (
+            <div className="text-center my-4">
+              <span className="text-4xl font-extrabold">Custom</span>
             </div>
           )}
           <p className="text-center text-muted-foreground mb-6 min-h-[40px]">{description}</p>
@@ -102,7 +123,7 @@ export function PricingCard({
             variant={isFeatured ? 'shiny' : 'outline'}
             className="w-full mt-8"
             onClick={handleCheckout}
-            disabled={isLoading}
+            disabled={buttonDisabled}
           >
             {isLoading ? (
               <LoaderCircle className="animate-spin" />

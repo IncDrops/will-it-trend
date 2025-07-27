@@ -19,12 +19,63 @@ import {getBestTimeToPost} from './ai/flows/best-time-to-post';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
 import {db} from './firebase-admin';
+import { addCreditsToUser } from './services/users';
 
 
 // Set global options for functions
 setGlobalOptions({maxInstances: 10});
 
 const app = express();
+
+
+// --- Stripe Webhook ---
+// We need to use express.raw for the webhook endpoint so that the raw body is preserved.
+// Stripe requires the raw body to verify the signature.
+app.post('/v1/stripe-webhook', express.raw({type: 'application/json'}), async (req: Request, res: Response) => {
+    const signature = req.headers['stripe-signature'] as string;
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
+
+    if (!signature || !webhookSecret) {
+        logger.error('Stripe signature or webhook secret is missing.');
+        return res.status(400).send('Webhook Error: Missing signature or secret.');
+    }
+
+    let event: Stripe.Event;
+
+    try {
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+        event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret);
+    } catch (err: any) {
+        logger.error('Stripe webhook signature verification failed.', err);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the checkout.session.completed event
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object as Stripe.Checkout.Session;
+        
+        const userId = session.metadata?.userId;
+        const priceId = session.line_items?.data[0]?.price?.id;
+
+        if (!userId || !priceId) {
+            logger.error('Missing userId or priceId in checkout session metadata.', { session_id: session.id });
+            return res.status(400).send('Webhook Error: Missing metadata.');
+        }
+        
+        logger.info(`Processing successful payment for user: ${userId}, price: ${priceId}`);
+
+        const result = await addCreditsToUser(userId, priceId);
+        
+        if (!result.success) {
+            return res.status(500).send({ error: result.error });
+        }
+    }
+
+    res.status(200).send({ received: true });
+});
+
+
+// All other routes should use express.json()
 app.use(express.json());
 
 // Middleware for API Key Authentication and Rate Limiting
@@ -33,8 +84,8 @@ const authenticateAndRateLimit = async (
   res: Response,
   next: NextFunction
 ) => {
-  // bypass auth for checkout creation
-  if (req.path.startsWith('/v1/create-checkout-session')) {
+  // bypass auth for checkout creation and webhooks
+  if (req.path.startsWith('/v1/create-checkout-session') || req.path.startsWith('/api/v1/stripe-webhook')) {
     return next();
   }
   const apiKey = req.headers['x-api-key'] as string;
@@ -119,7 +170,7 @@ app.use(authenticateAndRateLimit);
 app.post(
   '/v1/create-checkout-session',
   async (req: Request, res: Response) => {
-    const {priceId, successUrl, cancelUrl} = req.body;
+    const {priceId, successUrl, cancelUrl, userId} = req.body;
 
     if (!priceId) {
       return res.status(400).send({error: 'Price ID is missing.'});
@@ -128,6 +179,9 @@ app.post(
       return res
         .status(400)
         .send({error: 'Success and cancel URLs are required.'});
+    }
+     if (!userId) {
+      return res.status(400).send({ error: 'User ID is missing.' });
     }
 
     try {
@@ -146,6 +200,9 @@ app.post(
         mode: 'payment',
         success_url: successUrl,
         cancel_url: cancelUrl,
+        metadata: {
+            userId: userId,
+        }
       });
 
       return res.status(200).send({sessionId: session.id, url: session.url});
