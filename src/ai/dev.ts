@@ -7,3 +7,4 @@ import '@/ai/flows/generate-captions';
 import '@/ai/flows/find-hashtags';
 import '@/ai/flows/best-time-to-post';
 import '@/ai/flows/api-predict';
+import '@/ai/flows/generate-image';

@@ -56,7 +56,16 @@ const trendForecastFlow = ai.defineFlow(
     outputSchema: TrendForecastOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+      const {output} = await prompt(input);
+      if (!output) {
+        throw new Error('AI model did not return a valid output.');
+      }
+      return output;
+    } catch (error: any) {
+      console.error('Error in trendForecastFlow:', error);
+      // Re-throw a more user-friendly error to be caught by the action handler
+      throw new Error(`Failed to get trend forecast from AI: ${error.message}`);
+    }
   }
 );

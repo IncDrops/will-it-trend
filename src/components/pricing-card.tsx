@@ -1,8 +1,10 @@
+
 import { Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Badge } from './ui/badge';
+import Link from 'next/link';
 
 type PricingCardProps = {
   title: string;
@@ -12,6 +14,7 @@ type PricingCardProps = {
   cta: string;
   isFeatured?: boolean;
   targetAudience: string;
+  contactEmail?: string;
 };
 
 export function PricingCard({
@@ -22,7 +25,20 @@ export function PricingCard({
   cta,
   isFeatured = false,
   targetAudience,
+  contactEmail,
 }: PricingCardProps) {
+
+  const ctaButton = (
+    <Button
+      size="lg"
+      variant={isFeatured ? 'shiny' : 'outline'}
+      className="w-full mt-8"
+    >
+      {isFeatured && <Sparkles />}
+      {cta}
+    </Button>
+  );
+
   return (
     <div className={cn('relative group transition-transform duration-300 ease-in-out', isFeatured ? 'transform md:scale-110 z-10' : 'hover:scale-105')}>
       <div className={cn(
@@ -38,9 +54,15 @@ export function PricingCard({
           <CardDescription>{targetAudience}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col flex-grow">
-          <div className="text-center my-4">
-            <span className="text-4xl font-extrabold">${price}</span>
-            <span className="text-muted-foreground">/one-time</span>
+          <div className="text-center my-4 min-h-[56px] flex items-center justify-center">
+            {price > 0 ? (
+              <div>
+                <span className="text-4xl font-extrabold">${price}</span>
+                <span className="text-muted-foreground">/one-time</span>
+              </div>
+            ) : (
+               <span className="text-2xl font-bold">Contact for Quote</span>
+            )}
           </div>
           <p className="text-center text-muted-foreground mb-6 min-h-[40px]">{description}</p>
           <ul className="space-y-3 flex-grow">
@@ -51,14 +73,13 @@ export function PricingCard({
               </li>
             ))}
           </ul>
-          <Button
-            size="lg"
-            variant={isFeatured ? 'shiny' : 'outline'}
-            className="w-full mt-8"
-          >
-            {isFeatured && <Sparkles />}
-            {cta}
-          </Button>
+          {contactEmail ? (
+            <Link href={`mailto:${contactEmail}?subject=White%20Label%20Pricing%20Inquiry`}>
+              {ctaButton}
+            </Link>
+          ) : (
+            ctaButton
+          )}
         </CardContent>
       </Card>
     </div>

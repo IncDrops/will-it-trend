@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { type TrendForecastOutput } from '@/ai/flows/trend-forecasting';
 import { Header } from '@/components/header';
 import { InputModule } from '@/components/input-module';
@@ -11,6 +11,7 @@ import { BlogCard } from '@/components/blog-card';
 import { Button } from '@/components/ui/button';
 import { sampleTrends, adData, blogData } from '@/lib/data';
 import { Bot, Building, PenTool } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 type TrendResult = TrendForecastOutput & {
   id: string;
@@ -18,10 +19,19 @@ type TrendResult = TrendForecastOutput & {
   timeHorizon: string;
 };
 
+type ContentItem = 
+    | { type: 'ad'; data: typeof adData[0]; id: string }
+    | { type: 'blog'; data: typeof blogData[0]; id: string };
+
+
 export default function Home() {
   const [results, setResults] = useState<TrendResult[]>([]);
   const [shuffledCards, setShuffledCards] = useState<any[]>([]);
-  const [shuffledContent, setShuffledContent] = useState<any[]>([]);
+  
+  const { toast } = useToast();
+  const [contentItems, setContentItems] = useState<ContentItem[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMoreContent, setHasMoreContent] = useState(true);
 
   const handleNewResult = (result: TrendResult) => {
     setResults((prevResults) => [result, ...prevResults]);
@@ -33,20 +43,55 @@ export default function Home() {
       ...results.map(r => ({ type: 'trend' as const, data: r, id: `result-${r.id}`})),
     ];
   }, [results]);
-
-  const allContent = useMemo(() => {
+  
+  const allContentSource = useMemo(() => {
     return [
-      ...adData.map(ad => ({ type: 'ad' as const, data: ad, id: `ad-${ad.id}` })),
-      ...blogData.map(blog => ({ type: 'blog' as const, data: blog, id: `blog-${blog.id}` })),
-    ];
+      ...adData.map((ad, i) => ({ type: 'ad' as const, data: ad, id: `ad-${ad.id}-${i}` })),
+      ...blogData.map((blog, i) => ({ type: 'blog' as const, data: blog, id: `blog-${blog.id}-${i}`})),
+    ].sort(() => Math.random() - 0.5);
   }, []);
 
   useEffect(() => {
-    // Shuffle cards only on the client-side to avoid hydration mismatch
+    // Initial content load
+    setContentItems(allContentSource.slice(0, 4));
+    // Shuffle trend cards on client
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
-    setShuffledContent([...allContent].sort(() => Math.random() - 0.5));
-  }, [allCards, allContent]);
+  }, [allCards, allContentSource]);
 
+
+  const loadMoreContent = useCallback(() => {
+    if (isLoadingMore || !hasMoreContent) return;
+
+    setIsLoadingMore(true);
+    toast({ title: 'Loading more content...', description: 'Exploring the latest strategies & insights.' });
+
+    setTimeout(() => {
+        const currentLength = contentItems.length;
+        const nextItems = allContentSource.slice(currentLength, currentLength + 4);
+        
+        if (nextItems.length > 0) {
+            setContentItems(prevItems => [...prevItems, ...nextItems]);
+        } 
+        
+        if (contentItems.length + nextItems.length >= allContentSource.length) {
+            setHasMoreContent(false);
+            toast({ title: "You've reached the end!", description: 'Check back later for more insights.' });
+        }
+        
+        setIsLoadingMore(false);
+    }, 1500);
+  }, [isLoadingMore, hasMoreContent, allContentSource, contentItems, toast]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+        if (window.innerHeight + document.documentElement.scrollTop + 200 >= document.documentElement.offsetHeight && !isLoadingMore && hasMoreContent) {
+            loadMoreContent();
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLoadingMore, hasMoreContent, loadMoreContent]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -127,17 +172,21 @@ export default function Home() {
             <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
                 Go beyond the data with curated articles and partnership opportunities to grow your brand.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-                {shuffledContent.map(content => {
-                    if (content.type === 'ad') {
-                        return <AdCard key={content.id} {...content.data} />
-                    }
-                    if (content.type === 'blog') {
-                         return <BlogCard key={content.id} {...content.data} />
-                    }
-                    return null;
+             <div className="flex flex-col items-center gap-8">
+                {contentItems.map((content, index) => {
+                    const Component = content.type === 'ad' ? AdCard : BlogCard;
+                    return (
+                        <div key={content.id} className="w-full max-w-4xl">
+                             <Component {...content.data} index={index} />
+                        </div>
+                    )
                 })}
             </div>
+             {isLoadingMore && (
+                <div className="text-center py-8">
+                    <p className="text-muted-foreground">Loading more insights...</p>
+                </div>
+            )}
         </section>
 
       </main>

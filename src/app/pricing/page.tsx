@@ -1,3 +1,4 @@
+
 import { PricingCard } from '@/components/pricing-card';
 import { Check } from 'lucide-react';
 
@@ -22,7 +23,7 @@ export default function PricingPage() {
       description: 'For marketing teams and agencies managing multiple clients.',
       features: [
         'Unlimited Trend Reports',
-        '250 AI Credits',
+        '500 AI Credits',
         'API Access for integrations',
         'Priority Support',
       ],
@@ -32,7 +33,7 @@ export default function PricingPage() {
     },
     {
       title: 'White Label',
-      price: 299,
+      price: 0,
       description: 'For businesses wanting to offer our reports under their own brand.',
       features: [
         'Everything in Agency Pack',
@@ -40,9 +41,10 @@ export default function PricingPage() {
         'Dedicated Account Manager',
         'White-label options',
       ],
-      cta: 'Contact Sales',
+      cta: 'Contact for Quote',
       isFeatured: false,
       targetAudience: 'Influencers & Agencies',
+      contactEmail: 'ai@incdrops.com',
     },
   ];
 
@@ -69,6 +71,7 @@ export default function PricingPage() {
             cta={plan.cta}
             isFeatured={plan.isFeatured}
             targetAudience={plan.targetAudience}
+            contactEmail={plan.contactEmail}
           />
         ))}
       </div>
