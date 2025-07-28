@@ -103,6 +103,8 @@ export const contentData: ContentItem[] = [
     tag: 'Social Media',
     offer: 'Read on Amazon',
     link: 'https://amzn.to/4obEfN2',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'social media graph'
   },
   {
     type: 'ad' as const,

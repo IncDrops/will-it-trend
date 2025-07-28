@@ -12,7 +12,7 @@ import { useContent } from '@/hooks/use-content';
 import { Bot, Building, PenTool, Car, TrendingUp, Cpu, Brain, Leaf, Briefcase, Laptop, Smartphone, Tablet, TrendingUpIcon, LoaderCircle } from 'lucide-react';
 import { PageSizeCard } from '@/components/page-size-card';
 import { InstagramPostCard } from '@/components/instagram-post-card';
-import { AdCard as AdCardComponent } from '@/components/ad-card';
+import { AdCard } from '@/components/ad-card';
 import { PhoneSizeCard } from '@/components/phone-size-card';
 import { BlogCard } from '@/components/blog-card';
 import { IconSeparator } from '@/components/icon-separator';
@@ -46,23 +46,23 @@ export default function Home() {
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
   }, [allCards]);
 
-  const componentMap = {
-    '1': (item: ContentItem) => item.type === 'ad' && <PageSizeCard item={item as AdData} />,
-    '2': (item: ContentItem) => item.type === 'blog' && <InstagramPostCard item={item as BlogData} />,
-    '3': (item: ContentItem) => item.type === 'ad' && <div className="w-full max-w-4xl"><AdCardComponent item={item as AdData} /></div>,
-    '4': (item: ContentItem) => item.type === 'blog' && <PageSizeCard item={item as BlogData} />,
-    '5': (item: ContentItem) => item.type === 'ad' && <PhoneSizeCard item={item as AdData} />,
-    '6': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
+  const componentMap: { [key: string]: (item: ContentItem) => React.ReactNode } = {
+    '1': (item: ContentItem) => item.type === 'ad' ? <PageSizeCard item={item as AdData} /> : null,
+    '2': (item: ContentItem) => item.type === 'blog' ? <InstagramPostCard item={item as BlogData} /> : null,
+    '3': (item: ContentItem) => item.type === 'ad' ? <div className="w-full max-w-4xl"><AdCard item={item as AdData} /></div> : null,
+    '4': (item: ContentItem) => item.type === 'blog' ? <PageSizeCard item={item as BlogData} /> : null,
+    '5': (item: ContentItem) => item.type === 'ad' ? <PhoneSizeCard item={item as AdData} /> : null,
+    '6': (item: ContentItem) => item.type === 'blog' ? <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div> : null,
     '7': (item: ContentItem) => (
       <div className="flex w-full items-center justify-center gap-4">
         <Leaf className="w-8 h-8 text-primary/70" />
-        {item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent item={item as AdData} /></div>}
+        {item.type === 'ad' ? <div className="w-full max-w-2xl aspect-square"><AdCard item={item as AdData} /></div> : null}
         <Briefcase className="w-8 h-8 text-primary/70" />
       </div>
     ),
-    '8': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
-    '9': (item: ContentItem) => item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent item={item as AdData} /></div>,
-    '10': (item: ContentItem) => item.type === 'blog' && <PageSizeCard item={item as BlogData} />,
+    '8': (item: ContentItem) => item.type === 'blog' ? <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div> : null,
+    '9': (item: ContentItem) => item.type === 'ad' ? <div className="w-full max-w-2xl aspect-square"><AdCard item={item as AdData} /></div> : null,
+    '10': (item: ContentItem) => item.type === 'blog' ? <PageSizeCard item={item as BlogData} /> : null,
   };
   
   // Icon mapping for separators
