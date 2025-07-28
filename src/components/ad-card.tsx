@@ -11,7 +11,6 @@ import type { AdData } from '@/lib/data';
 
 type AdCardProps = {
   item: AdData;
-  onImageUpdate: (id: string, newImageUrl: string) => void;
 };
 
 export function AdCard({

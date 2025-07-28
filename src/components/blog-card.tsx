@@ -1,17 +1,12 @@
 
 'use client';
-import { useState, useEffect, useRef } from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Card, CardContent } from './ui/card';
-import { cn } from '@/lib/utils';
 import type { BlogData } from '@/lib/data';
-import { useAuth } from '@/hooks/use-auth';
-import { useToast } from '@/hooks/use-toast';
-import { doc, updateDoc } from 'firebase/firestore';
-import { dbClient } from '@/lib/firebase-client';
 
 type BlogCardProps = {
   item: BlogData;
@@ -19,6 +14,9 @@ type BlogCardProps = {
 
 
 export function BlogCard({ item }: BlogCardProps) {
+  if (!item) {
+    return null;
+  }
   const { title, teaser, tag, image, aiHint, offer, link } = item;
   
   return (
@@ -44,7 +42,7 @@ export function BlogCard({ item }: BlogCardProps) {
         </h3>
         <p className="text-sm text-muted-foreground mb-4">{teaser}</p>
         <Link
-          href={link}
+          href={link || '#'}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-auto self-start text-sm font-semibold text-primary inline-flex items-center gap-2 group-hover:text-accent transition-colors"

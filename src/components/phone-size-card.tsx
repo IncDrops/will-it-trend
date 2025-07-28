@@ -9,7 +9,6 @@ import { AdData } from '@/lib/data';
 
 type PhoneSizeCardProps = {
   item: AdData;
-  onImageUpdate: (id: string, newImageUrl: string) => void;
 };
 
 export function PhoneSizeCard({ item }: PhoneSizeCardProps) {
@@ -34,7 +33,7 @@ export function PhoneSizeCard({ item }: PhoneSizeCardProps) {
         </p>
         <div className="flex flex-col gap-2">
           <Button asChild variant="shiny" size="lg" className="w-full">
-            <Link href={item.link} target="_blank" rel="noopener noreferrer">
+            <Link href={item.link || '#'} target="_blank" rel="noopener noreferrer">
                 {item.cta}
                 <ArrowUpRight className="ml-2" />
             </Link>

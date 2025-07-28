@@ -9,7 +9,6 @@ import { AdData, BlogData } from '@/lib/data';
 
 type PageSizeCardProps = {
   item: AdData | BlogData;
-  onImageUpdate?: (id: string, newImageUrl: string) => void;
 };
 
 export function PageSizeCard({ item }: PageSizeCardProps) {
@@ -41,7 +40,7 @@ export function PageSizeCard({ item }: PageSizeCardProps) {
         </p>
         <div className="flex gap-2">
           <Button asChild variant="shiny" size="lg">
-            <Link href={item.link} target="_blank" rel="noopener noreferrer">
+            <Link href={item.link || '#'} target="_blank" rel="noopener noreferrer">
               {isAd ? (item as AdData).cta : item.offer}
               <ArrowUpRight className="ml-2" />
             </Link>
