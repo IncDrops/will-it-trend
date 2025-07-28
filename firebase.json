@@ -30,8 +30,7 @@
       ],
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run build"
-      ],
-      "invoker": "public"
+      ]
     }
   ],
   "firestore": {
@@ -44,7 +43,7 @@
     "rules": "storage.rules"
   },
   "apphosting": {
-    "backendId": "will-it-trend16",
+    "backendId": "launch16304",
     "rootDir": "/",
     "ignore": [
       "node_modules",
