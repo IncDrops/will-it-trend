@@ -30,7 +30,10 @@ export async function trendForecast(input: TrendForecastInput): Promise<TrendFor
 const prompt = ai.definePrompt({
   name: 'trendForecastPrompt',
   input: {schema: TrendForecastInputSchema},
-  output: {schema: TrendForecastOutputSchema},
+  output: {
+    schema: TrendForecastOutputSchema,
+    format: 'json',
+  },
   prompt: `You are an AI trend forecaster. Given an idea, hashtag, or product and a time horizon,
 you will forecast its trending potential based on current market trends, social buzz, and competitive analysis.
 
