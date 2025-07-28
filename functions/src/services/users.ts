@@ -5,7 +5,7 @@ import { getDb } from '../firebase-admin';
 import * as logger from 'firebase-functions/logger';
 
 const creditsMap: { [key: string]: number } = {
-  price_1RpMQpHK4G9ZDA0F4OJxhrD6: 50, // Starter Pack
+  price_1RpMQpHK4G9ZDA0F4OJxhrD6: 100, // Starter Pack
   price_1RpMgKHK4G9ZDA0FawwsKgsK: 500, // Pro AI Pack
 };
 

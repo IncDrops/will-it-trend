@@ -9,8 +9,8 @@ export default function PricingPage() {
       price: 9.99,
       description: 'Perfect for solo creators testing the waters.',
       features: [
-        '5 Trend Reports',
-        '50 AI Credits',
+        '20 Trend Reports (100 credits)',
+        '100 AI Credits',
         'Full access to AI Tools',
       ],
       cta: 'Get Started',
