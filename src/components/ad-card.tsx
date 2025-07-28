@@ -29,19 +29,17 @@ export function AdCard({
     <div className="relative group overflow-hidden rounded-2xl">
       <div className="absolute inset-0 z-0 animate-border-spin rounded-[inherit] bg-[linear-gradient(110deg,hsl(var(--primary)),45%,hsl(var(--accent)),55%,hsl(var(--primary)))] bg-[length:200%_100%]" />
       <Card className="relative z-10 glassmorphic rounded-xl h-full m-0.5 w-full">
-        <CardContent className="p-0 md:p-0">
-          <div className="flex flex-col md:flex-row items-stretch">
-            <div className="w-full md:w-1/2">
-                <Image
-                  src={image}
-                  alt={title}
-                  width={1200}
-                  height={600}
-                  data-ai-hint={aiHint}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 rounded-t-xl md:rounded-l-xl md:rounded-tr-none"
-                />
-            </div>
-            <div className="w-full md:w-1/2 p-6 flex flex-col">
+        <CardContent className="p-0">
+          <div>
+            <Image
+              src={image}
+              alt={title}
+              width={1200}
+              height={600}
+              data-ai-hint={aiHint}
+              className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 rounded-t-xl"
+            />
+            <div className="p-6 flex flex-col">
               <div className="flex gap-2 mb-4">
                 <Badge variant="secondary" className="self-start">{industry}</Badge>
                 <Badge variant="outline" className="self-start">Ad</Badge>
