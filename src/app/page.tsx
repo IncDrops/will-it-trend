@@ -127,7 +127,7 @@ export default function Home() {
             <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
                 Go beyond the data with curated articles and partnership opportunities to grow your brand.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+            <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
                 {shuffledContent.map(content => {
                     if (content.type === 'ad') {
                         return <AdCard key={content.id} {...content.data} />

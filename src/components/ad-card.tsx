@@ -28,27 +28,31 @@ export function AdCard({
   return (
     <div className="relative group overflow-hidden rounded-2xl">
       <div className="absolute inset-0 z-0 animate-border-spin rounded-[inherit] bg-[linear-gradient(110deg,hsl(var(--primary)),45%,hsl(var(--accent)),55%,hsl(var(--primary)))] bg-[length:200%_100%]" />
-      <Card className="relative z-10 glassmorphic rounded-xl h-full m-0.5">
-        <CardContent className="p-6 flex flex-col h-full">
-          <Badge variant="secondary" className="self-start mb-4">{industry}</Badge>
-          <div className="mb-4 rounded-lg overflow-hidden">
-            <Image
-              src={image}
-              alt={title}
-              width={1200}
-              height={600}
-              data-ai-hint={aiHint}
-              className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+      <Card className="relative z-10 glassmorphic rounded-xl h-full m-0.5 w-full">
+        <CardContent className="p-0 md:p-0">
+          <div className="flex flex-col md:flex-row items-stretch">
+            <div className="w-full md:w-1/2">
+                <Image
+                  src={image}
+                  alt={title}
+                  width={1200}
+                  height={600}
+                  data-ai-hint={aiHint}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 rounded-t-xl md:rounded-l-xl md:rounded-tr-none"
+                />
+            </div>
+            <div className="w-full md:w-1/2 p-6 flex flex-col">
+              <Badge variant="secondary" className="self-start mb-4">{industry}</Badge>
+              <h3 className="text-2xl font-bold font-headline mb-3">{title}</h3>
+              <p className="text-muted-foreground mb-6 flex-grow">{description}</p>
+              <Button asChild variant="outline" className="mt-auto self-start">
+                <Link href={link} target="_blank" rel="noopener noreferrer">
+                  {cta}
+                  <ArrowUpRight className="ml-2" />
+                </Link>
+              </Button>
+            </div>
           </div>
-          <h3 className="text-xl font-bold font-headline mb-2">{title}</h3>
-          <p className="text-muted-foreground mb-4 flex-grow">{description}</p>
-          <Button asChild variant="outline" className="mt-auto self-start">
-            <Link href={link} target="_blank" rel="noopener noreferrer">
-              {cta}
-              <ArrowUpRight className="ml-2" />
-            </Link>
-          </Button>
         </CardContent>
       </Card>
     </div>
