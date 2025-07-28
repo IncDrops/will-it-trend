@@ -102,7 +102,7 @@ const authenticateFirebaseToken = async (req: Request, res: Response, next: Next
     }
 };
 
-const checkUsageAndDecrementCredits = (toolType: 'trend_forecast' | 'content_tool') => async (req: Request, res: Response, next: NextFunction) => {
+const checkUsageAndDecrementCredits = ({ toolType, cost }: { toolType: 'trend_forecast' | 'content_tool', cost: number }) => async (req: Request, res: Response, next: NextFunction) => {
   const { uid } = res.locals.user;
   const db = getDb();
   const userRef = db.collection('users').doc(uid);
@@ -136,16 +136,14 @@ const checkUsageAndDecrementCredits = (toolType: 'trend_forecast' | 'content_too
     
     // If no free uses left, check for paid credits
     const credits = userData.ai_credits || 0;
-    if (credits > 0) {
-      await userRef.update({ ai_credits: FieldValue.increment(-1) });
-      logger.info(`User ${uid} used a paid credit for ${toolType}. Credits remaining: ${credits - 1}`);
+    if (credits >= cost) {
+      await userRef.update({ ai_credits: FieldValue.increment(-cost) });
+      logger.info(`User ${uid} used ${cost} paid credits for ${toolType}. Credits remaining: ${credits - cost}`);
       return next();
     }
 
-    // No free uses and no credits
-    const errorMsg = toolType === 'trend_forecast'
-      ? 'You have used your free trend reports for today. Please purchase credits to continue.'
-      : 'You have used your free AI tool uses for today. Please purchase credits to continue.';
+    // No free uses and not enough credits
+    const errorMsg = `This action costs ${cost} credits, but you only have ${credits}. Please purchase more credits.`;
       
     return res.status(429).send({ success: false, error: errorMsg });
 
@@ -286,7 +284,7 @@ app.post(
 // POST /v1/trend-forecast - Firebase Auth
 app.post('/v1/trend-forecast', 
     authenticateFirebaseToken, 
-    checkUsageAndDecrementCredits('trend_forecast'), 
+    checkUsageAndDecrementCredits({ toolType: 'trend_forecast', cost: 5 }), 
     async (req: Request, res: Response) => {
     const { input, timeHorizon } = req.body;
   
@@ -370,7 +368,7 @@ app.post('/v1/predict', authenticateAndRateLimit, async (req: Request, res: Resp
 
 // --- AI TOOLS - Firebase Auth ---
 
-const contentToolMiddleware = [authenticateFirebaseToken, checkUsageAndDecrementCredits('content_tool')];
+const contentToolMiddleware = [authenticateFirebaseToken, checkUsageAndDecrementCredits({ toolType: 'content_tool', cost: 1 })];
 
 // POST /v1/generate-captions
 app.post('/v1/generate-captions', contentToolMiddleware, async (req: Request, res: Response) => {
