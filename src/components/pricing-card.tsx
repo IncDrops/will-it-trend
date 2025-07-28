@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
+import Link from 'next/link';
 
 type PricingCardProps = {
   title: string;
@@ -35,12 +36,7 @@ export function PricingCard({
   const { user } = useAuth();
 
   const handleCheckout = async () => {
-    if (!priceId) {
-      // Handle "Contact Sales" case
-      window.location.href = 'mailto:ai@incdrops.com';
-      return;
-    }
-
+    // This function is now only for Stripe checkout
     setIsLoading(true);
      if (!user) {
         toast({
@@ -87,8 +83,7 @@ export function PricingCard({
     }
   };
   
-  const buttonDisabled = isLoading || (!priceId && cta !== 'Contact Sales');
-
+  const isContactButton = cta === 'Contact Sales';
 
   return (
     <div className={cn('relative group transition-transform duration-300 ease-in-out', isFeatured ? 'transform md:scale-110 z-10' : 'hover:scale-105')}>
@@ -124,17 +119,24 @@ export function PricingCard({
             size="lg"
             variant={isFeatured ? 'shiny' : 'outline'}
             className="w-full mt-8"
-            onClick={handleCheckout}
-            disabled={buttonDisabled}
+            onClick={!isContactButton ? handleCheckout : undefined}
+            disabled={isLoading}
+            asChild={isContactButton}
           >
-            {isLoading ? (
-              <LoaderCircle className="animate-spin" />
-            ) : (
-              <>
-                {isFeatured && <Sparkles />}
-                {cta}
-              </>
-            )}
+             {isContactButton ? (
+              <Link href="/pricing#contact">{cta}</Link>
+             ) : (
+                <>
+                {isLoading ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <>
+                    {isFeatured && <Sparkles />}
+                    {cta}
+                  </>
+                )}
+                </>
+             )}
           </Button>
         </CardContent>
       </Card>
