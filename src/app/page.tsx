@@ -28,20 +28,20 @@ type TrendResult = TrendForecastOutput & {
 // Component mapping for dynamic rendering
 const componentMap = {
   '1': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <PageSizeCard item={item as AdData} onImageUpdate={onImageUpdate} />,
-  '2': (item: ContentItem) => item.type === 'blog' && <InstagramPostCard item={item as BlogData} />,
-  '3': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-4xl"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>,
+  '2': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <InstagramPostCard item={item as BlogData} />,
+  '3': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-4xl"><AdCardComponent item={item as AdData} onImageUpdate={onImageUpdate} /></div>,
   '4': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <PageSizeCard item={item as BlogData} onImageUpdate={onImageUpdate} />,
   '5': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <PhoneSizeCard item={item as AdData} onImageUpdate={onImageUpdate} />,
-  '6': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
+  '6': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
   '7': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => (
     <div className="flex w-full items-center justify-center gap-4">
       <Leaf className="w-8 h-8 text-primary/70" />
-      {item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>}
+      {item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent item={item as AdData} onImageUpdate={onImageUpdate} /></div>}
       <Briefcase className="w-8 h-8 text-primary/70" />
     </div>
   ),
-  '8': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
-  '9': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>,
+  '8': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
+  '9': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent item={item as AdData} onImageUpdate={onImageUpdate} /></div>,
   '10': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <PageSizeCard item={item as BlogData} onImageUpdate={onImageUpdate} />,
 };
 
@@ -189,27 +189,32 @@ export default function Home() {
                     
                     return (
                         <React.Fragment key={item.id}>
-                            {CardComponent ? (
-                                CardComponent(item, handleImageUpdate)
-                            ) : (
-                                <Card className="p-4">
-                                    <p>Unsupported content type for id: {originalId}</p>
-                                </Card>
-                            )}
+                            <ScrollAnimate className='w-full flex justify-center'>
+                                {CardComponent ? (
+                                    CardComponent(item, handleImageUpdate)
+                                ) : (
+                                    <Card className="p-4">
+                                        <p>Unsupported content type for id: {originalId}</p>
+                                    </Card>
+                                )}
+                            </ScrollAnimate>
 
                             {IconComponent && index < content.length - 1 && (
-                                Array.isArray(IconComponent)
-                                    ? <IconSeparator icons={IconComponent} />
-                                    : <IconSeparator icon={IconComponent} />
+                                <ScrollAnimate>
+                                    {Array.isArray(IconComponent)
+                                        ? <IconSeparator icons={IconComponent} />
+                                        : <IconSeparator icon={IconComponent} />
+                                    }
+                                </ScrollAnimate>
                             )}
                         </React.Fragment>
                     );
                 })}
                 
-                <div className="mt-16 flex flex-col items-center space-y-2">
+                <ScrollAnimate className="mt-16 flex flex-col items-center space-y-2">
                     <TrendingUpIcon className="h-8 w-8 text-primary" />
                     <span className="text-xl font-bold">WillItTrend.com</span>
-                </div>
+                </ScrollAnimate>
             </div>
           )}
         </section>
