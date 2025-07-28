@@ -1,10 +1,32 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Deny all client-side access to all collections by default.
-    // Your server-side code (Firebase Functions, Admin SDK) will still have full access,
-    // which is the intended behavior for this application.
+
+    // Users can only read and write their own data.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // API keys should not be client-readable or writable for security.
+    match /api_keys/{apiKey} {
+        allow read, write: if false;
+    }
+
+    // Content is publically readable, but only authenticated users (i.e., you) can update it.
+    match /content/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Predictions cache is publically readable. Writes are handled by backend functions.
+    match /predictions_cache/{cacheKey} {
+        allow read: if true;
+        allow write: if false; // Should only be written by backend with admin privileges
+    }
+
+    // Default deny all other reads/writes
     match /{document=**} {
       allow read, write: if false;
     }
