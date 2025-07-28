@@ -8,19 +8,13 @@ import { getAuth } from 'firebase/auth';
 // replace the values in this object with the configuration
 // from your Firebase project's settings.
 const firebaseConfig = {
-  // Go to your Firebase project's settings.
-  // Under the "General" tab, find the "Your apps" card.
-  // In the "SDK setup and configuration" section, select "Config".
-  // Copy the values from there and paste them here.
-  "projectId": "YOUR_PROJECT_ID",
-  "appId": "YOUR_APP_ID",
-  "storageBucket": "YOUR_STORAGE_BUCKET",
-  "apiKey": "YOUR_API_KEY",
-  "authDomain": "YOUR_AUTH_DOMAIN",
-  "measurementId": "YOUR_MEASUREMENT_ID",
-  "messagingSenderId": "YOUR_MESSAGING_SENDER_ID"
+  apiKey: "AIzaSyAhHU9N7V5sIy3hFbiaNs7iaicibDp_WIE",
+  authDomain: "launch16304.firebaseapp.com",
+  projectId: "launch16304",
+  storageBucket: "launch16304.firebasestorage.app",
+  messagingSenderId: "451925187787",
+  appId: "1:451925187787:web:70e0acb65cba356f8fcf4e"
 };
-
 // Initialize Firebase
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const dbClient = getFirestore(app); // For frontend use
