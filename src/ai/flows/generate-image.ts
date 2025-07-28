@@ -9,6 +9,10 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+<<<<<<< HEAD
+=======
+import {generate} from 'genkit/generate';
+>>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt to generate an image from.'),
@@ -16,11 +20,21 @@ const GenerateImageInputSchema = z.object({
 export type GenerateImageInput = z.infer<typeof GenerateImageInputSchema>;
 
 const GenerateImageOutputSchema = z.object({
+<<<<<<< HEAD
   imageUrl: z.string().describe("The data URI of the generated image. Expected format: 'data:image/png;base64,<encoded_data>'."),
 });
 export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
 
 export async function generateImage(input: GenerateImageInput): Promise<GenerateImageOutput> {
+=======
+  imageUrl: z.string().describe('The data URI of the generated image.'),
+});
+export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
+
+export async function generateImage(
+  input: GenerateImageInput
+): Promise<GenerateImageOutput> {
+>>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
   return generateImageFlow(input);
 }
 
@@ -31,6 +45,7 @@ const generateImageFlow = ai.defineFlow(
     outputSchema: GenerateImageOutputSchema,
   },
   async input => {
+<<<<<<< HEAD
     const {media} = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: `A professional, high-quality, photorealistic image for a marketing website representing the concept: ${input.prompt}. Minimalist, clean background.`,
@@ -44,5 +59,22 @@ const generateImageFlow = ai.defineFlow(
     }
 
     return { imageUrl: media.url };
+=======
+    const {media} = await generate({
+      model: 'googleai/gemini-2.0-flash-preview-image-generation',
+      prompt: input.prompt,
+      config: {
+        responseModalities: ['TEXT', 'IMAGE'],
+      },
+    });
+
+    if (!media.url) {
+      throw new Error('Image generation failed to produce a URL.');
+    }
+
+    return {
+      imageUrl: media.url,
+    };
+>>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
   }
 );
