@@ -23,7 +23,7 @@ export default function PricingPage() {
       price: 29.99,
       description: 'For marketing teams and agencies managing multiple clients.',
       features: [
-        'Unlimited Trend Reports',
+        '100 Trend Reports (500 credits)',
         '500 AI Credits',
         'API Access for integrations',
         'Priority Support',
