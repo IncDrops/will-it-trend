@@ -5,13 +5,11 @@ import { trendForecast } from '@/ai/flows/trend-forecasting';
 import { generateCaptions as genCaptions } from '@/ai/flows/generate-captions';
 import { findHashtags as findTags } from '@/ai/flows/find-hashtags';
 import { getBestTimeToPost as getBestTime } from '@/ai/flows/best-time-to-post';
-import { generateImage as genImage } from '@/ai/flows/generate-image';
 
 import type { TrendForecastInput } from '@/ai/flows/trend-forecasting';
 import type { GenerateCaptionsInput } from '@/ai/flows/generate-captions';
 import type { FindHashtagsInput } from '@/ai/flows/find-hashtags';
 import type { BestTimeToPostInput } from '@/ai/flows/best-time-to-post';
-import type { GenerateImageInput } from '@/ai/flows/generate-image';
 
 export async function getTrendForecast(
   input: TrendForecastInput
@@ -66,21 +64,6 @@ export async function getBestTimeToPost(
     return { success: true, data: result };
   } catch (e: any) {
     console.error('Error in callGetBestTimeToPost:', e);
-    return {
-      success: false,
-      error: e.message || 'An unexpected error occurred.',
-    };
-  }
-}
-
-export async function getImageForPrompt(
-  input: GenerateImageInput
-): Promise<{ success: boolean; data?: any; error?: string }> {
-  try {
-    const result = await genImage(input);
-    return { success: true, data: result };
-  } catch (e: any) {
-    console.error('Error in getImageForPrompt:', e);
     return {
       success: false,
       error: e.message || 'An unexpected error occurred.',

@@ -1,86 +1,24 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, ImageIcon, LoaderCircle } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
-import { cn } from '@/lib/utils';
+import { Card } from './ui/card';
 import { AdData, BlogData } from '@/lib/data';
-import { useAuth } from '@/hooks/use-auth';
-import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { dbClient } from '@/lib/firebase-client';
 
 type PageSizeCardProps = {
   item: AdData | BlogData;
   onImageUpdate?: (id: string, newImageUrl: string) => void;
 };
 
-export function PageSizeCard({ item, onImageUpdate }: PageSizeCardProps) {
+export function PageSizeCard({ item }: PageSizeCardProps) {
   const isAd = item.type === 'ad';
   const imageUrl = item.image || 'https://placehold.co/1200x600';
   const imageHint = item.aiHint || 'placeholder';
 
-  const [isGenerating, setIsGenerating] = useState(false);
-  const { user } = useAuth();
-  const { toast } = useToast();
-
-  const handleGenerateImage = async () => {
-    if (!isAd || !onImageUpdate) return;
-
-    setIsGenerating(true);
-    if (!user) {
-        toast({
-            variant: 'destructive',
-            title: 'Authentication Error',
-            description: 'You must be signed in to generate images.',
-        });
-        setIsGenerating(false);
-        return;
-    }
-
-    try {
-        const token = await user.getIdToken();
-        const response = await fetch('/api/v1/generate-image', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ prompt: imageHint }),
-        });
-
-        const result = await response.json();
-        if (!response.ok || !result.success) {
-            throw new Error(result.error || 'Failed to generate image.');
-        }
-        
-        const newImageUrl = result.data.imageUrl;
-        const contentRef = doc(dbClient, 'content', item.id);
-        await updateDoc(contentRef, { image: newImageUrl });
-        
-        onImageUpdate(item.id, newImageUrl);
-
-    } catch (error: any) {
-        toast({
-            variant: 'destructive',
-            title: 'Image Generation Failed',
-            description: error.message,
-        });
-    } finally {
-        setIsGenerating(false);
-    }
-  };
-
   return (
     <Card className="w-full glassmorphic rounded-2xl overflow-hidden relative aspect-[16/9] md:aspect-[2/1] group">
-      {isGenerating && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
-          <LoaderCircle className="w-10 h-10 animate-spin text-white"/>
-        </div>
-      )}
       <Image
         src={imageUrl}
         alt={item.title}
@@ -108,22 +46,6 @@ export function PageSizeCard({ item, onImageUpdate }: PageSizeCardProps) {
               <ArrowUpRight className="ml-2" />
             </Link>
           </Button>
-          {isAd && onImageUpdate && (
-             <Button
-                variant="outline"
-                size="lg"
-                className="bg-white/20 text-white backdrop-blur-sm"
-                onClick={handleGenerateImage}
-                disabled={isGenerating}
-              >
-                {isGenerating ? (
-                  <LoaderCircle className="animate-spin" />
-                ) : (
-                  <ImageIcon />
-                )}
-                Generate Image
-              </Button>
-          )}
         </div>
       </div>
     </Card>

@@ -17,7 +17,6 @@ import {generateCaptions} from '@/ai/flows/generate-captions';
 import {findHashtags} from '@/ai/flows/find-hashtags';
 import {getBestTimeToPost} from '@/ai/flows/best-time-to-post';
 import {trendForecast} from '@/ai/flows/trend-forecasting';
-import {generateImage} from '@/ai/flows/generate-image';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
 import { db, auth } from './firebase-admin';
@@ -423,31 +422,6 @@ app.post('/v1/best-time-to-post', contentToolMiddleware, async (req: Request, re
       .send({error: 'Failed to get best time to post.', details: e.message});
   }
 });
-
-// POST /v1/generate-image - Firebase Auth
-app.post(
-  '/v1/generate-image',
-  authenticateFirebaseToken,
-  checkUsageAndDecrementCredits({toolType: 'image_tool', cost: 10}),
-  async (req, res) => {
-    const {prompt} = req.body;
-
-    if (!prompt) {
-      return res.status(400).send({error: 'A "prompt" is required.'});
-    }
-
-    try {
-      const result = await generateImage({prompt});
-      return res.status(200).send({success: true, data: result});
-    } catch (e: any) {
-      logger.error('Error in /v1/generate-image:', e);
-      return res
-        .status(500)
-        .send({success: false, error: e.message || 'An unexpected error occurred.'});
-    }
-  }
-);
-
 
 // Export the Express app as an onRequest function
 export const api = onRequest(app);
