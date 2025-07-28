@@ -42,7 +42,10 @@ export function AdCard({
                 />
             </div>
             <div className="w-full md:w-1/2 p-6 flex flex-col">
-              <Badge variant="secondary" className="self-start mb-4">{industry}</Badge>
+              <div className="flex gap-2 mb-4">
+                <Badge variant="secondary" className="self-start">{industry}</Badge>
+                <Badge variant="outline" className="self-start">Ad</Badge>
+              </div>
               <h3 className="text-2xl font-bold font-headline mb-3">{title}</h3>
               <p className="text-muted-foreground mb-6 flex-grow">{description}</p>
               <Button asChild variant="outline" className="mt-auto self-start">
