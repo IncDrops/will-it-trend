@@ -3,15 +3,18 @@ import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Badge } from './ui/badge';
+import Link from 'next/link';
+
 
 type PricingCardProps = {
   title: string;
-  price: number;
+  price: number | null;
   description: string;
   features: string[];
   cta: string;
   isFeatured?: boolean;
   targetAudience: string;
+  link: string;
 };
 
 export function PricingCard({
@@ -22,6 +25,7 @@ export function PricingCard({
   cta,
   isFeatured = false,
   targetAudience,
+  link
 }: PricingCardProps) {
   return (
     <div className={cn('relative group transition-transform duration-300 ease-in-out', isFeatured ? 'transform md:scale-110 z-10' : 'hover:scale-105')}>
@@ -38,9 +42,15 @@ export function PricingCard({
           <CardDescription>{targetAudience}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col flex-grow">
-          <div className="text-center my-4">
-            <span className="text-4xl font-extrabold">${price}</span>
-            <span className="text-muted-foreground">/one-time</span>
+          <div className="text-center my-4 min-h-[56px]">
+            {price !== null ? (
+              <>
+                <span className="text-4xl font-extrabold">${price}</span>
+                <span className="text-muted-foreground">/one-time</span>
+              </>
+            ) : (
+               <span className="text-2xl font-bold">Custom Pricing</span>
+            )}
           </div>
           <p className="text-center text-muted-foreground mb-6 min-h-[40px]">{description}</p>
           <ul className="space-y-3 flex-grow">
@@ -55,9 +65,12 @@ export function PricingCard({
             size="lg"
             variant={isFeatured ? 'shiny' : 'outline'}
             className="w-full mt-8"
+            asChild
           >
-            {isFeatured && <Sparkles />}
-            {cta}
+            <Link href={link}>
+              {isFeatured && <Sparkles />}
+              {cta}
+            </Link>
           </Button>
         </CardContent>
       </Card>

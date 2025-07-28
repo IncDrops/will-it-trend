@@ -12,6 +12,7 @@ const routes = [
   { href: '/tools', label: 'AI Tools' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/docs', label: 'API Docs' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export function Nav() {

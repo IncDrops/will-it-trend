@@ -15,27 +15,29 @@ export default function PricingPage() {
       cta: 'Get Started',
       isFeatured: false,
       targetAudience: 'Solo creators',
+      link: '/#input-section',
     },
     {
-      title: 'Agency Pack',
+      title: 'Pro AI',
       price: 49.99,
       description: 'For marketing teams and agencies managing multiple clients.',
       features: [
         'Unlimited Trend Reports',
-        '250 AI Credits',
+        '500 AI Credits',
         'API Access for integrations',
         'Priority Support',
       ],
-      cta: 'Choose Agency',
+      cta: 'Choose Pro AI',
       isFeatured: true,
       targetAudience: 'Marketing teams',
+      link: '/#input-section',
     },
     {
       title: 'White Label',
-      price: 299,
+      price: null,
       description: 'For businesses wanting to offer our reports under their own brand.',
       features: [
-        'Everything in Agency Pack',
+        'Everything in Pro AI Pack',
         'Custom Branded Reports',
         'Dedicated Account Manager',
         'White-label options',
@@ -43,6 +45,7 @@ export default function PricingPage() {
       cta: 'Contact Sales',
       isFeatured: false,
       targetAudience: 'Influencers & Agencies',
+      link: '/contact',
     },
   ];
 
@@ -69,6 +72,7 @@ export default function PricingPage() {
             cta={plan.cta}
             isFeatured={plan.isFeatured}
             targetAudience={plan.targetAudience}
+            link={plan.link}
           />
         ))}
       </div>
