@@ -138,21 +138,21 @@ export function InputModule({ onNewResult }: InputModuleProps) {
               name="timeHorizon"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/3">
-                  <FormLabel>Platform</FormLabel>
+                  <FormLabel>Time Horizon</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a platform" />
+                        <SelectValue placeholder="Select a time horizon" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="tiktok">TikTok</SelectItem>
-                      <SelectItem value="instagram">Instagram</SelectItem>
-                      <SelectItem value="twitter">Twitter</SelectItem>
-                      <SelectItem value="all">All Platforms</SelectItem>
+                      <SelectItem value="24 hours">24 Hours</SelectItem>
+                      <SelectItem value="7 days">7 Days</SelectItem>
+                      <SelectItem value="30 days">30 Days</SelectItem>
+                      <SelectItem value="90 days">90 Days</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
