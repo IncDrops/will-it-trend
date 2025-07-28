@@ -3,32 +3,35 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+  
+    // --- PUBLIC-READ COLLECTIONS ---
+    // Allow anyone to read content and predictions, as they are public-facing.
+    match /content/{docId} {
+      allow read: if true;
+      // Only authenticated users can update documents (e.g., to change an image).
+      allow write: if request.auth != null;
+    }
 
-    // Users can only read and write their own data.
+    match /predictions_cache/{docId} {
+        allow read: if true;
+        // No one should be able to write to the cache from the client.
+        allow write: if false;
+    }
+
+    // --- USER DATA ---
+    // Users can only read and write to their own document in the 'users' collection.
+    // This is essential for managing their AI credits.
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
     
-    // API keys should not be client-readable or writable for security.
-    match /api_keys/{apiKey} {
+    // --- API KEYS (Secure) ---
+    // Disallow all client-side access to API keys for security.
+    match /api_keys/{keyId} {
         allow read, write: if false;
     }
-
-    // Content is publically readable, but only authenticated users (i.e., you) can update it.
-    match /content/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-    
-    // Predictions cache is publically readable. Writes are handled by backend functions.
-    match /predictions_cache/{cacheKey} {
-        allow read: if true;
-        allow write: if false; // Should only be written by backend with admin privileges
-    }
-
-    // Default deny all other reads/writes
-    match /{document=**} {
-      allow read, write: if false;
+     match /api_keys/{keyId}/{anyDoc=**} {
+        allow read, write: if false;
     }
   }
 }
