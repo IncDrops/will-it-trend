@@ -1,7 +1,3 @@
-
-
-
-
 export const sampleTrends = [
   {
     id: 1,
