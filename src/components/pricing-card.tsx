@@ -53,14 +53,15 @@ export function PricingCard({
     }
 
     try {
+      const token = await user.getIdToken();
       const response = await fetch('/api/v1/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ 
           priceId,
-          userId: user.uid,
           successUrl: `${window.location.origin}/?payment=success`,
           cancelUrl: window.location.href,
         }),
@@ -81,7 +82,8 @@ export function PricingCard({
         title: 'Checkout Error',
         description: e.message,
       });
-      setIsLoading(false);
+    } finally {
+        setIsLoading(false);
     }
   };
   

@@ -183,11 +183,14 @@ const authenticateAndRateLimit = async (
 // POST /v1/create-checkout-session
 app.post(
   '/v1/create-checkout-session',
+  authenticateFirebaseToken,
   async (req: Request, res: Response) => {
-    const {priceId, userId, successUrl, cancelUrl} = req.body;
+    const {priceId, successUrl, cancelUrl} = req.body;
+    const { uid } = res.locals.user;
 
-    if (!priceId || !userId) {
-      return res.status(400).send({error: 'Price ID and User ID are missing.'});
+
+    if (!priceId) {
+      return res.status(400).send({error: 'Price ID is missing.'});
     }
     if (!successUrl || !cancelUrl) {
       return res
@@ -211,7 +214,7 @@ app.post(
         mode: 'payment',
         success_url: successUrl,
         cancel_url: cancelUrl,
-        client_reference_id: userId,
+        client_reference_id: uid,
       });
 
       return res.status(200).send({sessionId: session.id, url: session.url});
