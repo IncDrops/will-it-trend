@@ -24,6 +24,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { LoaderCircle, Sparkles } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 const formSchema = z.object({
   input: z
@@ -44,6 +45,7 @@ type InputModuleProps = {
 export function InputModule({ onNewResult }: InputModuleProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,11 +58,23 @@ export function InputModule({ onNewResult }: InputModuleProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     
+    if (!user) {
+        toast({
+            variant: 'destructive',
+            title: 'Authentication Error',
+            description: 'Could not verify user. Please refresh the page.',
+        });
+        setIsSubmitting(false);
+        return;
+    }
+
     try {
+        const token = await user.getIdToken();
         const response = await fetch('/api/v1/trend-forecast', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify(values),
         });

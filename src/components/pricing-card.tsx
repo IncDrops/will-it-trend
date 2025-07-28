@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/
 import { Badge } from './ui/badge';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/use-auth';
 
 type PricingCardProps = {
   title: string;
@@ -31,6 +32,7 @@ export function PricingCard({
 }: PricingCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleCheckout = async () => {
     if (!priceId) {
@@ -40,6 +42,16 @@ export function PricingCard({
     }
 
     setIsLoading(true);
+     if (!user) {
+        toast({
+            variant: 'destructive',
+            title: 'Authentication Error',
+            description: 'You must be signed in to make a purchase. Please refresh the page.',
+        });
+        setIsLoading(false);
+        return;
+    }
+
     try {
       const response = await fetch('/api/v1/create-checkout-session', {
         method: 'POST',
@@ -48,6 +60,7 @@ export function PricingCard({
         },
         body: JSON.stringify({ 
           priceId,
+          userId: user.uid,
           successUrl: `${window.location.origin}/?payment=success`,
           cancelUrl: window.location.href,
         }),
@@ -72,7 +85,7 @@ export function PricingCard({
     }
   };
   
-  const buttonDisabled = isLoading;
+  const buttonDisabled = isLoading || (!priceId && cta !== 'Contact Sales');
 
 
   return (
