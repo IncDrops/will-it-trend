@@ -17,28 +17,15 @@ import { dbClient } from '@/lib/firebase-client';
 
 
 type AdCardProps = {
-  id: string;
-  industry: string;
-  title: string;
-  description: string;
-  cta: string;
-  link: string;
-  image: string; // Original placeholder
-  aiHint: string;
+  item: AdData;
   onImageUpdate: (id: string, newImageUrl: string) => void;
 };
 
 export function AdCard({
-  id,
-  industry,
-  title,
-  description,
-  cta,
-  link,
-  image,
-  aiHint,
+  item,
   onImageUpdate,
 }: AdCardProps) {
+  const { id, industry, title, description, cta, link, image, aiHint } = item;
   const [isGenerating, setIsGenerating] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -108,7 +95,7 @@ export function AdCard({
             </p>
             <div className="flex gap-2 flex-wrap">
               <Button asChild variant="shiny" size="lg">
-                <Link href={link} target="_blank" rel="noopener noreferrer">
+                <Link href={link || '#'} target="_blank" rel="noopener noreferrer">
                   {cta}
                   <ArrowUpRight className="ml-2" />
                 </Link>
