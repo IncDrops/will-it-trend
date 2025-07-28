@@ -32,7 +32,6 @@ const prompt = ai.definePrompt({
   input: {schema: TrendForecastInputSchema},
   output: {
     schema: TrendForecastOutputSchema,
-    format: 'json',
   },
   prompt: `You are an AI trend forecaster. Given an idea, hashtag, or product and a time horizon,
 you will forecast its trending potential based on current market trends, social buzz, and competitive analysis.
@@ -58,6 +57,9 @@ const trendForecastFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('The AI model did not return a valid response.');
+    }
+    return output;
   }
 );
