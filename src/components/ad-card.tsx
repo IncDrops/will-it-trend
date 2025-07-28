@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,8 +10,12 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { type AdData } from '@/lib/data';
+import { doc, updateDoc } from 'firebase/firestore';
+import { dbClient } from '@/lib/firebase-client';
 
 type AdCardProps = {
+  id: string;
   industry: string;
   title: string;
   description: string;
@@ -18,9 +23,11 @@ type AdCardProps = {
   link: string;
   image: string;
   aiHint: string;
+  onImageUpdate: (id: string, newImageUrl: string) => void;
 };
 
 export function AdCard({
+  id,
   industry,
   title,
   description,
@@ -28,8 +35,8 @@ export function AdCard({
   link,
   image,
   aiHint,
+  onImageUpdate,
 }: AdCardProps) {
-  const [currentImage, setCurrentImage] = useState(image);
   const [isGenerating, setIsGenerating] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -62,7 +69,14 @@ export function AdCard({
         throw new Error(result.error || 'Failed to generate image.');
       }
       
-      setCurrentImage(result.data.imageUrl);
+      const newImageUrl = result.data.imageUrl;
+      
+      // Update the image URL in Firestore
+      const contentRef = doc(dbClient, 'content', id);
+      await updateDoc(contentRef, { image: newImageUrl });
+      
+      // Update the local state in the parent component
+      onImageUpdate(id, newImageUrl);
 
     } catch (error: any) {
       toast({
@@ -120,7 +134,7 @@ export function AdCard({
             </div>
            )}
           <Image
-            src={currentImage}
+            src={image}
             alt={title}
             width={600}
             height={400}
