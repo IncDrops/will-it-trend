@@ -26,6 +26,11 @@ import { addCreditsToUser } from './services/users';
 // Set global options for functions
 setGlobalOptions({maxInstances: 10});
 
+// Initialize Stripe outside of the request handler
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: '2024-06-20',
+});
+
 const app = express();
 
 // --- Stripe Webhook ---
@@ -43,7 +48,6 @@ app.post('/v1/stripe-webhook', express.raw({type: 'application/json'}), async (r
     let event: Stripe.Event;
 
     try {
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
         event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret);
     } catch (err: any) {
         logger.error('Stripe webhook signature verification failed.', err);
@@ -199,10 +203,6 @@ app.post(
     }
     
     try {
-      // Initialize Stripe
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-        apiVersion: '2024-06-20',
-      });
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
