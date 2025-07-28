@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
@@ -34,8 +35,8 @@ export function AdCard({
             <Image
               src={image}
               alt={title}
-              width={600}
-              height={400}
+              width={1200}
+              height={600}
               data-ai-hint={aiHint}
               className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
             />

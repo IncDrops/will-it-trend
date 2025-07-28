@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -21,8 +22,8 @@ export function BlogCard({ title, teaser, tag, image, aiHint, offer, link }: Blo
         <Image
           src={image}
           alt={title}
-          width={600}
-          height={400}
+          width={1200}
+          height={600}
           data-ai-hint={aiHint}
           className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
         />
