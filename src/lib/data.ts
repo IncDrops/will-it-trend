@@ -1,3 +1,4 @@
+
 export const sampleTrends = [
   {
     id: 1,
@@ -89,7 +90,7 @@ export const contentData: ContentItem[] = [
     title: 'The Future is Electric. Drive the Revolution.',
     description: 'Introducing the new luxury EV. Unmatched performance and design.',
     cta: 'Explore Now',
-    link: 'https://amzn.to/4o9Dowh',
+    link: 'https://amzn.to/4obEfN2',
     image: 'https://placehold.co/1200x600',
     aiHint: 'luxury EV magazine'
   },
@@ -101,7 +102,7 @@ export const contentData: ContentItem[] = [
     teaser: 'Discover the tools and strategies to identify and capitalize on trending hashtags before they go viral.',
     tag: 'Social Media',
     offer: 'Read on Amazon',
-    link: 'https://amzn.to/3UusOSW',
+    link: 'https://amzn.to/4obEfN2',
   },
   {
     type: 'ad' as const,
@@ -126,7 +127,7 @@ export const contentData: ContentItem[] = [
     image: 'https://placehold.co/1200x600',
     aiHint: 'futuristic gadget magazine',
     offer: 'Shop on Amazon',
-    link: 'https://amzn.to/456j3iN'
+    link: 'https://amzn.to/4obEfN2'
   },
    {
     type: 'ad' as const,
@@ -150,7 +151,7 @@ export const contentData: ContentItem[] = [
     image: 'https://placehold.co/600x400',
     aiHint: 'marketing dashboard',
     offer: 'Explore Our API',
-    link: '#'
+    link: '/docs'
   },
   {
     type: 'ad' as const,
@@ -174,7 +175,7 @@ export const contentData: ContentItem[] = [
     image: 'https://placehold.co/600x400',
     aiHint: 'sustainable tech',
     offer: 'Shop Smart Gardens',
-    link: 'https://amzn.to/3J2ZEYu'
+    link: 'https://amzn.to/4obEfN2'
   },
   {
     type: 'ad' as const,
@@ -198,6 +199,6 @@ export const contentData: ContentItem[] = [
     image: 'https://placehold.co/1200x600',
     aiHint: 'gen z fashion magazine',
     offer: 'Shop Vlogging Kits',
-    link: 'https://amzn.to/4meDf94'
+    link: 'https://amzn.to/4obEfN2'
   }
 ];
