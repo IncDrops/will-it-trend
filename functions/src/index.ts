@@ -20,7 +20,7 @@ import {trendForecast} from '@/ai/flows/trend-forecasting';
 import {generateImage} from '@/ai/flows/generate-image';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
-import { getDb, getAuth } from './firebase-admin';
+import { db, auth } from './firebase-admin';
 import { addCreditsToUser } from './services/users';
 import { FieldValue } from 'firebase-admin/firestore';
 
@@ -88,7 +88,6 @@ app.use(express.urlencoded({limit: '50mb', extended: true}));
 
 // Middleware to verify Firebase ID token
 const authenticateFirebaseToken = async (req: Request, res: Response, next: NextFunction) => {
-    const auth = getAuth();
     const token = req.headers.authorization?.split('Bearer ')[1];
 
     if (!token) {
@@ -107,7 +106,6 @@ const authenticateFirebaseToken = async (req: Request, res: Response, next: Next
 
 const checkUsageAndDecrementCredits = ({ toolType, cost }: { toolType: 'trend_forecast' | 'content_tool' | 'image_tool', cost: number }) => async (req: Request, res: Response, next: NextFunction) => {
   const { uid } = res.locals.user;
-  const db = getDb();
   const userRef = db.collection('users').doc(uid);
   const FREE_LIMIT = 2;
 
@@ -163,7 +161,6 @@ const authenticateAndRateLimit = async (
   res: Response,
   next: NextFunction
 ) => {
-  const db = getDb();
   const apiKey = req.headers['x-api-key'] as string;
 
   if (!apiKey) {
@@ -326,7 +323,6 @@ app.post('/v1/predict', authenticateAndRateLimit, async (req: Request, res: Resp
     return res.status(400).send({error: 'Prediction "topic" is missing.'});
   }
 
-  const db = getDb();
   const cacheKey = crypto.createHash('md5').update(topic).digest('hex');
   const cacheRef = db.collection('predictions_cache').doc(cacheKey);
 

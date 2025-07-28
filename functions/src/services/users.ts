@@ -1,7 +1,7 @@
 
 'use server';
 
-import { getDb } from '../firebase-admin';
+import { db } from '../firebase-admin';
 import * as logger from 'firebase-functions/logger';
 
 const creditsMap: { [key: string]: number } = {
@@ -26,7 +26,6 @@ export async function addCreditsToUser(userId: string, priceId: string): Promise
     return { success: false, error: `No credits configured for priceId: ${priceId}`};
   }
 
-  const db = getDb();
   const userRef = db.collection('users').doc(userId);
 
   try {
