@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 
 const routes = [
   { href: '/', label: 'Dashboard' },
+  { href: '/learn-more', label: 'Learn More' },
   { href: '/tools', label: 'AI Tools' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/contact', label: 'Contact' },

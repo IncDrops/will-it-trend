@@ -113,7 +113,7 @@ export const contentData: ContentItem[] = [
     description:
       'Next-generation semiconductors for unparalleled AI processing power.',
     cta: 'Learn More',
-    link: '#',
+    link: '/learn-more',
     image: 'https://placehold.co/600x400',
     aiHint: 'semiconductor chip'
   },
