@@ -9,7 +9,7 @@ export default function PricingPage() {
       price: 9.99,
       description: 'Perfect for solo creators testing the waters.',
       features: [
-        '20 Trend Reports (100 credits)',
+        'Up to 20 Trend Reports',
         '100 AI Credits',
         'Full access to AI Tools',
       ],
@@ -23,7 +23,7 @@ export default function PricingPage() {
       price: 29.99,
       description: 'For marketing teams and agencies managing multiple clients.',
       features: [
-        '100 Trend Reports (500 credits)',
+        'Up to 100 Trend Reports',
         '500 AI Credits',
         'API Access for integrations',
         'Priority Support',
