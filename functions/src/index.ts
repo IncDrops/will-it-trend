@@ -21,6 +21,7 @@ import * as crypto from 'crypto';
 import Stripe from 'stripe';
 import { getDb, getAuth } from './firebase-admin';
 import { addCreditsToUser } from './services/users';
+import { FieldValue } from 'firebase-admin/firestore';
 
 
 // Set global options for functions
@@ -100,6 +101,60 @@ const authenticateFirebaseToken = async (req: Request, res: Response, next: Next
         return res.status(403).send({ error: 'Unauthorized: Invalid token.' });
     }
 };
+
+const checkUsageAndDecrementCredits = (toolType: 'trend_forecast' | 'content_tool') => async (req: Request, res: Response, next: NextFunction) => {
+  const { uid } = res.locals.user;
+  const db = getDb();
+  const userRef = db.collection('users').doc(uid);
+  const FREE_LIMIT = 2;
+
+  const dateField = `last_free_use_date_${toolType}`;
+  const countField = `free_uses_today_${toolType}`;
+
+  try {
+    const userDoc = await userRef.get();
+    const userData = userDoc.data() || {};
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+
+    // Check for free uses first
+    const lastUseDate = userData[dateField];
+    let freeUsesToday = userData[countField] || 0;
+
+    if (lastUseDate !== todayStr) {
+      // It's a new day, reset free uses for this tool type
+      freeUsesToday = 0;
+      await userRef.set({ [dateField]: todayStr, [countField]: 0 }, { merge: true });
+    }
+
+    if (freeUsesToday < FREE_LIMIT) {
+      // User has free uses left
+      await userRef.update({ [countField]: FieldValue.increment(1) });
+      logger.info(`User ${uid} used a free ${toolType}. Uses today: ${freeUsesToday + 1}`);
+      return next();
+    }
+    
+    // If no free uses left, check for paid credits
+    const credits = userData.ai_credits || 0;
+    if (credits > 0) {
+      await userRef.update({ ai_credits: FieldValue.increment(-1) });
+      logger.info(`User ${uid} used a paid credit for ${toolType}. Credits remaining: ${credits - 1}`);
+      return next();
+    }
+
+    // No free uses and no credits
+    const errorMsg = toolType === 'trend_forecast'
+      ? 'You have used your free trend reports for today. Please purchase credits to continue.'
+      : 'You have used your free AI tool uses for today. Please purchase credits to continue.';
+      
+    return res.status(429).send({ success: false, error: errorMsg });
+
+  } catch (error) {
+    logger.error(`Error in usage middleware for ${uid} and ${toolType}:`, error);
+    return res.status(500).send({ success: false, error: 'An internal error occurred while checking usage limits.' });
+  }
+};
+
 
 // Middleware for API Key Authentication and Rate Limiting
 const authenticateAndRateLimit = async (
@@ -229,50 +284,19 @@ app.post(
 
 
 // POST /v1/trend-forecast - Firebase Auth
-app.post('/v1/trend-forecast', authenticateFirebaseToken, async (req: Request, res: Response) => {
-    const { uid } = res.locals.user;
+app.post('/v1/trend-forecast', 
+    authenticateFirebaseToken, 
+    checkUsageAndDecrementCredits('trend_forecast'), 
+    async (req: Request, res: Response) => {
     const { input, timeHorizon } = req.body;
-    const db = getDb();
   
     if (!input || !timeHorizon) {
       return res.status(400).send({ error: 'Request must include "input" and "timeHorizon".' });
     }
   
     try {
-      const userRef = db.collection('users').doc(uid);
-      const userDoc = await userRef.get();
-      const userData = userDoc.data();
-      const now = new Date();
-      const todayStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
-  
-      let canForecast = false;
-  
-      if (userData?.ai_credits && userData.ai_credits > 0) {
-        // User has credits, allow and decrement
-        await userRef.update({ 'ai_credits': (userData.ai_credits || 0) - 1 });
-        canForecast = true;
-      } else {
-        // Check free daily limit
-        const lastFreeUsage = userData?.last_free_usage_date;
-        if (lastFreeUsage !== todayStr) {
-          // It's a new day, allow and update timestamp
-          await userRef.set({ last_free_usage_date: todayStr }, { merge: true });
-          canForecast = true;
-        } else {
-          return res.status(429).send({ 
-            success: false, 
-            error: 'You have used your free trend report for today. Please purchase credits to continue.' 
-          });
-        }
-      }
-      
-      if (canForecast) {
-        const result = await trendForecast({ input, timeHorizon });
-        return res.status(200).send({ success: true, data: result });
-      } else {
-        // This case should not be hit due to the logic above, but it's a safeguard
-        return res.status(403).send({ success: false, error: 'Not authorized to perform a forecast.' });
-      }
+      const result = await trendForecast({ input, timeHorizon });
+      return res.status(200).send({ success: true, data: result });
     } catch (e: any) {
       logger.error('Error in /v1/trend-forecast:', e);
       return res.status(500).send({ success: false, error: e.message || 'An unexpected error occurred.' });
@@ -346,8 +370,10 @@ app.post('/v1/predict', authenticateAndRateLimit, async (req: Request, res: Resp
 
 // --- AI TOOLS - Firebase Auth ---
 
+const contentToolMiddleware = [authenticateFirebaseToken, checkUsageAndDecrementCredits('content_tool')];
+
 // POST /v1/generate-captions
-app.post('/v1/generate-captions', authenticateFirebaseToken, async (req: Request, res: Response) => {
+app.post('/v1/generate-captions', contentToolMiddleware, async (req: Request, res: Response) => {
   const {topic, tone} = req.body;
   if (!topic || !tone) {
     return res
@@ -366,7 +392,7 @@ app.post('/v1/generate-captions', authenticateFirebaseToken, async (req: Request
 });
 
 // POST /v1/find-hashtags
-app.post('/v1/find-hashtags', authenticateFirebaseToken, async (req: Request, res: Response) => {
+app.post('/v1/find-hashtags', contentToolMiddleware, async (req: Request, res: Response) => {
   const {topic} = req.body;
   if (!topic) {
     return res.status(400).send({error: 'Request body must include "topic".'});
@@ -383,7 +409,7 @@ app.post('/v1/find-hashtags', authenticateFirebaseToken, async (req: Request, re
 });
 
 // POST /v1/best-time-to-post
-app.post('/v1/best-time-to-post', authenticateFirebaseToken, async (req: Request, res: Response) => {
+app.post('/v1/best-time-to-post', contentToolMiddleware, async (req: Request, res: Response) => {
   const {industry, platform} = req.body;
   if (!industry || !platform) {
     return res
