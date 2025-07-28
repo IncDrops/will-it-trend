@@ -7,22 +7,56 @@ import { Header } from '@/components/header';
 import { InputModule } from '@/components/input-module';
 import { TrendCard } from '@/components/trend-card';
 import { ScrollAnimate } from '@/components/scroll-animate';
-import { sampleTrends, contentData, type ContentItem, AdData, BlogData } from '@/lib/data';
+import { sampleTrends, type ContentItem, AdData, BlogData } from '@/lib/data';
 import { useContent } from '@/hooks/use-content';
 import { Bot, Building, PenTool, Car, TrendingUp, Cpu, Brain, Leaf, Briefcase, Laptop, Smartphone, Tablet, TrendingUpIcon, LoaderCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { PageSizeCard } from '@/components/page-size-card';
 import { InstagramPostCard } from '@/components/instagram-post-card';
 import { AdCard as AdCardComponent } from '@/components/ad-card';
 import { PhoneSizeCard } from '@/components/phone-size-card';
 import { BlogCard } from '@/components/blog-card';
 import { IconSeparator } from '@/components/icon-separator';
+import { Card } from '@/components/ui/card';
 
 type TrendResult = TrendForecastOutput & {
   id: string;
   query: string;
   timeHorizon: string;
 };
+
+// Component mapping for dynamic rendering
+const componentMap = {
+  '1': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <PageSizeCard item={item as AdData} onImageUpdate={onImageUpdate} />,
+  '2': (item: ContentItem) => item.type === 'blog' && <InstagramPostCard item={item as BlogData} />,
+  '3': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-4xl"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>,
+  '4': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <PageSizeCard item={item as BlogData} onImageUpdate={onImageUpdate} />,
+  '5': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <PhoneSizeCard item={item as AdData} onImageUpdate={onImageUpdate} />,
+  '6': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard {...(item as BlogData)} /></div>,
+  '7': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => (
+    <div className="flex w-full items-center justify-center gap-4">
+      <Leaf className="w-8 h-8 text-primary/70" />
+      {item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>}
+      <Briefcase className="w-8 h-8 text-primary/70" />
+    </div>
+  ),
+  '8': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard {...(item as BlogData)} /></div>,
+  '9': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>,
+  '10': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <PageSizeCard item={item as BlogData} onImageUpdate={onImageUpdate} />,
+};
+
+// Icon mapping for separators
+const iconMap: { [key: string]: React.ElementType | React.ElementType[] } = {
+  '1': Car,
+  '2': TrendingUp,
+  '3': Cpu,
+  '4': Laptop,
+  '5': [Smartphone, Tablet, Laptop],
+  '6': Brain,
+  '7': Leaf,
+  '8': Laptop,
+  '9': TrendingUpIcon,
+};
+
 
 export default function Home() {
   const [results, setResults] = useState<TrendResult[]>([]);
@@ -45,19 +79,6 @@ export default function Home() {
     // Shuffle cards only on the client-side to avoid hydration mismatch
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
   }, [allCards]);
-
-  const [
-    autoAd,
-    socialBlog,
-    techAd,
-    gadgetBlog,
-    mobileAd,
-    marketingBlog,
-    softwareAd,
-    sustainBlog,
-    financeAd,
-    genZBlog,
-  ] = content;
 
 
   return (
@@ -160,49 +181,29 @@ export default function Home() {
             </div>
           ) : (
             <div className="flex flex-col items-center gap-8">
-                {autoAd?.type === 'ad' && <PageSizeCard item={autoAd as AdData} />}
-                <IconSeparator icon={Car} />
+                {content.map((item, index) => {
+                    const originalId = item.originalId || item.id;
+                    const CardComponent = componentMap[originalId as keyof typeof componentMap];
+                    const IconComponent = iconMap[originalId as keyof typeof iconMap];
+                    
+                    return (
+                        <React.Fragment key={item.id}>
+                            {CardComponent ? (
+                                CardComponent(item, handleImageUpdate)
+                            ) : (
+                                <Card className="p-4">
+                                    <p>Unsupported content type for id: {originalId}</p>
+                                </Card>
+                            )}
 
-                {socialBlog?.type === 'blog' && <InstagramPostCard item={socialBlog as BlogData} />}
-                <IconSeparator icon={TrendingUp} />
-
-                {techAd?.type === 'ad' && (
-                  <div className="w-full max-w-4xl">
-                    <AdCardComponent {...(techAd as AdData)} onImageUpdate={handleImageUpdate} />
-                  </div>
-                )}
-                <IconSeparator icon={Cpu} />
-
-                {gadgetBlog?.type === 'blog' && <PageSizeCard item={gadgetBlog as BlogData} />}
-                <IconSeparator icon={Laptop} />
-                
-                {mobileAd?.type === 'ad' && <PhoneSizeCard item={mobileAd as AdData} onImageUpdate={handleImageUpdate} />}
-                <IconSeparator icons={[Smartphone, Tablet, Laptop]} />
-
-                {marketingBlog?.type === 'blog' && (
-                  <div className="w-full max-w-4xl"> <BlogCard {...(marketingBlog as BlogData)}/> </div>
-                )}
-                <IconSeparator icon={Brain} />
-                
-                <div className="flex w-full items-center justify-center gap-4">
-                    <Leaf className="w-8 h-8 text-primary/70" />
-                    {softwareAd?.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent {...(softwareAd as AdData)} onImageUpdate={handleImageUpdate}/></div>}
-                    <Briefcase className="w-8 h-8 text-primary/70" />
-                </div>
-                <IconSeparator icon={Leaf} />
-                
-                {sustainBlog?.type === 'blog' && (
-                    <div className="w-full max-w-4xl"> <BlogCard {...(sustainBlog as BlogData)}/> </div>
-                )}
-                <IconSeparator icon={Laptop} />
-
-                {financeAd?.type === 'ad' && (
-                    <div className="w-full max-w-2xl aspect-square"><AdCardComponent {...(financeAd as AdData)} onImageUpdate={handleImageUpdate} /></div>
-                )}
-                <IconSeparator icon={TrendingUpIcon} />
-
-
-                {genZBlog?.type === 'blog' && <PageSizeCard item={genZBlog as BlogData} />}
+                            {IconComponent && index < content.length - 1 && (
+                                Array.isArray(IconComponent)
+                                    ? <IconSeparator icons={IconComponent} />
+                                    : <IconSeparator icon={IconComponent} />
+                            )}
+                        </React.Fragment>
+                    );
+                })}
                 
                 <div className="mt-16 flex flex-col items-center space-y-2">
                     <TrendingUpIcon className="h-8 w-8 text-primary" />

@@ -1,6 +1,7 @@
 
 
 
+
 export const sampleTrends = [
   {
     id: 1,
@@ -54,7 +55,8 @@ export const sampleTrends = [
 
 export type AdData = {
   type: 'ad';
-  id: string; // Changed to string for Firestore
+  id: string; 
+  originalId: string;
   industry: string;
   title: string;
   description: string;
@@ -66,7 +68,8 @@ export type AdData = {
 
 export type BlogData = {
   type: 'blog';
-  id: string; // Changed to string for Firestore
+  id: string; 
+  originalId: string;
   title: string;
   teaser: string;
   tag: string;
@@ -85,6 +88,7 @@ export const contentData: ContentItem[] = [
   {
     type: 'ad' as const,
     id: '1',
+    originalId: '1',
     industry: 'Automobile',
     title: 'The Future is Electric. Drive the Revolution.',
     description: 'Introducing the new luxury EV. Unmatched performance and design.',
@@ -96,6 +100,7 @@ export const contentData: ContentItem[] = [
     {
     type: 'blog' as const,
     id: '2',
+    originalId: '2',
     title: 'How to Profit From the Next Social Media Hashtag Boom',
     teaser: 'Discover the tools and strategies to identify and capitalize on trending hashtags before they go viral.',
     tag: 'Social Media',
@@ -105,6 +110,7 @@ export const contentData: ContentItem[] = [
   {
     type: 'ad' as const,
     id: '3',
+    originalId: '3',
     industry: 'Tech',
     title: 'Powering the AI Era.',
     description:
@@ -117,6 +123,7 @@ export const contentData: ContentItem[] = [
     {
     type: 'blog' as const,
     id: '4',
+    originalId: '4',
     title: 'Best Gadgets for Early Adopters: 2025 Picks',
     teaser: 'A curated list of the most innovative and game-changing gadgets set to launch in the coming year.',
     tag: 'Technology',
@@ -128,6 +135,7 @@ export const contentData: ContentItem[] = [
    {
     type: 'ad' as const,
     id: '5',
+    originalId: '5',
     industry: 'Mobile Smart Devices',
     title: 'Experience Brilliance.',
     description: 'The latest flagship phone with a revolutionary camera system.',
@@ -139,6 +147,7 @@ export const contentData: ContentItem[] = [
    {
     type: 'blog' as const,
     id: '6',
+    originalId: '6',
     title: 'AI Trend Forecasting Tools for Marketers',
     teaser: 'A deep dive into the AI platforms that are revolutionizing marketing by predicting consumer behavior.',
     tag: 'AI & Marketing',
@@ -150,6 +159,7 @@ export const contentData: ContentItem[] = [
   {
     type: 'ad' as const,
     id: '7',
+    originalId: '7',
     industry: 'Software',
     title: 'Build, Collaborate, and Scale.',
     description: 'Our cloud SaaS platform empowers teams to achieve more.',
@@ -161,6 +171,7 @@ export const contentData: ContentItem[] = [
     {
     type: 'blog' as const,
     id: '8',
+    originalId: '8',
     title: 'The Rise of Sustainable Tech: What to Watch',
     teaser: 'From green energy solutions to circular economy gadgets, explore the sustainable tech trends shaping our future.',
     tag: 'Sustainability',
@@ -172,6 +183,7 @@ export const contentData: ContentItem[] = [
   {
     type: 'ad' as const,
     id: '9',
+    originalId: '9',
     industry: 'Finance/Fintech',
     title: 'Invest Smarter, Not Harder.',
     description: 'Our AI-driven platform helps you navigate the markets with confidence.',
@@ -183,6 +195,7 @@ export const contentData: ContentItem[] = [
    {
     type: 'blog' as const,
     id: '10',
+    originalId: '10',
     title: 'Decoding Gen Z: How They Drive Digital Trends',
     teaser: 'Understand the platforms, aesthetics, and values that make Gen Z the most powerful force in trend creation.',
     tag: 'Culture',
