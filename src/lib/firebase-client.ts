@@ -6,13 +6,13 @@ import { getAuth } from 'firebase/auth';
 
 // IMPORTANT: This is the corrected Firebase config for your project.
 const firebaseConfig = {
-  "apiKey": "AIzaSyB-...",
-  "authDomain": "will-it-trend16.firebaseapp.com",
-  "projectId": "will-it-trend16",
-  "storageBucket": "will-it-trend16.appspot.com",
-  "messagingSenderId": "1016836814476",
-  "appId": "1:1016836814476:web:15e5c26b7f9a2b53a4e9b9",
-  "measurementId": "G-L5E14Y852K"
+  "projectId": "trendcast-ai-65ycx",
+  "appId": "1:716031577191:web:fbc52a62a18a3c224e18c2",
+  "storageBucket": "trendcast-ai-65ycx.firebasestorage.app",
+  "apiKey": "AIzaSyBdIPIJmkK3SFfgZq6j1A7eeCW0CnrMrIQ",
+  "authDomain": "trendcast-ai-65ycx.firebaseapp.com",
+  "measurementId": "G-L5E14Y852K",
+  "messagingSenderId": "716031577191"
 };
 
 // Initialize Firebase
