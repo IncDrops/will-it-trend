@@ -32,7 +32,7 @@ const componentMap = {
   '3': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-4xl"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>,
   '4': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <PageSizeCard item={item as BlogData} onImageUpdate={onImageUpdate} />,
   '5': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <PhoneSizeCard item={item as AdData} onImageUpdate={onImageUpdate} />,
-  '6': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard {...(item as BlogData)} /></div>,
+  '6': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
   '7': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => (
     <div className="flex w-full items-center justify-center gap-4">
       <Leaf className="w-8 h-8 text-primary/70" />
@@ -40,7 +40,7 @@ const componentMap = {
       <Briefcase className="w-8 h-8 text-primary/70" />
     </div>
   ),
-  '8': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard {...(item as BlogData)} /></div>,
+  '8': (item: ContentItem) => item.type === 'blog' && <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div>,
   '9': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <div className="w-full max-w-2xl aspect-square"><AdCardComponent {...(item as AdData)} onImageUpdate={onImageUpdate} /></div>,
   '10': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'blog' && <PageSizeCard item={item as BlogData} onImageUpdate={onImageUpdate} />,
 };

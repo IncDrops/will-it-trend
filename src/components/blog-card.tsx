@@ -15,11 +15,10 @@ import { dbClient } from '@/lib/firebase-client';
 
 type BlogCardProps = {
   item: BlogData;
-  onImageUpdate: (id: string, newImageUrl: string) => void;
 };
 
 
-export function BlogCard({ item, onImageUpdate }: BlogCardProps) {
+export function BlogCard({ item }: BlogCardProps) {
   const { title, teaser, tag, image, aiHint, offer, link } = item;
   
   return (
