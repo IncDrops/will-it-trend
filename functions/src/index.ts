@@ -451,5 +451,3 @@ app.post(
 
 // Export the Express app as an onRequest function
 export const api = onRequest(app);
-
-    
