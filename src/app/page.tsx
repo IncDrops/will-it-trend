@@ -1,11 +1,7 @@
 
 'use client';
 
-<<<<<<< HEAD
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-=======
-import React, { useState, useEffect, useMemo, useRef } from 'react';
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 import { type TrendForecastOutput } from '@/ai/flows/trend-forecasting';
 import { Header } from '@/components/header';
 import { InputModule } from '@/components/input-module';
@@ -19,15 +15,9 @@ import { InstagramPostCard } from '@/components/instagram-post-card';
 import { AdCard as AdCardComponent } from '@/components/ad-card';
 import { PhoneSizeCard } from '@/components/phone-size-card';
 import { BlogCard } from '@/components/blog-card';
-<<<<<<< HEAD
-import { Button } from '@/components/ui/button';
-import { sampleTrends, adData, blogData } from '@/lib/data';
-import { Bot, Building, PenTool } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-=======
 import { IconSeparator } from '@/components/icon-separator';
 import { Card } from '@/components/ui/card';
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
+
 
 type TrendResult = TrendForecastOutput & {
   id: string;
@@ -35,11 +25,6 @@ type TrendResult = TrendForecastOutput & {
   timeHorizon: string;
 };
 
-<<<<<<< HEAD
-type ContentItem = 
-    | { type: 'ad'; data: typeof adData[0]; id: string }
-    | { type: 'blog'; data: typeof blogData[0]; id: string };
-=======
 // Component mapping for dynamic rendering
 const componentMap = {
   '1': (item: ContentItem, onImageUpdate: (id: string, newImageUrl: string) => void) => item.type === 'ad' && <PageSizeCard item={item as AdData} onImageUpdate={onImageUpdate} />,
@@ -72,22 +57,13 @@ const iconMap: { [key: string]: React.ElementType | React.ElementType[] } = {
   '8': Laptop,
   '9': TrendingUpIcon,
 };
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 
 
 export default function Home() {
   const [results, setResults] = useState<TrendResult[]>([]);
   const [shuffledCards, setShuffledCards] = useState<any[]>([]);
-<<<<<<< HEAD
-  
-  const { toast } = useToast();
-  const [contentItems, setContentItems] = useState<ContentItem[]>([]);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [hasMoreContent, setHasMoreContent] = useState(true);
-=======
   const { content, loading: contentLoading, error, handleImageUpdate } = useContent();
 
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 
   const handleNewResult = (result: TrendResult) => {
     setResults((prevResults) => [result, ...prevResults]);
@@ -99,62 +75,12 @@ export default function Home() {
       ...results.map(r => ({ type: 'trend' as const, data: r, id: `result-${r.id}`})),
     ];
   }, [results]);
-<<<<<<< HEAD
-  
-  const allContentSource = useMemo(() => {
-    return [
-      ...adData.map((ad, i) => ({ type: 'ad' as const, data: ad, id: `ad-${ad.id}-${i}` })),
-      ...blogData.map((blog, i) => ({ type: 'blog' as const, data: blog, id: `blog-${blog.id}-${i}`})),
-    ].sort(() => Math.random() - 0.5);
-  }, []);
-=======
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 
   useEffect(() => {
-    // Initial content load
-    setContentItems(allContentSource.slice(0, 4));
     // Shuffle trend cards on client
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
-<<<<<<< HEAD
-  }, [allCards, allContentSource]);
-=======
   }, [allCards]);
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 
-
-  const loadMoreContent = useCallback(() => {
-    if (isLoadingMore || !hasMoreContent) return;
-
-    setIsLoadingMore(true);
-    toast({ title: 'Loading more content...', description: 'Exploring the latest strategies & insights.' });
-
-    setTimeout(() => {
-        const currentLength = contentItems.length;
-        const nextItems = allContentSource.slice(currentLength, currentLength + 4);
-        
-        if (nextItems.length > 0) {
-            setContentItems(prevItems => [...prevItems, ...nextItems]);
-        } 
-        
-        if (contentItems.length + nextItems.length >= allContentSource.length) {
-            setHasMoreContent(false);
-            toast({ title: "You've reached the end!", description: 'Check back later for more insights.' });
-        }
-        
-        setIsLoadingMore(false);
-    }, 1500);
-  }, [isLoadingMore, hasMoreContent, allContentSource, contentItems, toast]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-        if (window.innerHeight + document.documentElement.scrollTop + 200 >= document.documentElement.offsetHeight && !isLoadingMore && hasMoreContent) {
-            loadMoreContent();
-        }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isLoadingMore, hasMoreContent, loadMoreContent]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -244,23 +170,6 @@ export default function Home() {
             <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
                 Go beyond the data with curated articles and partnership opportunities to grow your brand.
             </p>
-<<<<<<< HEAD
-             <div className="flex flex-col items-center gap-8">
-                {contentItems.map((content, index) => {
-                    const Component = content.type === 'ad' ? AdCard : BlogCard;
-                    return (
-                        <div key={content.id} className="w-full max-w-4xl">
-                             <Component {...content.data} index={index} />
-                        </div>
-                    )
-                })}
-            </div>
-             {isLoadingMore && (
-                <div className="text-center py-8">
-                    <p className="text-muted-foreground">Loading more insights...</p>
-                </div>
-            )}
-=======
           </ScrollAnimate>
 
           {contentLoading ? (
@@ -303,7 +212,6 @@ export default function Home() {
                 </div>
             </div>
           )}
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
         </section>
 
       </main>
