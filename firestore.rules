@@ -16,12 +16,16 @@ service cloud.firestore {
 
     match /predictions_cache/{docId} {
       allow read: if true;
-      allow write: if request.auth != null; // Written by the backend, but good practice
+      allow write: if false; // Should only be written by the backend
     }
 
     // Allow users to read/write their own data
     match /users/{userId} {
       allow read, update, create: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /users/{userId}/{document=**} {
+       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
     // API Keys should not be client-accessible
