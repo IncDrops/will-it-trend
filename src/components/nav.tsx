@@ -12,7 +12,6 @@ const routes = [
   { href: '/learn-more', label: 'Learn More' },
   { href: '/tools', label: 'AI Tools' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '/contact', label: 'Contact' },
   { href: '/docs', label: 'API Docs' },
   { href: '/contact', label: 'Contact' },
 ];
