@@ -8,7 +8,7 @@
  * - FindHashtagsOutput - The return type for the findHashtags function.
  */
 
-import {ai} from '../genkit';
+import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const FindHashtagsInputSchema = z.object({
@@ -31,17 +31,6 @@ export async function findHashtags(
   return findHashtagsFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'findHashtagsPrompt',
-  input: {schema: FindHashtagsInputSchema},
-  output: {schema: FindHashtagsOutputSchema},
-  prompt: `You are a social media expert. Generate a list of 10-15 optimal hashtags for the following topic.
-The list should include a mix of high-traffic, niche, and community-specific hashtags. Do not include the '#' symbol.
-
-Topic: {{{topic}}}
-
-Hashtags:`,
-});
 
 const findHashtagsFlow = ai.defineFlow(
   {
@@ -49,8 +38,18 @@ const findHashtagsFlow = ai.defineFlow(
     inputSchema: FindHashtagsInputSchema,
     outputSchema: FindHashtagsOutputSchema,
   },
-  async (input: FindHashtagsInput) => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const {output} = await ai.generate({
+        prompt: `You are a social media expert. Generate a list of 10-15 optimal hashtags for the following topic.
+        The list should include a mix of high-traffic, niche, and community-specific hashtags. Do not include the '#' symbol.
+
+        Topic: ${input.topic}
+
+        Hashtags:`,
+        output: {
+            schema: FindHashtagsOutputSchema,
+        },
+    });
     return output!;
   }
 );

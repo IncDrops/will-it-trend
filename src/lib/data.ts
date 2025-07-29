@@ -102,7 +102,7 @@ export const contentData: ContentItem[] = [
     teaser: 'Discover the tools and strategies to identify and capitalize on trending hashtags before they go viral.',
     tag: 'Social Media',
     offer: 'Read on Amazon',
-    link: 'https://amzn.to/4obEfN2',
+    link: '#',
     image: 'https://placehold.co/1200x600',
     aiHint: 'social media graph'
   },
@@ -129,7 +129,7 @@ export const contentData: ContentItem[] = [
     image: 'https://placehold.co/1200x600',
     aiHint: 'futuristic gadget magazine',
     offer: 'Shop on Amazon',
-    link: 'https://amzn.to/4obEfN2'
+    link: '#'
   },
    {
     type: 'ad' as const,
@@ -155,52 +155,4 @@ export const contentData: ContentItem[] = [
     offer: 'Explore Our API',
     link: '/docs'
   },
-  {
-    type: 'ad' as const,
-    id: '7',
-    originalId: '7',
-    industry: 'Software',
-    title: 'Build, Collaborate, and Scale.',
-    description: 'Our cloud SaaS platform empowers teams to achieve more.',
-    cta: 'Start Free Trial',
-    link: '#',
-    image: 'https://placehold.co/1200x600',
-    aiHint: 'software interface'
-  },
-    {
-    type: 'blog' as const,
-    id: '8',
-    originalId: '8',
-    title: 'The Rise of Sustainable Tech: What to Watch',
-    teaser: 'From green energy solutions to circular economy gadgets, explore the sustainable tech trends shaping our future.',
-    tag: 'Sustainability',
-    image: 'https://placehold.co/1200x600',
-    aiHint: 'sustainable tech',
-    offer: 'Shop Smart Gardens',
-    link: 'https://amzn.to/4obEfN2'
-  },
-  {
-    type: 'ad' as const,
-    id: '9',
-    originalId: '9',
-    industry: 'Finance/Fintech',
-    title: 'Invest Smarter, Not Harder.',
-    description: 'Our AI-driven platform helps you navigate the markets with confidence.',
-    cta: 'See Investment Trends',
-    link: '#',
-    image: 'https://placehold.co/1200x600',
-    aiHint: 'finance chart'
-  },
-   {
-    type: 'blog' as const,
-    id: '10',
-    originalId: '10',
-    title: 'Decoding Gen Z: How They Drive Digital Trends',
-    teaser: 'Understand the platforms, aesthetics, and values that make Gen Z the most powerful force in trend creation.',
-    tag: 'Culture',
-    image: 'https://placehold.co/1200x600',
-    aiHint: 'gen z fashion magazine',
-    offer: 'Shop Vlogging Kits',
-    link: 'https://amzn.to/4obEfN2'
-  }
 ];

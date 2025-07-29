@@ -94,7 +94,7 @@ export function PricingCard({
           <Badge className="absolute top-4 right-4" variant="default">Most Popular</Badge>
         )}
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold font-headline">{title}</CardTitle>
+          <CardTitle className="text-2xl font-bold">{title}</CardTitle>
           <CardDescription>{targetAudience}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col flex-grow">
@@ -133,7 +133,7 @@ export function PricingCard({
                   <LoaderCircle className="animate-spin" />
                 ) : (
                   <>
-                    {isFeatured && <Sparkles />}
+                    {isFeatured && <Sparkles className="mr-2" />}
                     {cta}
                   </>
                 )}

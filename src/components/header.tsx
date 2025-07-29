@@ -10,7 +10,7 @@ export function Header() {
         See Viral Trends Before They Blow Up—<br/>Then <span className="text-gradient">Ride the Wave</span>
       </h1>
       <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-        WillItTrend.com tracks rising trends in real-time and gives you AI-powered strategies to capitalize on them—no guessing, no sign-up.
+        Trendcast AI tracks rising trends in real-time and gives you AI-powered strategies to capitalize on them—no guessing, no sign-up.
       </p>
        <Button size="lg" variant="shiny" asChild>
         <Link href="/#input-section">

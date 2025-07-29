@@ -1,4 +1,3 @@
-'use server';
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -34,9 +33,13 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.db = void 0;
+exports.auth = exports.db = void 0;
+// firebase-admin.ts
 const admin = __importStar(require("firebase-admin"));
+// This file is intended for use within Firebase Functions,
+// where the environment is already configured.
 let db;
+let auth;
 if (admin.apps.length === 0) {
     try {
         // Initialize without credentials in the emulator,
@@ -48,4 +51,5 @@ if (admin.apps.length === 0) {
     }
 }
 exports.db = db = admin.firestore();
+exports.auth = auth = admin.auth();
 //# sourceMappingURL=firebase-admin.js.map

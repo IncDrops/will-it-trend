@@ -6,12 +6,18 @@ import { type TrendForecastOutput } from '@/ai/flows/trend-forecasting';
 import { Header } from '@/components/header';
 import { InputModule } from '@/components/input-module';
 import { TrendCard } from '@/components/trend-card';
-import { ScrollAnimate } from '@/components/scroll-animate';
 import { sampleTrends, type ContentItem, AdData, BlogData } from '@/lib/data';
 import { useContent } from '@/hooks/use-content';
+<<<<<<< HEAD
 import { Bot, Building, PenTool, LoaderCircle } from 'lucide-react';
 import { AdCard } from '@/components/ad-card';
 import { BlogCard } from '@/components/blog-card';
+=======
+import { LoaderCircle } from 'lucide-react';
+import { AdCard } from '@/components/ad-card';
+import { BlogCard } from '@/components/blog-card';
+import { ScrollAnimate } from '@/components/scroll-animate';
+>>>>>>> 19c9e617f3d8acb0c1c5bafa285060f66a459448
 
 type TrendResult = TrendForecastOutput & {
   id: string;
@@ -40,96 +46,71 @@ export default function Home() {
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
   }, [allCards]);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 19c9e617f3d8acb0c1c5bafa285060f66a459448
   return (
     <div className="flex flex-col min-h-screen">
-      <ScrollAnimate><Header /></ScrollAnimate>
+      <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <ScrollAnimate>
-          <div id="input-section" className="py-8 scroll-mt-20">
-            <InputModule onNewResult={handleNewResult} />
-          </div>
-        </ScrollAnimate>
-
-        <ScrollAnimate>
-          <section className="mt-16 text-center">
-              <h2 className="text-3xl font-bold mb-4">How It Works</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto mb-8">A simple 3-step process to stay ahead of the curve.</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="glassmorphic p-6 rounded-xl">
-                      <div className="text-5xl mb-4">1.</div>
-                      <h3 className="text-xl font-semibold mb-2">Track</h3>
-                      <p className="text-muted-foreground">We monitor millions of data points across social media to spot emerging patterns.</p>
-                  </div>
-                  <div className="glassmorphic p-6 rounded-xl">
-                      <div className="text-5xl mb-4">2.</div>
-                      <h3 className="text-xl font-semibold mb-2">Predict</h3>
-                      <p className="text-muted-foreground">Our AI analyzes the growth, engagement, and context to forecast a trend's potential.</p>
-                  </div>
-                   <div className="glassmorphic p-6 rounded-xl">
-                      <div className="text-5xl mb-4">3.</div>
-                      <h3 className="text-xl font-semibold mb-2">Create</h3>
-                      <p className="text-muted-foreground">Get AI-generated content ideas, captions, and hashtags to ride the wave.</p>
-                  </div>
-              </div>
-          </section>
-        </ScrollAnimate>
         
-        <ScrollAnimate>
-          <section className="mt-24 text-center">
-            <h3 className="text-lg font-semibold text-muted-foreground">Trusted by over 10,000+ creators and brands</h3>
-             <div className="mt-8 flex justify-center items-center gap-x-8 md:gap-x-12 lg:gap-x-16 grayscale opacity-60">
-                  <div className="flex items-center gap-2">
-                      <Bot size={24} />
-                      <span className="text-xl font-bold">AI Innovators</span>
+        <div id="input-section" className="py-8 scroll-mt-20">
+          <InputModule onNewResult={handleNewResult} />
+        </div>
+        
+        <section className="mt-16 text-center">
+            <h2 className="text-3xl font-bold mb-4">How It Works</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">A simple 3-step process to stay ahead of the curve.</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="glassmorphic p-6 rounded-xl">
+                    <div className="text-5xl mb-4">1.</div>
+                    <h3 className="text-xl font-semibold mb-2">Track</h3>
+                    <p className="text-muted-foreground">We monitor millions of data points across social media to spot emerging patterns.</p>
+                </div>
+                <div className="glassmorphic p-6 rounded-xl">
+                    <div className="text-5xl mb-4">2.</div>
+                    <h3 className="text-xl font-semibold mb-2">Predict</h3>
+                    <p className="text-muted-foreground">Our AI analyzes the growth, engagement, and context to forecast a trend's potential.</p>
+                </div>
+                  <div className="glassmorphic p-6 rounded-xl">
+                    <div className="text-5xl mb-4">3.</div>
+                    <h3 className="text-xl font-semibold mb-2">Create</h3>
+                    <p className="text-muted-foreground">Get AI-generated content ideas, captions, and hashtags to ride the wave.</p>
                   </div>
-                   <div className="flex items-center gap-2">
-                      <Building size={24} />
-                      <span className="text-xl font-bold">Agency Co.</span>
-                  </div>
-                   <div className="flex items-center gap-2">
-                      <PenTool size={24} />
-                      <span className="text-xl font-bold">Creator Hub</span>
-                  </div>
-              </div>
-          </section>
-        </ScrollAnimate>
-
-
-        <ScrollAnimate>
-          <section className="mt-24">
-            <h2 className="text-3xl font-bold text-center mb-2">
-              Live Trend Preview
-            </h2>
-            <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-              Here are some examples of AI-powered trend forecasts. See a query,
-              its projected score, and the rationale behind it.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-              {shuffledCards.map((card) => (
-                  <TrendCard
-                    key={card.id}
-                    query={card.data.query}
-                    timer={card.type === 'sample' ? card.data.timer : card.data.timeHorizon}
-                    score={card.type === 'sample' ? card.data.score : card.data.trendScore}
-                    rationale={card.data.rationale}
-                    isSample={card.type === 'sample'}
-                    platform={card.data.platform}
-                  />
-              ))}
             </div>
-          </section>
-        </ScrollAnimate>
+        </section>
         
         <section className="mt-24">
-          <ScrollAnimate>
-            <h2 className="text-3xl font-bold text-center mb-2">
-                Strategy & Insights
-            </h2>
-            <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-                Go beyond the data with curated articles and partnership opportunities to grow your brand.
-            </p>
-          </ScrollAnimate>
+          <h2 className="text-3xl font-bold text-center mb-2">
+            Live Trend Preview
+          </h2>
+          <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
+            Here are some examples of AI-powered trend forecasts. See a query,
+            its projected score, and the rationale behind it.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+            {shuffledCards.map((card) => (
+                <TrendCard
+                  key={card.id}
+                  query={card.data.query}
+                  timer={card.type === 'sample' ? card.data.timer : card.data.timeHorizon}
+                  score={card.type === 'sample' ? card.data.score : card.data.trendScore}
+                  rationale={card.data.rationale}
+                  isSample={card.type === 'sample'}
+                  platform={card.data.platform}
+                />
+            ))}
+          </div>
+        </section>
+        
+        <section className="mt-24">
+          <h2 className="text-3xl font-bold text-center mb-2">
+              Strategy & Insights
+          </h2>
+          <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
+              Go beyond the data with curated articles and partnership opportunities to grow your brand.
+          </p>
 
           {contentLoading ? (
             <div className="flex justify-center items-center p-16">
@@ -140,10 +121,21 @@ export default function Home() {
                 <p>Failed to load content. Please try refreshing the page.</p>
             </div>
           ) : (
+<<<<<<< HEAD
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
                 {content.map((item) => (
                     <ScrollAnimate key={item.id} className='w-full flex justify-center'>
                        {item.type === 'ad' ? <AdCard item={item as AdData} /> : <BlogCard item={item as BlogData} />}
+=======
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 auto-rows-fr">
+                {content.map((item) => (
+                    <ScrollAnimate key={item.id}>
+                        {item.type === 'ad' ? (
+                            <AdCard item={item as AdData} />
+                        ) : (
+                            <BlogCard item={item as BlogData} />
+                        )}
+>>>>>>> 19c9e617f3d8acb0c1c5bafa285060f66a459448
                     </ScrollAnimate>
                 ))}
             </div>

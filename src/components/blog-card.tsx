@@ -21,23 +21,23 @@ export function BlogCard({ item }: BlogCardProps) {
   
   return (
     <Card
-      className='glassmorphic rounded-2xl h-full overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 flex flex-col'
+      className='glassmorphic rounded-xl h-full overflow-hidden flex flex-col'
     >
-      <div className='overflow-hidden w-full h-64'>
+      <div className='overflow-hidden w-full h-64 rounded-t-xl'>
         <Image
           src={image || 'https://placehold.co/1200x600.png'}
           alt={title}
           width={1200}
           height={600}
           data-ai-hint={aiHint}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover"
         />
       </div>
       <CardContent className="p-6 flex flex-col flex-grow">
         <Badge className="self-start mb-4 bg-accent text-accent-foreground hover:bg-accent/80">
           {tag}
         </Badge>
-        <h3 className="text-xl font-bold font-headline mb-2 flex-grow">
+        <h3 className="text-xl font-bold mb-2 flex-grow">
           {title}
         </h3>
         <p className="text-sm text-muted-foreground mb-4">{teaser}</p>

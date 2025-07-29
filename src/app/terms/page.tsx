@@ -20,7 +20,7 @@ export default function TermsPage() {
             </CardHeader>
             <CardContent className="text-muted-foreground">
             <p>
-                By accessing and using WillItTrend.com (the "Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this Service.
+                By accessing and using Trendcast AI (the "Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this Service.
             </p>
             </CardContent>
         </Card>
@@ -52,10 +52,20 @@ export default function TermsPage() {
             </p>
             </CardContent>
         </Card>
+
+        <Card className="glassmorphic">
+            <CardHeader>
+            <CardTitle>4. AI Credits and Payments</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-muted-foreground">
+                <p>Usage of certain AI tools requires AI Credits. Credits can be purchased in one-time packs. All payments are processed securely by Stripe. We do not store your payment card information.</p>
+                <p>Due to the digital nature of AI Credits and the computational cost incurred, all purchases are final and non-refundable.</p>
+            </CardContent>
+        </Card>
         
         <Card className="glassmorphic">
             <CardHeader>
-            <CardTitle>4. Disclaimer of Warranties</CardTitle>
+            <CardTitle>5. Disclaimer of Warranties</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground">
             <p>
@@ -66,11 +76,11 @@ export default function TermsPage() {
         
         <Card className="glassmorphic">
             <CardHeader>
-            <CardTitle>5. Limitation of Liability</CardTitle>
+            <CardTitle>6. Limitation of Liability</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground">
             <p>
-                In no event shall WillItTrend.com, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
+                In no event shall Trendcast AI, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
             </p>
             </CardContent>
         </Card>

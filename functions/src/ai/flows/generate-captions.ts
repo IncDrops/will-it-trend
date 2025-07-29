@@ -8,7 +8,7 @@
  * - GenerateCaptionsOutput - The return type for the generateCaptions function.
  */
 
-import {ai} from '../genkit';
+import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateCaptionsInputSchema = z.object({
@@ -36,26 +36,25 @@ export async function generateCaptions(
   return generateCaptionsFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'generateCaptionsPrompt',
-  input: {schema: GenerateCaptionsInputSchema},
-  output: {schema: GenerateCaptionsOutputSchema},
-  prompt: `You are a social media copywriter. Generate 5 engaging captions for the given topic and tone.
-
-Topic: {{{topic}}}
-Tone: {{{tone}}}
-
-Captions:`,
-});
-
 const generateCaptionsFlow = ai.defineFlow(
   {
     name: 'generateCaptionsFlow',
     inputSchema: GenerateCaptionsInputSchema,
     outputSchema: GenerateCaptionsOutputSchema,
   },
-  async (input: GenerateCaptionsInput) => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const {output} = await ai.generate({
+      prompt: `You are a social media copywriter. Generate 5 engaging captions for the given topic and tone.
+
+      Topic: ${input.topic}
+      Tone: ${input.tone}
+      
+      Captions:`,
+      output: {
+        schema: GenerateCaptionsOutputSchema,
+      },
+    });
+
     return output!;
   }
 );

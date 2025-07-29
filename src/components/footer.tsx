@@ -11,7 +11,7 @@ export function Footer() {
                     <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
                 </div>
                 <div>
-                    <p>&copy; {new Date().getFullYear()} WillItTrend.com. All Rights Reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Trendcast AI. All Rights Reserved.</p>
                     <p>Predictions are not guaranteed. Use at your own discretion.</p>
                 </div>
             </div>

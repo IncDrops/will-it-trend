@@ -62,7 +62,7 @@ export default function PricingPage() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         {plans.map((plan) => (
           <PricingCard
             key={plan.title}

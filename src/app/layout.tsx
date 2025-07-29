@@ -1,7 +1,6 @@
 
 'use client';
 
-import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
@@ -16,14 +15,6 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
 });
 
-// Metadata can't be exported from a client component, so we export it from the RootLayoutProps
-// and apply it in the server component that renders this layout.
-// export const metadata: Metadata = {
-//   title: 'Trendcast AI - Predict Viral Trends',
-//   description:
-//     'Use AI to forecast the trending potential of any idea, hashtag, or product. Incorporates market trends, social buzz, and competitive analysis.',
-// };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +28,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          'min-h-screen bg-background font-body antialiased',
+          'min-h-screen bg-background font-sans antialiased',
           spaceGrotesk.variable
         )}
       >
@@ -50,9 +41,11 @@ export default function RootLayout({
               <div className="trail" style={{ left: '75%', animationDuration: '9s', animationDelay: '-1s' }}></div>
               <div className="trail" style={{ left: '90%', animationDuration: '6s', animationDelay: '-3s' }}></div>
           </div>
-          <div className="relative z-10">
+          <div className="relative z-10 flex min-h-screen flex-col">
               <Nav />
-              {children}
+              <main className="flex-grow">
+                {children}
+              </main>
               <Toaster />
               <Footer />
           </div>
