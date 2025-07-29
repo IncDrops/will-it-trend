@@ -37,6 +37,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addCreditsToUser = addCreditsToUser;
 const firebase_admin_1 = require("../firebase-admin");
 const logger = __importStar(require("firebase-functions/logger"));
+const firestore_1 = require("firebase-admin/firestore");
 const creditsMap = {
     price_1RpMQpHK4G9ZDA0F4OJxhrD6: 100, // Starter Pack
     price_1RpMgKHK4G9ZDA0FawwsKgsK: 500, // Pro AI Pack
@@ -67,16 +68,16 @@ async function addCreditsToUser(userId, priceId) {
                 // If user doesn't exist, create them
                 transaction.set(userRef, {
                     ai_credits: creditsToAdd,
-                    createdAt: new Date(),
+                    createdAt: firestore_1.FieldValue.serverTimestamp(),
                 });
                 logger.info(`New user document created for ${userId} with ${creditsToAdd} credits.`);
             }
             else {
                 // If user exists, increment their credits
-                const currentCredits = userDoc.data()?.ai_credits || 0;
                 transaction.update(userRef, {
-                    ai_credits: currentCredits + creditsToAdd,
+                    ai_credits: firestore_1.FieldValue.increment(creditsToAdd),
                 });
+                const currentCredits = userDoc.data()?.ai_credits || 0;
                 logger.info(`Added ${creditsToAdd} credits to user ${userId}. New balance: ${currentCredits + creditsToAdd}`);
             }
         });

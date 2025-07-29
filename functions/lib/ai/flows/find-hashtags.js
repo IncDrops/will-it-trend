@@ -9,7 +9,7 @@ exports.findHashtags = findHashtags;
  * - FindHashtagsInput - The input type for the findHashtags function.
  * - FindHashtagsOutput - The return type for the findHashtags function.
  */
-const genkit_1 = require("../genkit");
+const genkit_1 = require("@/ai/genkit");
 const genkit_2 = require("genkit");
 const FindHashtagsInputSchema = genkit_2.z.object({
     topic: genkit_2.z.string().describe('The topic or keyword to find hashtags for.'),
@@ -22,23 +22,22 @@ const FindHashtagsOutputSchema = genkit_2.z.object({
 async function findHashtags(input) {
     return findHashtagsFlow(input);
 }
-const prompt = genkit_1.ai.definePrompt({
-    name: 'findHashtagsPrompt',
-    input: { schema: FindHashtagsInputSchema },
-    output: { schema: FindHashtagsOutputSchema },
-    prompt: `You are a social media expert. Generate a list of 10-15 optimal hashtags for the following topic.
-The list should include a mix of high-traffic, niche, and community-specific hashtags. Do not include the '#' symbol.
-
-Topic: {{{topic}}}
-
-Hashtags:`,
-});
 const findHashtagsFlow = genkit_1.ai.defineFlow({
     name: 'findHashtagsFlow',
     inputSchema: FindHashtagsInputSchema,
     outputSchema: FindHashtagsOutputSchema,
 }, async (input) => {
-    const { output } = await prompt(input);
+    const { output } = await genkit_1.ai.generate({
+        prompt: `You are a social media expert. Generate a list of 10-15 optimal hashtags for the following topic.
+        The list should include a mix of high-traffic, niche, and community-specific hashtags. Do not include the '#' symbol.
+
+        Topic: ${input.topic}
+
+        Hashtags:`,
+        output: {
+            schema: FindHashtagsOutputSchema,
+        },
+    });
     return output;
 });
 //# sourceMappingURL=find-hashtags.js.map
