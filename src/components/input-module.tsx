@@ -165,12 +165,12 @@ export function InputModule({ onNewResult }: InputModuleProps) {
             <Button type="submit" size="lg" variant="shiny" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <LoaderCircle className="animate-spin" />
+                  <LoaderCircle className="animate-spin mr-2" />
                   Predicting...
                 </>
               ) : (
                 <>
-                  <Sparkles />
+                  <Sparkles className="mr-2" />
                   Will This Trend?
                 </>
               )}

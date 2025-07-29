@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI agent for recommending the best time to post on social media.
@@ -7,7 +8,7 @@
  * - BestTimeToPostOutput - The return type for the getBestTimeToPost function.
  */
 
-import {ai} from '../genkit';
+import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const BestTimeToPostInputSchema = z.object({
@@ -38,21 +39,6 @@ export async function getBestTimeToPost(
   return bestTimeToPostFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'bestTimeToPostPrompt',
-  input: {schema: BestTimeToPostInputSchema},
-  output: {schema: BestTimeToPostOutputSchema},
-  prompt: `You are a social media expert. Based on the given industry and platform, determine the single best time to post for maximum engagement.
-Provide a specific time and a concise reason.
-
-Industry: {{{industry}}}
-Platform: {{{platform}}}
-
-Analysis: Consider peak user activity times for the platform and typical audience behavior in the specified industry.
-
-Recommended Time: {{time}}
-Reasoning: {{reasoning}}`,
-});
 
 const bestTimeToPostFlow = ai.defineFlow(
   {
@@ -60,8 +46,19 @@ const bestTimeToPostFlow = ai.defineFlow(
     inputSchema: BestTimeToPostInputSchema,
     outputSchema: BestTimeToPostOutputSchema,
   },
-  async (input: BestTimeToPostInput) => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const {output} = await ai.generate({
+      prompt: `You are a social media expert. Based on the given industry and platform, determine the single best time to post for maximum engagement.
+      Provide a specific time and a concise reason.
+
+      Industry: ${input.industry}
+      Platform: ${input.platform}
+      `,
+      output: {
+        schema: BestTimeToPostOutputSchema,
+      },
+    });
+
     return output!;
   }
 );

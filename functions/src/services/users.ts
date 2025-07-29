@@ -1,7 +1,9 @@
+
 'use server';
 
 import {db} from '../firebase-admin';
 import * as logger from 'firebase-functions/logger';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const creditsMap: {[key: string]: number} = {
   price_1RpMQpHK4G9ZDA0F4OJxhrD6: 100, // Starter Pack
@@ -40,17 +42,17 @@ export async function addCreditsToUser(
         // If user doesn't exist, create them
         transaction.set(userRef, {
           ai_credits: creditsToAdd,
-          createdAt: new Date(),
+          createdAt: FieldValue.serverTimestamp(),
         });
         logger.info(
           `New user document created for ${userId} with ${creditsToAdd} credits.`
         );
       } else {
         // If user exists, increment their credits
-        const currentCredits = userDoc.data()?.ai_credits || 0;
         transaction.update(userRef, {
-          ai_credits: currentCredits + creditsToAdd,
+          ai_credits: FieldValue.increment(creditsToAdd),
         });
+        const currentCredits = userDoc.data()?.ai_credits || 0;
         logger.info(
           `Added ${creditsToAdd} credits to user ${userId}. New balance: ${
             currentCredits + creditsToAdd

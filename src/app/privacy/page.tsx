@@ -20,7 +20,7 @@ export default function PrivacyPage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                Welcome to WillItTrend.com ("we," "our," or "us"). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services.
+                Welcome to Trendcast AI ("we," "our," or "us"). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services.
               </p>
               <p>
                 By using our service, you agree to the collection and use of information in accordance with this policy.
@@ -40,11 +40,11 @@ export default function PrivacyPage() {
                 <li>
                 <strong>Content You Provide:</strong> When you submit a trend, topic, or idea to our platform for analysis, we collect that content. This includes text submitted through the main input form, the AI tools, and via our API.
                 </li>
-                <li>
-                <strong>API Usage Data:</strong> For users of our API, we collect information associated with your API key, such as the endpoints you access, the volume of requests, and timestamps, to manage billing, rate limits, and service quality.
+                 <li>
+                <strong>Authentication Information:</strong> We use Firebase Anonymous Authentication to create a temporary, anonymous user ID for you. This allows us to associate API usage and purchases with a session without collecting personal information.
                 </li>
                 <li>
-                <strong>Anonymized Usage Data:</strong> We may collect anonymous data about how you interact with our service to help us improve our platform. This information is not personally identifiable.
+                <strong>API Usage Data:</strong> For users of our API, we collect information associated with your API key, such as the endpoints you access, the volume of requests, and timestamps, to manage billing, rate limits, and service quality.
                 </li>
             </ul>
             </CardContent>
@@ -62,11 +62,11 @@ export default function PrivacyPage() {
                 <li>
                 <strong>To Provide and Improve Our Service:</strong> The content you submit is sent to third-party AI models (e.g., Google's Gemini) to generate trend forecasts and other content. We use your queries to power our core service.
                 </li>
-                <li>
-                <strong>To Monitor and Secure Our Service:</strong> We use API usage data to enforce our terms of service, prevent abuse, and ensure fair usage across our tiers.
+                 <li>
+                <strong>To Manage Credits and Payments:</strong> Your anonymous user ID is linked to your AI credit balance in our database and is passed to Stripe during checkout to associate a purchase with your session. We do not store any payment card information.
                 </li>
                 <li>
-                <strong>For Research and Development:</strong> Anonymized data may be used to improve our AI models and develop new features. We do not use your personal information for this purpose.
+                <strong>To Monitor and Secure Our Service:</strong> We use API usage data to enforce our terms of service, prevent abuse, and ensure fair usage across our tiers.
                 </li>
             </ul>
             </CardContent>
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
             <p>We take reasonable measures to protect your information. However, no electronic transmission or storage is 100% secure. We retain user-submitted content and API logs as necessary to provide the service and for a reasonable period for analytical purposes.</p>
-            <p>We do not require user accounts and therefore do not store personal information like names, email addresses (except for API-related communication), or passwords on our platform.</p>
+            <p>We do not require user accounts and therefore do not store personal information like names or email addresses. All interactions are handled through your anonymous user ID.</p>
             </CardContent>
         </Card>
       </div>

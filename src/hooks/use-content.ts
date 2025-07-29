@@ -2,20 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { collection, getDocs, doc, setDoc, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, query, orderBy, getCountFromServer } from 'firebase/firestore';
 import { dbClient } from '@/lib/firebase-client';
 import { contentData, type ContentItem } from '@/lib/data';
 
-// This function seeds the database with the initial content if it's empty.
-// It's useful for the first time the app runs.
 const seedDatabase = async () => {
   const contentCollectionRef = collection(dbClient, 'content');
-  const snapshot = await getDocs(contentCollectionRef);
-  if (snapshot.empty) {
+  const snapshot = await getCountFromServer(contentCollectionRef);
+  if (snapshot.data().count === 0) {
     console.log('Content collection is empty. Seeding database...');
     const promises = contentData.map(item => {
       const docRef = doc(contentCollectionRef, item.id.toString());
-      // Ensure 'id' is part of the document data
       const dataWithId = { ...item, originalId: item.id };
       return setDoc(docRef, dataWithId);
     });
@@ -35,10 +32,8 @@ export const useContent = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        // First, check if we need to seed the database
         await seedDatabase();
         
-        // Then, fetch the content
         const contentCollectionRef = collection(dbClient, 'content');
         const q = query(contentCollectionRef, orderBy('originalId'));
         const snapshot = await getDocs(q);
@@ -59,14 +54,6 @@ export const useContent = () => {
 
     fetchContent();
   }, []);
-  
-  const handleImageUpdate = (id: string, newImageUrl: string) => {
-    setContent(prevContent =>
-      prevContent.map(item =>
-        item.id === id ? { ...item, image: newImageUrl } : item
-      )
-    );
-  };
 
-  return { content, loading, error, handleImageUpdate };
+  return { content, loading, error };
 };

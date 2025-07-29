@@ -25,7 +25,7 @@ export function Nav() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <TrendingUp className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
-              WillItTrend.com
+              Trendcast AI
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -61,7 +61,7 @@ export function Nav() {
               className="mb-4 flex items-center space-x-2"
             >
               <TrendingUp className="h-6 w-6 text-primary" />
-              <span className="font-bold">WillItTrend.com</span>
+              <span className="font-bold">Trendcast AI</span>
             </Link>
             <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
               <div className="flex flex-col space-y-3">
@@ -82,9 +82,9 @@ export function Nav() {
           </SheetContent>
         </Sheet>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <Button variant="shiny" size="sm" asChild>
-            <Link href="/#input-section">Get Started</Link>
-          </Button>
+           <Link href="/#input-section">
+            <Button variant="shiny" size="sm">Get Started</Button>
+          </Link>
         </div>
       </div>
     </header>

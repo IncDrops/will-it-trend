@@ -244,7 +244,7 @@ export function AiTools() {
                 )}
               </CardContent>
               <CardFooter>
-                <Button type="submit" className="w-full" variant="shiny" disabled={captionState.loading}>
+                <Button type="submit" className="w-full gap-2" variant="shiny" disabled={captionState.loading}>
                   {captionState.loading ? <LoaderCircle className="animate-spin" /> : <Sparkles />}
                   Generate Captions
                 </Button>
@@ -301,7 +301,7 @@ export function AiTools() {
                         )}
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit" className="w-full" variant="shiny" disabled={hashtagState.loading}>
+                        <Button type="submit" className="w-full gap-2" variant="shiny" disabled={hashtagState.loading}>
                              {hashtagState.loading ? <LoaderCircle className="animate-spin" /> : <Sparkles />}
                             Find Hashtags
                         </Button>
@@ -359,8 +359,9 @@ export function AiTools() {
                                             <SelectContent>
                                                 <SelectItem value="TikTok">TikTok</SelectItem>
                                                 <SelectItem value="Instagram">Instagram</SelectItem>
-                                                <SelectItem value="Twitter">Twitter</SelectItem>
+                                                <SelectItem value="Twitter">Twitter / X</SelectItem>
                                                 <SelectItem value="YouTube">YouTube</SelectItem>
+                                                <SelectItem value="Pinterest">Pinterest</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -385,7 +386,7 @@ export function AiTools() {
 
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit" className="w-full" variant="shiny" disabled={postingTimeState.loading}>
+                        <Button type="submit" className="w-full gap-2" variant="shiny" disabled={postingTimeState.loading}>
                              {postingTimeState.loading ? <LoaderCircle className="animate-spin" /> : <Sparkles />}
                            Analyze Best Times
                         </Button>
