@@ -1,51 +1,52 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 4.8% 12%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 262 84% 58%;
+    --background: 277 69% 95%; /* #F1E5F8 */
+    --foreground: 240 10% 3.9%;
+    --card: 277 50% 98%; /* Lighter shade for cards */
+    --card-foreground: 240 10% 3.9%;
+    --popover: 277 69% 95%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 275 83% 61%; /* #9D4EDD */
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 262 84% 58%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --secondary: 277 50% 90%;
+    --secondary-foreground: 240 10% 3.9%;
+    --muted: 277 50% 85%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 195 79% 56%; /* #48BFE3 */
+    --accent-foreground: 240 10% 3.9%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 262 84% 58%;
+    --border: 275 83% 85%;
+    --input: 277 50% 90%;
+    --ring: 275 83% 61%;
     --radius: 0.8rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 275 15% 10%;
     --foreground: 0 0% 98%;
-    --card: 240 4.8% 12%;
+    --card: 275 12% 15%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 275 15% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 262 84% 58%;
+    --primary: 275 83% 61%; /* #9D4EDD */
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 275 12% 20%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
+    --muted: 275 12% 20%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 262 84% 58%;
+    --accent: 195 79% 56%; /* #48BFE3 */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 262 84% 58%;
+    --border: 275 12% 25%;
+    --input: 275 12% 20%;
+    --ring: 275 83% 61%;
   }
 }
 
@@ -55,9 +56,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-color: hsl(var(--background));
-    background-image: radial-gradient(hsl(var(--secondary)) 0.5px, transparent 0);
-    background-size: 32px 32px;
   }
 }
 
@@ -67,16 +65,27 @@
   }
 
   .text-gradient {
-    @apply bg-gradient-to-br from-primary to-indigo-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent;
   }
   
   .bg-gradient-animated {
-    @apply bg-gradient-to-br from-primary via-indigo-500 to-purple-400 animate-gradient;
+    @apply bg-gradient-to-br from-primary via-accent to-primary;
     background-size: 200% 200%;
+    animation: gradient 4s ease infinite;
+  }
+
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .scroll-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes gradient-animation {
+@keyframes gradient {
   0% {
     background-position: 0% 50%;
   }
@@ -86,4 +95,35 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+.static-grid-background {
+  --grid-color: hsl(var(--primary) / 0.1);
+  background-image: 
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+@keyframes trail {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0.7;
+  }
+  99% {
+      opacity: 0.2;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.trail {
+    position: absolute;
+    width: 2px;
+    background: linear-gradient(to bottom, hsl(var(--primary) / 0.5), transparent);
+    animation-name: trail;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }

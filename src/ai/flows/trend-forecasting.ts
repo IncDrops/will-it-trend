@@ -44,9 +44,7 @@ Consider the following:
 - Potential for virality
 - Novelty and uniqueness
 
-Output a trend score (0-100) and a rationale for the score.
-Trend Score: {{trendScore}}
-Rationale: {{rationale}}`,
+Output a trend score (0-100) and a rationale for the score.`,
 });
 
 const trendForecastFlow = ai.defineFlow(
@@ -56,7 +54,16 @@ const trendForecastFlow = ai.defineFlow(
     outputSchema: TrendForecastOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+      const {output} = await prompt(input);
+      if (!output) {
+        throw new Error('AI model did not return a valid output.');
+      }
+      return output;
+    } catch (error: any) {
+      console.error('Error in trendForecastFlow:', error);
+      // Re-throw a more user-friendly error to be caught by the action handler
+      throw new Error(`Failed to get trend forecast from AI: ${error.message}`);
+    }
   }
 );

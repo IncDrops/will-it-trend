@@ -9,14 +9,18 @@
     pkgs.zulu
   ];
   # Sets environment variables in the workspace
-  env = {};
-  # This adds a file watcher to startup the firebase emulators. The emulators will only start if
-  # a firebase.json file is written into the user's directory
-  services.firebase.emulators = {
-    detect = true;
-    projectId = "demo-app";
-    services = ["auth" "firestore"];
+  env = {
+    # Add your Google Cloud credentials here
+    GOOGLE_CLOUD_PROJECT = "demo-app";
+    # Uncomment and set if you have a service account key
+    # GOOGLE_APPLICATION_CREDENTIALS = "/path/to/your/service-account.json";
   };
+  # Disable Firebase emulators for now to avoid conflicts
+  # services.firebase.emulators = {
+  #   detect = true;
+  #   projectId = "demo-app";
+  #   services = ["auth" "firestore"];
+  # };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -34,8 +38,13 @@
       enable = true;
       previews = {
         web = {
+          # Run Next.js directly instead of through Firebase
           command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
           manager = "web";
+          env = {
+            NODE_ENV = "development";
+            NEXT_PUBLIC_FIREBASE_PROJECT_ID = "demo-app";
+          };
         };
       };
     };

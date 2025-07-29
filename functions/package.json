@@ -14,9 +14,13 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@genkit-ai/googleai": "^1.14.1",
     "express": "^4.19.2",
     "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.0.1"
+    "firebase-functions": "^6.0.1",
+    "genkit": "^1.14.1",
+    "stripe": "^16.5.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

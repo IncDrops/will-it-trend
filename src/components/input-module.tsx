@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,8 +23,8 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
-import { getTrendForecast } from '@/lib/actions';
 import { LoaderCircle, Sparkles } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 const formSchema = z.object({
   input: z
@@ -44,6 +45,7 @@ type InputModuleProps = {
 export function InputModule({ onNewResult }: InputModuleProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,10 +57,31 @@ export function InputModule({ onNewResult }: InputModuleProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    try {
-      const result = await getTrendForecast(values);
+    
+    if (!user) {
+        toast({
+            variant: 'destructive',
+            title: 'Authentication Error',
+            description: 'Could not verify user. Please refresh the page.',
+        });
+        setIsSubmitting(false);
+        return;
+    }
 
-      if (result.success && result.data) {
+    try {
+        const token = await user.getIdToken();
+        const response = await fetch('/api/v1/trend-forecast', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(values),
+        });
+
+        const result = await response.json();
+
+      if (response.ok && result.success) {
         onNewResult({
           id: crypto.randomUUID(),
           query: values.input,
@@ -115,21 +138,21 @@ export function InputModule({ onNewResult }: InputModuleProps) {
               name="timeHorizon"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/3">
-                  <FormLabel>Platform</FormLabel>
+                  <FormLabel>Time Horizon</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a platform" />
+                        <SelectValue placeholder="Select a time horizon" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="tiktok">TikTok</SelectItem>
-                      <SelectItem value="instagram">Instagram</SelectItem>
-                      <SelectItem value="twitter">Twitter</SelectItem>
-                      <SelectItem value="all">All Platforms</SelectItem>
+                      <SelectItem value="24 hours">24 Hours</SelectItem>
+                      <SelectItem value="7 days">7 Days</SelectItem>
+                      <SelectItem value="30 days">30 Days</SelectItem>
+                      <SelectItem value="90 days">90 Days</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
