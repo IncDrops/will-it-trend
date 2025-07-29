@@ -76,7 +76,10 @@ export function InputModule({ onNewResult }: InputModuleProps) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify(values),
+            body: JSON.stringify({
+              input: values.input,
+              timeHorizon: values.timeHorizon,
+            }),
         });
 
         const result = await response.json();
