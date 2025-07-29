@@ -13,7 +13,6 @@ const routes = [
   { href: '/tools', label: 'AI Tools' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/docs', label: 'API Docs' },
-  { href: '/contact', label: 'Contact' },
 ];
 
 export function Nav() {
@@ -43,6 +42,17 @@ export function Nav() {
                 {route.label}
               </Link>
             ))}
+             <Link
+                href="/contact"
+                className={cn(
+                  'transition-colors hover:text-foreground/80',
+                  pathname === "/contact"
+                    ? 'text-foreground'
+                    : 'text-foreground/60'
+                )}
+              >
+                Contact
+              </Link>
           </nav>
         </div>
         <Sheet>
@@ -77,6 +87,15 @@ export function Nav() {
                     {route.label}
                   </Link>
                 ))}
+                 <Link
+                    href="/contact"
+                    className={cn(
+                        'transition-colors hover:text-foreground/80',
+                         pathname === "/contact" ? 'text-foreground font-semibold' : 'text-foreground/60'
+                    )}
+                  >
+                    Contact
+                  </Link>
               </div>
             </div>
           </SheetContent>

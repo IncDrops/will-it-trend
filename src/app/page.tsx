@@ -9,15 +9,9 @@ import { TrendCard } from '@/components/trend-card';
 import { ScrollAnimate } from '@/components/scroll-animate';
 import { sampleTrends, type ContentItem, AdData, BlogData } from '@/lib/data';
 import { useContent } from '@/hooks/use-content';
-import { Bot, Building, PenTool, Car, TrendingUp, Cpu, Brain, Leaf, Briefcase, Laptop, Smartphone, Tablet, TrendingUpIcon, LoaderCircle } from 'lucide-react';
-import { PageSizeCard } from '@/components/page-size-card';
-import { InstagramPostCard } from '@/components/instagram-post-card';
+import { Bot, Building, PenTool, LoaderCircle } from 'lucide-react';
 import { AdCard } from '@/components/ad-card';
-import { PhoneSizeCard } from '@/components/phone-size-card';
 import { BlogCard } from '@/components/blog-card';
-import { IconSeparator } from '@/components/icon-separator';
-import { Card } from '@/components/ui/card';
-
 
 type TrendResult = TrendForecastOutput & {
   id: string;
@@ -46,37 +40,6 @@ export default function Home() {
     setShuffledCards([...allCards].sort(() => Math.random() - 0.5));
   }, [allCards]);
 
-  const componentMap: { [key: string]: (item: ContentItem) => React.ReactNode } = {
-    '1': (item: ContentItem) => item.type === 'ad' ? <PageSizeCard item={item as AdData} /> : null,
-    '2': (item: ContentItem) => item.type === 'blog' ? <InstagramPostCard item={item as BlogData} /> : null,
-    '3': (item: ContentItem) => item.type === 'ad' ? <div className="w-full max-w-4xl"><AdCard item={item as AdData} /></div> : null,
-    '4': (item: ContentItem) => item.type === 'blog' ? <PageSizeCard item={item as BlogData} /> : null,
-    '5': (item: ContentItem) => item.type === 'ad' ? <PhoneSizeCard item={item as AdData} /> : null,
-    '6': (item: ContentItem) => item.type === 'blog' ? <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div> : null,
-    '7': (item: ContentItem) => (
-      <div className="flex w-full items-center justify-center gap-4">
-        <Leaf className="w-8 h-8 text-primary/70" />
-        {item.type === 'ad' ? <div className="w-full max-w-2xl aspect-square"><AdCard item={item as AdData} /></div> : null}
-        <Briefcase className="w-8 h-8 text-primary/70" />
-      </div>
-    ),
-    '8': (item: ContentItem) => item.type === 'blog' ? <div className="w-full max-w-4xl"><BlogCard item={item as BlogData} /></div> : null,
-    '9': (item: ContentItem) => item.type === 'ad' ? <div className="w-full max-w-2xl aspect-square"><AdCard item={item as AdData} /></div> : null,
-    '10': (item: ContentItem) => item.type === 'blog' ? <PageSizeCard item={item as BlogData} /> : null,
-  };
-  
-  // Icon mapping for separators
-  const iconMap: { [key: string]: React.ElementType | React.ElementType[] } = {
-    '1': Car,
-    '2': TrendingUp,
-    '3': Cpu,
-    '4': Laptop,
-    '5': [Smartphone, Tablet, Laptop],
-    '6': Brain,
-    '7': Leaf,
-    '8': Laptop,
-    '9': TrendingUpIcon,
-  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -177,40 +140,12 @@ export default function Home() {
                 <p>Failed to load content. Please try refreshing the page.</p>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-8">
-                {content.map((item, index) => {
-                    const originalId = item.originalId || item.id;
-                    const CardComponent = componentMap[originalId as keyof typeof componentMap];
-                    const IconComponent = iconMap[originalId as keyof typeof iconMap];
-                    
-                    return (
-                        <React.Fragment key={item.id}>
-                            <ScrollAnimate className='w-full flex justify-center'>
-                                {CardComponent ? (
-                                    CardComponent(item)
-                                ) : (
-                                    <Card className="p-4">
-                                        <p>Unsupported content type for id: {originalId}</p>
-                                    </Card>
-                                )}
-                            </ScrollAnimate>
-
-                            {IconComponent && index < content.length - 1 && (
-                                <ScrollAnimate>
-                                    {Array.isArray(IconComponent)
-                                        ? <IconSeparator icons={IconComponent} />
-                                        : <IconSeparator icon={IconComponent} />
-                                    }
-                                </ScrollAnimate>
-                            )}
-                        </React.Fragment>
-                    );
-                })}
-                
-                <ScrollAnimate className="mt-16 flex flex-col items-center space-y-2">
-                    <TrendingUpIcon className="h-8 w-8 text-primary" />
-                    <span className="text-xl font-bold">WillItTrend.com</span>
-                </ScrollAnimate>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                {content.map((item) => (
+                    <ScrollAnimate key={item.id} className='w-full flex justify-center'>
+                       {item.type === 'ad' ? <AdCard item={item as AdData} /> : <BlogCard item={item as BlogData} />}
+                    </ScrollAnimate>
+                ))}
             </div>
           )}
         </section>
