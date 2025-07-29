@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // functions/src/genkit.ts
 
 import { configureGenkit } from 'genkit';
@@ -18,17 +17,6 @@ export const ai = configureGenkit({
   // when calling ai.generate, or use defaultModel if you only use one.
   // Example if you wanted a global default model:
   // defaultModel: geminiFlash,
-=======
-'use server';
-
-import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
-
-export const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-1.5-flash-latest',
-  logLevel: 'debug',
->>>>>>> 19c9e617f3d8acb0c1c5bafa285060f66a459448
 });
 
 // Export specific model objects so they can be imported and used in other flow files
