@@ -35,7 +35,6 @@ export function AdCard({
           <CardHeader className="p-0 mb-4">
             <div className="flex justify-between items-center">
               <Badge variant="secondary">{industry}</Badge>
-              <Badge variant="outline">Ad</Badge>
             </div>
           </CardHeader>
           <CardContent className="p-0 flex-grow">
