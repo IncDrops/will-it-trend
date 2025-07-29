@@ -1,6 +1,6 @@
 // src/genkit.ts
-import { configureGenkit } from 'genkit'; // Correct import for configureGenkit
-import { googleAI, geminiPro, geminiFlash, geminiVision } from '@genkit-ai/googleai'; // Import all specific models for clarity and use
+import {configureGenkit} from 'genkit'; // Correct import for configureGenkit
+import {googleAI} from '@genkit-ai/googleai'; // Import all specific models for clarity and use
 
 export const ai = configureGenkit({
   plugins: [
@@ -16,6 +16,3 @@ export const ai = configureGenkit({
   // it's better to explicitly set the model in the flow using ai.generate.
   // Example: defaultModel: geminiFlash, // If you want a global default
 });
-
-// Export specific models for direct use in other files
-export { geminiPro, geminiFlash, geminiVision };

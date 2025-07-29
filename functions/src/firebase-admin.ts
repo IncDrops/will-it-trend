@@ -20,4 +20,4 @@ if (admin.apps.length === 0) {
 db = admin.firestore();
 auth = admin.auth();
 
-export { db, auth };
+export {db, auth};
