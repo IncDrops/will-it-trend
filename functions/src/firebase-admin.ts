@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 // functions/src/firebase-admin.ts
 
-=======
-// firebase-admin.ts
->>>>>>> 19c9e617f3d8acb0c1c5bafa285060f66a459448
 import * as admin from 'firebase-admin';
 
 // This file is intended for use within Firebase Functions,
@@ -25,8 +21,4 @@ if (admin.apps.length === 0) {
 db = admin.firestore();
 auth = admin.auth();
 
-<<<<<<< HEAD
 export { db, auth };
-=======
-export {db, auth};
->>>>>>> 19c9e617f3d8acb0c1c5bafa285060f66a459448
