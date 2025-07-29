@@ -90,14 +90,9 @@ export const contentData: ContentItem[] = [
     title: 'The Future is Electric. Drive the Revolution.',
     description: 'Introducing the new luxury EV. Unmatched performance and design.',
     cta: 'Explore Now',
-<<<<<<< HEAD
     link: '#',
     image: 'https://placehold.co/1200x600',
     aiHint: 'luxury EV'
-=======
-    link: 'https://amzn.to/4obEfN2',
-    image: 'https://placehold.co/1200x600',
-    aiHint: 'luxury EV magazine'
   },
     {
     type: 'blog' as const,
@@ -108,9 +103,8 @@ export const contentData: ContentItem[] = [
     tag: 'Social Media',
     offer: 'Read on Amazon',
     link: 'https://amzn.to/4obEfN2',
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://placehold.co/1200x600',
     aiHint: 'social media graph'
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
   },
   {
     type: 'ad' as const,
@@ -121,13 +115,8 @@ export const contentData: ContentItem[] = [
     description:
       'Next-generation semiconductors for unparalleled AI processing power.',
     cta: 'Learn More',
-<<<<<<< HEAD
-    link: '#',
-    image: 'https://placehold.co/1200x600',
-=======
     link: '/learn-more',
-    image: 'https://placehold.co/600x400',
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
+    image: 'https://placehold.co/1200x600',
     aiHint: 'semiconductor chip'
   },
     {
@@ -151,12 +140,8 @@ export const contentData: ContentItem[] = [
     description: 'The latest flagship phone with a revolutionary camera system.',
     cta: 'Pre-order Today',
     link: '#',
-<<<<<<< HEAD
     image: 'https://placehold.co/1200x600',
     aiHint: 'smartphone tech'
-=======
-    image: 'https://placehold.co/375x812',
-    aiHint: 'smartphone tech',
   },
    {
     type: 'blog' as const,
@@ -165,11 +150,10 @@ export const contentData: ContentItem[] = [
     title: 'AI Trend Forecasting Tools for Marketers',
     teaser: 'A deep dive into the AI platforms that are revolutionizing marketing by predicting consumer behavior.',
     tag: 'AI & Marketing',
-    image: 'https://placehold.co/600x400',
+    image: 'https://placehold.co/1200x600',
     aiHint: 'marketing dashboard',
     offer: 'Explore Our API',
     link: '/docs'
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
   },
   {
     type: 'ad' as const,
@@ -180,11 +164,7 @@ export const contentData: ContentItem[] = [
     description: 'Our cloud SaaS platform empowers teams to achieve more.',
     cta: 'Start Free Trial',
     link: '#',
-<<<<<<< HEAD
     image: 'https://placehold.co/1200x600',
-=======
-    image: 'https://placehold.co/600x600',
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
     aiHint: 'software interface'
   },
     {
@@ -194,7 +174,7 @@ export const contentData: ContentItem[] = [
     title: 'The Rise of Sustainable Tech: What to Watch',
     teaser: 'From green energy solutions to circular economy gadgets, explore the sustainable tech trends shaping our future.',
     tag: 'Sustainability',
-    image: 'https://placehold.co/600x400',
+    image: 'https://placehold.co/1200x600',
     aiHint: 'sustainable tech',
     offer: 'Shop Smart Gardens',
     link: 'https://amzn.to/4obEfN2'
@@ -208,66 +188,8 @@ export const contentData: ContentItem[] = [
     description: 'Our AI-driven platform helps you navigate the markets with confidence.',
     cta: 'See Investment Trends',
     link: '#',
-<<<<<<< HEAD
     image: 'https://placehold.co/1200x600',
     aiHint: 'finance chart'
-  },
-];
-
-export const blogData = [
-    {
-        id: 1,
-        title: 'How to Profit From the Next Social Media Hashtag Boom',
-        teaser: 'Discover the tools and strategies to identify and capitalize on trending hashtags before they go viral.',
-        tag: 'Social Media',
-        image: 'https://placehold.co/1200x600',
-        aiHint: 'social media',
-        offer: 'Use XYZ Tools – Get 20% Off',
-        link: '#'
-    },
-    {
-        id: 2,
-        title: 'Best Gadgets for Early Adopters: 2025 Picks',
-        teaser: 'A curated list of the most innovative and game-changing gadgets set to launch in the coming year.',
-        tag: 'Technology',
-        image: 'https://placehold.co/1200x600',
-        aiHint: 'futuristic gadget',
-        offer: 'Shop on Amazon',
-        link: '#'
-    },
-    {
-        id: 3,
-        title: 'AI Trend Forecasting Tools for Marketers',
-        teaser: 'A deep dive into the AI platforms that are revolutionizing marketing by predicting consumer behavior.',
-        tag: 'AI & Marketing',
-        image: 'https://placehold.co/1200x600',
-        aiHint: 'marketing dashboard',
-        offer: 'Explore Our API',
-        link: '#'
-    },
-    {
-        id: 4,
-        title: 'The Rise of Sustainable Tech: What to Watch',
-        teaser: 'From green energy solutions to circular economy gadgets, explore the sustainable tech trends shaping our future.',
-        tag: 'Sustainability',
-        image: 'https://placehold.co/1200x600',
-        aiHint: 'sustainable tech',
-        offer: 'Invest in Green Tech',
-        link: '#'
-    },
-    {
-        id: 5,
-        title: 'Decoding Gen Z: How They Drive Digital Trends',
-        teaser: 'Understand the platforms, aesthetics, and values that make Gen Z the most powerful force in trend creation.',
-        tag: 'Culture',
-        image: 'https://placehold.co/1200x600',
-        aiHint: 'gen z fashion',
-        offer: 'Read the Full Report',
-        link: '#'
-    }
-=======
-    image: 'https://placehold.co/600x600',
-    aiHint: 'finance chart crypto',
   },
    {
     type: 'blog' as const,
@@ -281,5 +203,4 @@ export const blogData = [
     offer: 'Shop Vlogging Kits',
     link: 'https://amzn.to/4obEfN2'
   }
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
 ];

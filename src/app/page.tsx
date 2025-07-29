@@ -166,22 +166,7 @@ export default function Home() {
             <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
                 Go beyond the data with curated articles and partnership opportunities to grow your brand.
             </p>
-<<<<<<< HEAD
-            <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
-                {shuffledContent.map(content => {
-                    if (content.type === 'ad') {
-                        return <AdCard key={content.id} {...content.data} />
-                    }
-                    if (content.type === 'blog') {
-                         return <BlogCard key={content.id} {...content.data} />
-                    }
-                    return null;
-                })}
-            </div>
-        </section>
-=======
           </ScrollAnimate>
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
 
           {contentLoading ? (
             <div className="flex justify-center items-center p-16">

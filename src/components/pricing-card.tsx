@@ -1,48 +1,25 @@
 
-<<<<<<< HEAD
-import { Check, Sparkles } from 'lucide-react';
-=======
 'use client';
 import { Check, Sparkles, LoaderCircle } from 'lucide-react';
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Badge } from './ui/badge';
-<<<<<<< HEAD
-import Link from 'next/link';
-
-
-type PricingCardProps = {
-  title: string;
-  price: number | null;
-=======
-<<<<<<< HEAD
-=======
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
 import Link from 'next/link';
 
 type PricingCardProps = {
   title: string;
-  price?: number;
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
+  price?: number | null;
   description: string;
   features: string[];
   cta: string;
   isFeatured?: boolean;
   targetAudience: string;
-<<<<<<< HEAD
-  link: string;
-=======
-<<<<<<< HEAD
-  contactEmail?: string;
-=======
+  link?: string;
   priceId?: string;
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
 };
 
 export function PricingCard({
@@ -53,25 +30,7 @@ export function PricingCard({
   cta,
   isFeatured = false,
   targetAudience,
-<<<<<<< HEAD
-  link
-=======
-<<<<<<< HEAD
-  contactEmail,
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
-}: PricingCardProps) {
-
-  const ctaButton = (
-    <Button
-      size="lg"
-      variant={isFeatured ? 'shiny' : 'outline'}
-      className="w-full mt-8"
-    >
-      {isFeatured && <Sparkles />}
-      {cta}
-    </Button>
-  );
-=======
+  link,
   priceId,
 }: PricingCardProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -126,8 +85,7 @@ export function PricingCard({
     }
   };
   
-  const isContactButton = cta === 'Contact Sales';
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
+  const isContactButton = link === '/contact';
 
   return (
     <div className={cn('relative group transition-transform duration-300 ease-in-out', isFeatured ? 'transform md:scale-110 z-10' : 'hover:scale-105')}>
@@ -140,40 +98,16 @@ export function PricingCard({
           <CardDescription>{targetAudience}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col flex-grow">
-<<<<<<< HEAD
-          <div className="text-center my-4 min-h-[56px]">
-            {price !== null ? (
-              <>
-                <span className="text-4xl font-extrabold">${price}</span>
-                <span className="text-muted-foreground">/one-time</span>
-              </>
-            ) : (
-               <span className="text-2xl font-bold">Custom Pricing</span>
-=======
-<<<<<<< HEAD
           <div className="text-center my-4 min-h-[56px] flex items-center justify-center">
-            {price > 0 ? (
+            {price !== null && price !== undefined ? (
               <div>
                 <span className="text-4xl font-extrabold">${price}</span>
                 <span className="text-muted-foreground">/one-time</span>
               </div>
             ) : (
                <span className="text-2xl font-bold">Contact for Quote</span>
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
             )}
           </div>
-=======
-          {price !== undefined ? (
-            <div className="text-center my-4">
-              <span className="text-4xl font-extrabold">${price}</span>
-              <span className="text-muted-foreground">/one-time</span>
-            </div>
-          ) : (
-            <div className="text-center my-4">
-              <span className="text-4xl font-extrabold">Custom</span>
-            </div>
-          )}
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
           <p className="text-center text-muted-foreground mb-6 min-h-[40px]">{description}</p>
           <ul className="space-y-3 flex-grow">
             {features.map((feature) => (
@@ -183,33 +117,16 @@ export function PricingCard({
               </li>
             ))}
           </ul>
-<<<<<<< HEAD
-          {contactEmail ? (
-            <Link href={`mailto:${contactEmail}?subject=White%20Label%20Pricing%20Inquiry`}>
-              {ctaButton}
-            </Link>
-          ) : (
-            ctaButton
-          )}
-=======
           <Button
             size="lg"
             variant={isFeatured ? 'shiny' : 'outline'}
             className="w-full mt-8"
-<<<<<<< HEAD
-            asChild
-          >
-            <Link href={link}>
-              {isFeatured && <Sparkles />}
-              {cta}
-            </Link>
-=======
             onClick={!isContactButton ? handleCheckout : undefined}
             disabled={isLoading}
             asChild={isContactButton}
           >
              {isContactButton ? (
-              <Link href="/pricing#contact">{cta}</Link>
+              <Link href={link!}>{cta}</Link>
              ) : (
                 <>
                 {isLoading ? (
@@ -222,9 +139,7 @@ export function PricingCard({
                 )}
                 </>
              )}
->>>>>>> b7983d82e07580e44754abb1e3efcfeba2a5181f
           </Button>
->>>>>>> 20a0f1202cfd5154a93bfd1a3c582e3aeb209090
         </CardContent>
       </Card>
     </div>
