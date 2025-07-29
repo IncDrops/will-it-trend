@@ -1,9 +1,7 @@
-
-'use server';
-
+// firebase-admin.ts
 import * as admin from 'firebase-admin';
 
-// This file is intended for use within Firebase Functions, 
+// This file is intended for use within Firebase Functions,
 // where the environment is already configured.
 
 let db: admin.firestore.Firestore;

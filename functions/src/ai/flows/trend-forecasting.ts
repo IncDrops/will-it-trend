@@ -1,5 +1,5 @@
 // src/ai/flows/trend-forecasting.ts
-'use server';
+// 'use server'; // Still optional, remove if you prefer
 
 /**
  * @fileOverview An AI agent for forecasting the trending potential of ideas, hashtags, or products.
@@ -12,8 +12,8 @@
 // IMPORTANT: Ensure this path is correct and your genkit.ts exports 'ai' correctly
 import { ai } from '../genkit';
 import { z } from 'genkit';
-// Import the specific model you want to use
-import { geminiProFlash } from '@genkit-ai/googleai'; // <--- ADD THIS IMPORT
+// Fix: Import 'geminiFlash' instead of 'geminiProFlash'
+import { geminiFlash } from '@genkit-ai/googleai'; // <--- FIX IS HERE
 
 const TrendForecastInputSchema = z.object({
   input: z.string().describe('An idea, hashtag, or product to forecast.'),
@@ -38,33 +38,51 @@ const trendForecastFlow = ai.defineFlow(
     outputSchema: TrendForecastOutputSchema,
   },
   async input => {
-    // You can define the prompt directly within the flow using ai.generate,
-    // or pass the model to a defined prompt like this:
-    const { output } = await ai.generate({ // Use ai.generate directly for explicit model control
-      model: geminiProFlash, // <-- Specify the model instance here!
-      prompt: `You are an AI trend forecaster. Given an idea, hashtag, or product and a time horizon,
-        you will forecast its trending potential based on current market trends, social buzz, and competitive analysis.
+    let rawAiResponseText: string | undefined; // To store the raw text for logging
 
-        Input: ${input.input}
-        Time Horizon: ${input.timeHorizon}
+    try {
+      const response = await ai.generate({
+        model: geminiFlash, // <--- USE THE CORRECTLY IMPORTED MODEL HERE
+        prompt: `You are an AI trend forecaster. Given an idea, hashtag, or product and a time horizon,
+          you will forecast its trending potential based on current market trends, social buzz, and competitive analysis.
 
-        Consider the following:
-        - Current market trends
-        - Social media buzz and engagement
-        - Competitive landscape
-        - Potential for virality
-        - Novelty and uniqueness
+          Input: ${input.input}
+          Time Horizon: ${input.timeHorizon}
 
-        Output a trend score (0-100) and a rationale for the score. The output MUST be in JSON format matching the schema: {"trendScore": number, "rationale": string}.
-        `,
-      output: {
-        schema: TrendForecastOutputSchema, // This tells Genkit to parse the output into this schema
-      },
-    });
+          Consider the following:
+          - Current market trends
+          - Social media buzz and engagement
+          - Competitive landscape
+          - Potential for virality
+          - Novelty and uniqueness
 
-    if (!output) {
-      throw new Error('The AI model did not return a valid response or could not be parsed into the expected schema.');
+          Output a trend score (0-100) and a rationale for the score. The output MUST be in JSON format matching the schema: {"trendScore": number, "rationale": string}.
+          `,
+        output: {
+          schema: TrendForecastOutputSchema,
+        },
+      });
+
+      rawAiResponseText = response.text(); // Capture the raw text before checking output
+      console.log('--- Raw AI Response Text (for debugging) ---');
+      console.log(rawAiResponseText);
+      console.log('--------------------------------------------');
+
+      const { output } = response;
+
+      if (!output) {
+        // This means Genkit's internal schema parser failed.
+        // The raw text above will tell you why.
+        console.error('Genkit failed to parse AI output to schema. Raw text was:', rawAiResponseText);
+        throw new Error('The AI model did not return a valid response that could be parsed into the expected JSON schema.');
+      }
+      return output;
+
+    } catch (error: any) {
+      console.error('Error during AI generation or parsing in trendForecastFlow:', error);
+      console.error('Raw AI response text before error (if available):', rawAiResponseText);
+      // Ensure the error message here is robust and includes the raw AI output if possible
+      throw new Error(`AI Trend Forecasting failed: ${error.message || 'Unknown AI error'}. This usually means the AI did not return valid JSON. Raw AI output: "${rawAiResponseText}".`);
     }
-    return output;
   }
 );
